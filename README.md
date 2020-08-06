@@ -25,7 +25,7 @@ sip-hub服务仅有3个页面
 	- 3000端口是web页面端口
 	- 9060是hep消息收取端口
 
-```sh
+```bash
 docker run -d -p 3000:3000 -p 9060:9060/udp \
 --env NODE_ENV=production \
 --env dbHost=1.2.3.4 \
@@ -39,5 +39,40 @@ docker run -d -p 3000:3000 -p 9060:9060/udp \
 # 集成
 
 ## OpenSIPS集成
+test witch OpenSIPS 2.4
+
+```bash
+# add hep listen
+listen=hep_udp:your_ip:9061
+
+loadmodule "proto_hep.so"
+# replace SIP_HUB_IP_PORT with siphub‘s ip:port
+modparam("proto_hep", "hep_id","[hep_dst] SIP_HUB_IP_PORT;transport=udp;version=3") 
+loadmodule "siptrace.so"
+modparam("siptrace", "trace_id","[tid]uri=hep:hep_dst")
+
+# add ite in request route();
+if(!is_method("REGISTER") && !has_totag()){
+  sip_trace("tid", "d", "sip");
+}
+```
 
 ## FreeSWITCH集成
+fs version 版本要高于 1.6.8+ 
+
+编辑： sofia.conf.xml
+
+用真实的siphub ip:port替换SIP_HUB_IP_PORT
+
+```
+<param name="capture-server" value="udp:SIP_HUB_IP_PORT"/>
+```
+
+```
+freeswitch@fsnode04> sofia global capture on
+ 
++OK Global capture on
+freeswitch@fsnode04> sofia global capture off
+ 
++OK Global capture off
+```
