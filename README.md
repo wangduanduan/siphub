@@ -76,3 +76,4 @@ freeswitch@fsnode04> sofia global capture off
  
 +OK Global capture off
 ```
+
