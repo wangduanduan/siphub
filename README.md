@@ -1,21 +1,24 @@
-# create db sql
-# create database `siphub` default character set utf8mb4 collate utf8mb4_unicode_ci
-# 
-network:
-  docker network create -d bridge \
-  --ip-range=192.168.1.0/24 \
-  --gateway=192.168.1.1 --subnet=192.168.1.0/24 sip
-mysql:
-	docker run --name mysql \
-	-e MYSQL_ROOT_PASSWORD=123456 -d \
-  	-p 3306:3306 \
-  	-v /my/own/datadir:/var/lib/mysql \
-  	--network sip \
-  	registry:5000/wecloud/mysql:5.7-1 \
-  	--sql-mode=""
-siphub:
+# 介绍
+
+![](./docs/search.jpg)
+![](./docs/sips.jpg)
+
+sip-hub是一个sip消息的搜索以及时序图可视化展示的服务，相比于Homer, sip-hub做了大量的功能简化。同时也提供了一些个性化的查询，例如被叫后缀查询，仅域名查询等等。
+
+sip-hub服务仅有3个页面
+
+- sip消息搜索页面，用于按照主被叫、域名和时间范围搜索呼叫记录
+- 时序图展示页面，用于展示SIP时序图和原始SIP消息
+- 可以导入导出SIP消息
+- 可以查找A-Leg
+- 监控功能
+
+# 安装
+1. 首先需要安装MySql数据库，并在其中建立一个名为siphub的数据库
+2. 运行
+
+```sh
 	docker run -d -p 3000:3000 -p 9060:9060/udp \
-    --network sip \
 	--env NODE_ENV=production \
 	--env dbHost=mysql \
 	--env dbUser=root \
@@ -23,6 +26,4 @@ siphub:
 	--env dbName=siphub \
 	--env dataKeepDays=3 \
 	--name sip-hub registry:5000/wecloud/sip-hub:0.0.0-35
-restart:
-	-docker rm -f sip-hub;
-	make run-sip-hub;
+```
