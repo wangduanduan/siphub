@@ -1,5 +1,7 @@
 # 功能介绍
-sip-hub是一个sip消息的搜索以及时序图可视化展示的服务，相比于Homer, sip-hub做了大量的功能简化。同时也提供了一些个性化的查询，例如被叫后缀查询，仅域名查询等等。
+sip-hub是一个专注sip信令的搜索以及时序图可视化展示的服务。
+
+相比于Homer, sip-hub做了大量的功能简化。同时也提供了一些个性化的查询，例如被叫后缀查询，仅域名查询等等。
 
 sip-hub服务仅有3个页面
 
@@ -8,6 +10,8 @@ sip-hub服务仅有3个页面
 - 可以导入导出SIP消息
 - 可以查找A-Leg
 - 监控功能
+
+做siphub的原因是homer太难用了，经常查不到想查的数据，查询的速度也蛮。
 
 # 相关截图
 
@@ -76,4 +80,3 @@ freeswitch@fsnode04> sofia global capture off
  
 +OK Global capture off
 ```
-
