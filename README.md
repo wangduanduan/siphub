@@ -14,19 +14,30 @@ sip-hub服务仅有3个页面
 ![](./docs/search.jpg)
 ![](./docs/sips.jpg)
 
-
-
 # 安装
+
 1. 首先需要安装MySql数据库，并在其中建立一个名为siphub的数据库
 2. 运行
+	- dbHost 数据库地址
+	- dbUser 数据库用户
+	- dbName 数据库名
+	- dataKeepDays 抓包保存天数
+	- 3000端口是web页面端口
+	- 9060是hep消息收取端口
 
 ```sh
-	docker run -d -p 3000:3000 -p 9060:9060/udp \
-	--env NODE_ENV=production \
-	--env dbHost=mysql \
-	--env dbUser=root \
-	--env dbPwd=123456 \
-	--env dbName=siphub \
-	--env dataKeepDays=3 \
-	--name siphub wangduanduan/siphub
+docker run -d -p 3000:3000 -p 9060:9060/udp \
+--env NODE_ENV=production \
+--env dbHost=1.2.3.4 \
+--env dbUser=root \
+--env dbPwd=123456 \
+--env dbName=siphub \
+--env dataKeepDays=3 \
+--name siphub wangduanduan/siphub
 ```
+
+# 集成
+
+## OpenSIPS集成
+
+## FreeSWITCH集成
