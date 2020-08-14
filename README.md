@@ -37,6 +37,9 @@ docker run -d -p 3000:3000 -p 9060:9060/udp \
 --env dbPwd=123456 \
 --env dbName=siphub \
 --env dataKeepDays=3 \
+--env logLevel=error \
+--log-opt max-size=10M \
+--log-opt max-file=3 \
 --name siphub wangduanduan/siphub
 ```
 
