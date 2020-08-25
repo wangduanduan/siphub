@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<%- include('head.html'); %>
+<style>
+  .uk-notify{
+    width: 40%;
+  }
+
+</style>
+<script src="/lib/dayjs.min.js"></script>
+<script src="/js/notify.js"></script>
+<body>
+    <div class="container" id="app">
+        <div class="row">
+            <div class="col-md-12">
+                <form class="form-inline" @submit.prevent="getData">
+                    <!-- <div class="form-group">
+                      Method: <input v-model="method" type="text" class="form-control" placeholder="INVITE">
+                    </div> -->
+
+                    <div class="form-group">
+                      From: <input v-model="from" type="text" class="form-control" placeholder="8001@test.cc">
+                    </div>
+                    <div class="form-group">
+                      To: <input v-model="to" type="text" class="form-control" placeholder="8002@test.cc">
+                    </div>
+                      Time Ranges: 
+                    <select class="form-control" v-model.number="shortTime" @change="changeTime">
+                      <option value="5">Last 5minutes</option>
+                      <option value="10">Last 10minutes</option>
+                      <option value="30">Last 30minutes</option>
+                      <option value="60">Last 1 hour</option>
+                      <option value="120">Last 2 hours</option>
+                      <option value="180">Last 3 hours</option>
+                      <option value="360">Last 6 hours</option>
+                    </select>
+                    <div class="form-group">
+                      Start time: <input v-model="beginTime" type="text" class="form-control" placeholder="2020-05-08 10:12:23">
+                    </div>
+                    <div class="form-group">
+                      End time: <input v-model="endTime" type="text" class="form-control" placeholder="2020-05-10 10:12:23">
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary">Search</button>
+                    <a class="btn btn-default" role="button" href="/import" target="_blank">Import JSON File</a>
+                    <a class="btn btn-default" role="button" href="/monitor" target="_blank">Monitor</a>
+                    <br>
+                    <hr>
+                  </form>
+            </div>
+            <br/>
+            <br/>
+            <div class="rol-md-12">
+              <table class="table table-striped">
+                <thead>
+                  <tr>
+                    <th>Time</th>
+                    <th>User Agent</th>
+                    <th>Protocol</th>
+                    <th>From->To</th>
+                    <th>src_host->dst_host</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr v-show="loading">
+                    <td colspan="5" style="text-align: center;"><img src="/images/loading.gif" alt=""></td>
+                  </tr>
+                  <tr v-show="list.length === 0">
+                    <td colspan="5" style="text-align: center;color:red">Sorry, No Result !!!</td>
+                  </tr>
+                  <tr v-for="item in list" :key="item.id">
+                    <td>{{item.time}}</td>
+                    <td>{{item.ua}}</td>
+                    <td>{{item.protocol | transProtocol}}</td>
+                    <td><a :href="'/call?' + item.table + item.callid" target="_blank">{{item.from_user}}@{{item.from_host}} -> {{item.to_user_r.split('').reverse().join('')}}@{{item.to_host}}</a></td>
+                    <td>{{item.src_host}}->{{item.dst_host}}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+        </div>
+        
+    </div>
+</body>
+<script src="/js/index.js"></script>
+</html>
