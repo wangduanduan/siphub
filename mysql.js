@@ -66,10 +66,10 @@ function insert (msg) {
     msg.dst_host, msg.timeSeconds, msg.raw, msg.ua])
 
   let sql2 = mysql.format(`insert into inv_${tableDate} (
-    from_user,from_host,to_user_r,to_host,callid,
+    from_user,from_host,to_user_r,to_host,callid,fs_callid
     time,src_host,dst_host,ua,protocol) 
-    values(?,?,?,?,?,
-      ?,?,?,?,?)`, [msg.from_user, msg.from_host, msg.to_user_r, msg.to_host, msg.callid,
+    values(?,?,?,?,?,?
+      ?,?,?,?,?)`, [msg.from_user, msg.from_host, msg.to_user_r, msg.to_host, msg.callid, msg.fs_callid,
     msg.timeSeconds, msg.src_host, msg.dst_host, msg.ua, msg.protocol])
 
   log.info(sql, sql2)
@@ -127,6 +127,7 @@ function createTable (tableDate) {
 
   let sql2 = `CREATE TABLE if not exists inv_${tableName} (
     \`callid\` char(64) NOT NULL DEFAULT '',
+    \`fs_callid\` char(64) NOT NULL DEFAULT '',
     \`protocol\` int(11) NOT NULL,
     \`from_user\` char(40) NOT NULL DEFAULT '',
     \`from_host\` char(64) NOT NULL DEFAULT '',
@@ -138,6 +139,7 @@ function createTable (tableDate) {
     \`time\` datetime NOT NULL ON UPDATE CURRENT_TIMESTAMP,
     PRIMARY KEY (\`callid\`),
     KEY \`from_host\` (\`from_host\`),
+    KEY \`fs_callid\` (\`fs_callid\`),
     KEY \`to_host\` (\`to_host\`)
   ) ENGINE=InnoDB DEFAULT CHARSET=utf8;`
 

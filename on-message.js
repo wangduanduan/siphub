@@ -33,6 +33,7 @@ function getMetaFromPaylod (payload) {
     to_host: to.host,
     to_user_r: reverseString(to.auth),
     callid: msg.call_id,
+    fs_callid: msg.fs_call_id,
     cseq: msg.cseq,
     ua: msg.ua,
     src_host: '',

@@ -25,11 +25,13 @@ function parse (msg) {
   }
 
   let count = 0
+
   let from = ''
   let to = ''
   let call_id = ''
   let cseq = ''
   let ua = ''
+  let fs_call_id = ''
 
   for (let i = 1; i < lines.length; i++) {
     // log.info('lines >>', lines[i])
@@ -47,20 +49,33 @@ function parse (msg) {
       call_id = getValue(lines[i])
     } else if (lines[i].startsWith('CSeq:')) {
       count++
+
+      // 过滤注册和OPTIONS请求的响应
+
       if (lines[i].includes('REGISTER')) {
         return {}
       }
       if (lines[i].includes('OPTIONS')) {
         return {}
       }
+
       let _seq = lines[i].split(' ')[1]
       cseq = parseInt(_seq)
+
     } else if (lines[i].startsWith('User-Agent:')) {
       count++
       ua = getValue(lines[i])
+    } else if (line[i].startsWith('Wellcloud_Call_ID:')) {
+      count++
+      fs_call_id = getValue(lines[i])
     }
 
-    if (count >= 5) {
+    if (count >= 6) {
+      break
+    }
+
+    // stop parse udp
+    if (line[i].startsWith('v=')) {
       break
     }
   }
@@ -71,7 +86,8 @@ function parse (msg) {
     to,
     ua,
     cseq,
-    call_id
+    call_id,
+    fs_call_id
   }
 }
 
