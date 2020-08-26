@@ -75,7 +75,7 @@ function parse (msg) {
     }
 
     // stop parse udp
-    if (line[i].startsWith('v=')) {
+    if (lines[i].startsWith('v=')) {
       break
     }
   }
