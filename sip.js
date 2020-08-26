@@ -65,7 +65,7 @@ function parse (msg) {
     } else if (lines[i].startsWith('User-Agent:')) {
       count++
       ua = getValue(lines[i])
-    } else if (line[i].startsWith('Wellcloud_Call_ID:')) {
+    } else if (lines[i].startsWith('Wellcloud_Call_ID:')) {
       count++
       fs_call_id = getValue(lines[i])
     }
