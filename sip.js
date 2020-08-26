@@ -123,18 +123,54 @@ module.exports = {
 //     'Content-Length: 0\r\n' +
 //     '\r\n'
 
-// var msg3 = 'INVITE sip:8001@001.com SIP/2.0\r\n' +
-//     'Record-Route: <sip:192.168.60.101:18627;lr;ftag=v2Gl2kKLlTNNC.Nydij-ri02clU52sTZ;did=cec.d7a2f4a6>\r\n' +
-//     'Via: SIP/2.0/UDP 192.168.60.101:18627;branch=z9hG4bKfee.a8c4d037.0\r\n' +
-//     'Via: SIP/2.0/UDP 192.168.1.101:57039;received=192.168.2.37;rport=57039;branch=z9hG4bKPjfcCCXpqtwrpKQYK39H3oTNFwp4JdS7Xe\r\n' +
-//     'Max-Forwards: 69\r\n' +
-//     'From: "800004" <sip:800004@001.com>;tag=v2Gl2kKLlTNNC.Nydij-ri02clU52sTZ\r\n' +
-//     'To: <sip:8001@001.com>\r\n' +
-//     'Contact: "800004" <sip:800004@192.168.2.37:57039;ob>\r\n' +
-//     'Call-ID: cH.VUFyVvmS5aNUWQtsmgoLylRAEXnMW\r\n' +
-//     'CSeq: 22855 INVITE\r\n' +
-//     'Route: <sip:192.168.60.101:18627;lr>\r\n' +
-//     'Allow: PRACK, INVITE, ACK, BYE, CANCEL, UPDATE, INFO, SUBSCRIBE, NOTIFY, REFER, MESSAGE, OPTIONS\r\n' +
-//     'Supported:'
+var msg3 = 'INVITE sip:8001@001.com SIP/2.0\r\n' +
+    'Record-Route: <sip:192.168.60.101:18627;lr;ftag=v2Gl2kKLlTNNC.Nydij-ri02clU52sTZ;did=cec.d7a2f4a6>\r\n' +
+    'Via: SIP/2.0/UDP 192.168.60.101:18627;branch=z9hG4bKfee.a8c4d037.0\r\n' +
+    'Via: SIP/2.0/UDP 192.168.1.101:57039;received=192.168.2.37;rport=57039;branch=z9hG4bKPjfcCCXpqtwrpKQYK39H3oTNFwp4JdS7Xe\r\n' +
+    'Max-Forwards: 69\r\n' +
+    'From: "800004" <sip:800004@001.com>;tag=v2Gl2kKLlTNNC.Nydij-ri02clU52sTZ\r\n' +
+    'To: <sip:8001@001.com>\r\n' +
+    'Contact: "800004" <sip:800004@192.168.2.37:57039;ob>\r\n' +
+    'Call-ID: cH.VUFyVvmS5aNUWQtsmgoLylRAEXnMW\r\n' +
+    'CSeq: 22855 INVITE\r\n' +
+    'Route: <sip:192.168.60.101:18627;lr>\r\n' +
+    'Allow: PRACK, INVITE, ACK, BYE, CANCEL, UPDATE, INFO, SUBSCRIBE, NOTIFY, REFER, MESSAGE, OPTIONS\r\n' +
+    'Supported:'
 
 // console.log(parse(msg1))
+
+
+var msg1 = `INVITE sip:8007@cirno.cc SIP/2.0\r\n
+Via: SIP/2.0/UDP 192.168.2.80:59453;rport;branch=z9hG4bKPj1kdIaVrMdK8YHIPK0vwL.I-jFZeer1bw\r\n
+Max-Forwards: 70\r\n
+From: "8005" <sip:8005@cirno.cc>;tag=OK7NdwIDx78gVxDeB7SGUz51RwWjaJEI\r\n
+To: sip:8007@cirno.cc\r\n
+Contact: "8005" <sip:8005@192.168.2.80:59453;ob>\r\n
+Call-ID: 4.QV3NtWXNW7GCydvaPkh9c2qz1Lwypw\r\n
+CSeq: 18122 INVITE\r\n
+Route: <sip:192.168.40.21:18627;lr>\r\n
+Allow: PRACK, INVITE, ACK, BYE, CANCEL, UPDATE, INFO, SUBSCRIBE, NOTIFY, REFER, MESSAGE, OPTIONS\r\n
+Supported: replaces, 100rel, norefersub\r\n
+User-Agent: Telephone 1.4.6\r\n
+Content-Type: application/sdp\r\n
+Content-Length:   339\r\n
+\r\n\r\n
+v=0\r\n
+o=- 3807399422 3807399422 IN IP4 192.168.2.80\r\n
+s=pjmedia\r\n
+b=AS:84\r\n
+t=0 0\r\n
+a=X-nat:0\r\n
+m=audio 4000 RTP/AVP 8 0 101\r\n
+c=IN IP4 192.168.2.80\r\n
+b=TIAS:64000\r\n
+a=rtcp:4001 IN IP4 192.168.2.80\r\n
+a=sendrecv\r\n
+a=rtpmap:8 PCMA/8000\r\n
+a=rtpmap:0 PCMU/8000\r\n
+a=rtpmap:101 telephone-event/8000\r\n
+a=fmtp:101 0-16\r\n
+a=ssrc:838821114 cname:21348ed0018c0ab8\r\n
+`
+
+console.log(parse(msg3))
