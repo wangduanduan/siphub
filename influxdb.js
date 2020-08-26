@@ -4,7 +4,7 @@ const logger = require('./util').getLogger()
 
 const { getStat, resetStat } = require('./statis')
 
-const maxFailed = 3
+const maxFailed = 1
 let currentFailed = 0
 let timeId = 0
 

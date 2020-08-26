@@ -1,5 +1,6 @@
 const dayReg = /^\d{4}_\d{2}_\d{2}$/
 const {format} = require('mysql')
+// const debug = require('debug')('app:fs-callid')
 
 function checkQuery (sipCallId, day) {
     // day format: YYYY_MM_DD
@@ -9,11 +10,12 @@ function checkQuery (sipCallId, day) {
 }
 
 function makeSql (sipCallId, day) {
-    return format('select fs_callid from inv_? where callid=?', [day, sipCallId])
+    return `select fs_callid from inv_${day} where callid='${sipCallId}' limit 1`
 }
 
 function find (con, sipCallId, day, cb) {
-    let sql = makeSql(day,sipCallId)
+    let sql = makeSql(sipCallId, day)
+    console.log(sql)
     con.query(sql, cb)
 }
 

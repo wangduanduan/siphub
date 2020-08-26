@@ -4,7 +4,7 @@ const dayjs = require('dayjs')
 
 const {insert} = require('./mysql')
 const {reverseString, getLogger} = require('./util')
-const {parse} = require('./sip')
+const {parse} = require('./src/parse')
 const {updateStat} = require('./statis')
 
 const refuseFromUser = ['prober', 'dispatcher']

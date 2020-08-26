@@ -22,7 +22,8 @@ router.get('/search', function (req, res, next) {
     'ua',
     'protocol',
     'dst_host',
-    'src_host'
+    'src_host',
+    'fs_callid'
   ]
 
   let conditions = []
@@ -53,6 +54,10 @@ router.get('/search', function (req, res, next) {
 
   if (req.query.endTime) {
     conditions.push(`time <= '${req.query.endTime}'`)
+  }
+
+  if (req.query.fs_callid) {
+    conditions.push(`fs_callid = '${req.query.fs_callid}'`)
   }
 
   let tableDate = dayjs(req.query.beginTime).format('YYYY_MM_DD')
@@ -111,15 +116,27 @@ router.get('/core-dump', function (req, res, next) {
 })
 
 router.get('/fs-callid', function getFsCallId (req, res, next) {
-    if(!fsCallHand.checkQuery(req.query.sipCallId, req.query.day)) return res.status(400).end()
+    let day = req.query.day || dayjs().format('YYYY_MM_DD')
 
-    fsCallHand.find(getConnection(), (error, results, fields) => {
+    if(!fsCallHand.checkQuery(req.query.sipCallId, day)) return res.status(400).end()
+
+    fsCallHand.find(getConnection(),req.query.sipCallId, day, (error, results, fields) => {
         if(error) {
             log.error(error)
             return res.status(500).end()
         }
+
+        if (results.length === 0){
+            return res.status(404).end()
+        }
+
+        if (!results[0].fs_callid){
+            return res.status(404).end()
+        }
         
-        return res.json(results).end()
+        return res.json({
+            fs_callid: results[0].fs_callid
+        }).end()
     })
 })
 

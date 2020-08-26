@@ -1,3 +1,4 @@
+group?=parse
 push:
 	git add -A;
 	git commit -am "00";
@@ -5,3 +6,5 @@ push:
 .PHONY: tags
 tags:
 	ctags -R;
+test:
+	yarn jest --testNamePattern=$(group) --verbose

@@ -11,7 +11,7 @@
 <script src="/lib/dayjs.min.js"></script>
 <script src="/js/notify.js"></script>
 <body>
-    <div class="container" id="app">
+    <div class="container-fluid" id="app">
         <div class="row">
             <div class="col-md-12">
                 <form class="form-inline" @submit.prevent="getData">
@@ -56,6 +56,7 @@
                 <thead>
                   <tr>
                     <th>Time</th>
+                    <th>FS Call-Id</th>
                     <th>User Agent</th>
                     <th>Protocol</th>
                     <th>From->To</th>
@@ -71,6 +72,7 @@
                   </tr>
                   <tr v-for="item in list" :key="item.id">
                     <td>{{item.time}}</td>
+                    <td>{{item.fs_callid}}</td>
                     <td>{{item.ua}}</td>
                     <td>{{item.protocol | transProtocol}}</td>
                     <td><a :href="'/call?' + item.table + item.callid" target="_blank">{{item.from_user}}@{{item.from_host}} -> {{item.to_user_r.split('').reverse().join('')}}@{{item.to_host}}</a></td>

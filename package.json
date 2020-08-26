@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "nodemon index.js",
     "prd": "export NODE_ENV=production && node index.js",
-    "build": "babel public/js-src -d public/js"
+    "build": "babel public/js-src -d public/js",
+    "test": "jest"
   },
   "dependencies": {
     "@log4js-node/logstashudp": "^1.2.1",
@@ -14,6 +15,7 @@
     "compression": "^1.7.4",
     "config": "^3.2.5",
     "dayjs": "^1.8.19",
+    "debug": "^4.1.1",
     "ejs": "^3.0.1",
     "express": "^4.17.1",
     "hep-js": "^1.0.20",
@@ -26,6 +28,7 @@
     "@babel/cli": "^7.8.4",
     "@babel/core": "^7.8.6",
     "@babel/preset-env": "^7.8.6",
+    "jest": "^26.4.2",
     "nodemon": "^2.0.2"
   },
   "nodemonConfig": {
