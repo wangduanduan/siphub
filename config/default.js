@@ -1,8 +1,8 @@
 module.exports = {
-  host: process.env.dbHost,
-  user: process.env.dbUser,
-  password: process.env.dbPwd,
-  database: process.env.dbName,
+  host: process.env.dbHost || '192.168.60.132',
+  user: process.env.dbUser || 'root',
+  password: process.env.dbPwd || 'wellcloud',
+  database: process.env.dbName || 'siphub',
   
   dataKeepDays: 3,
   cronTimeSecond: 10,

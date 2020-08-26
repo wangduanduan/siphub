@@ -5,22 +5,9 @@ const { getConnection, createTable } = require('../mysql')
 const dayjs = require('dayjs')
 const { getStat } = require('../statis')
 const { coreDump } = require('../core-dump')
+const fsCallHand = require('./fs-callid')
 
 const log = getLogger()
-
-function removeDupItem (arr) {
-  let ids = ''
-
-  return arr.filter((item) => {
-    if (ids.includes(item.callid)) {
-      return false
-    }
-
-    ids += item.callid
-
-    return true
-  })
-}
 
 router.get('/search', function (req, res, next) {
   let connection = getConnection()
@@ -121,6 +108,19 @@ router.get('/stat', function (req, res, next) {
 router.get('/core-dump', function (req, res, next) {
   coreDump()
   res.status(204).end();
+})
+
+router.get('/fs-callid', function getFsCallId (req, res, next) {
+    if(!fsCallHand.checkQuery(req.query.sipCallId, req.query.day)) return res.status(400).end()
+
+    fsCallHand.find(getConnection(), (error, results, fields) => {
+        if(error) {
+            log.error(error)
+            return res.status(500).end()
+        }
+        
+        return res.json(results).end()
+    })
 })
 
 module.exports = router
