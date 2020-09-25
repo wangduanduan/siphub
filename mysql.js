@@ -2,9 +2,18 @@ const log = require('./util').getLogger()
 const mysql = require('mysql')
 const dayjs = require('dayjs')
 const config = require('config')
+const mysqlErrorTips = require('./mysqlErrorTips')
+
 const {
   updateStat
 } = require('./statis')
+
+
+function errorTips (errorCode) {
+  if (mysqlErrorTips[errorCode]){
+    log.error(mysqlErrorTips[errorCode])
+  }
+}
 
 let connection
 
@@ -30,6 +39,7 @@ function createConn () {
     if (err) {
       log.error('connect mysql failed', err.code) // 'ECONNREFUSED'
       log.error(err.fatal) // true
+      errorTips(err.code)
     } else {
       log.info('connect mysql success')
       let today = dayjs().format('YYYY_MM_DD')
@@ -77,6 +87,7 @@ function insert (msg) {
   log.info('start insert sip table', sql)
   connection.query(sql, function (error, results, fields) {
     if (error) {
+      errorTips(error.code)
       return log.error(error)
     }
     updateStat('h', 'insertdb', 1)
@@ -87,6 +98,7 @@ function insert (msg) {
   connection.query(sql2, function (error, results, fields) {
     if (error) {
       if (error.code !== 'ER_DUP_ENTRY') {
+        errorTips(error.code)
         log.info(error)
       }
       return log.info('insert fail inv_, maybe dumpcate')

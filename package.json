@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "nodemon index.js",
     "prd": "export NODE_ENV=production && node index.js",
-    "build": "babel public/js-src -d public/js",
+    "build": "babel public/js-src -d public/js -w",
     "test": "jest"
   },
   "dependencies": {
