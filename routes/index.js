@@ -1,4 +1,5 @@
 var express = require('express')
+var config = require('config')
 var router = express.Router()
 const {
   getStat,
@@ -22,7 +23,10 @@ router.get('/import', function (req, res, next) {
 router.get('/monitor', function (req, res, next) {
   res.render('monitor', {
     ...getStat(),
-    ...getPeekStat()
+    ...getPeekStat(),
+    ...process.memoryUsage(),
+    uptime: process.uptime(),
+    dbPoolSize: config.get('dbPoolSize')
   })
 })
 

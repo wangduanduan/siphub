@@ -21,15 +21,23 @@
                     <div class="form-group">
                       To: <input v-model="to" type="text" class="form-control" placeholder="8002@test.cc">
                     </div>
+
+                    <div class="form-group">
+                      Limit: 
+                      <select class="form-control" v-model.number="limit">
+                        <option value="50">50</option>
+                        <option value="100">100</option>
+                        <option value="200">200</option>
+                      </select>
+                    </div>
+
                       Quick Ranges: 
                     <select class="form-control" v-model.number="shortTime" @change="changeTime">
-                      <option value="5">Last 5minutes</option>
-                      <option value="10">Last 10minutes</option>
-                      <option value="30">Last 30minutes</option>
-                      <option value="60">Last 1 hour</option>
-                      <option value="120">Last 2 hours</option>
-                      <option value="180">Last 3 hours</option>
-                      <option value="360">Last 6 hours</option>
+                      <option value="10">Last 10m</option>
+                      <option value="30">Last 30m</option>
+                      <option value="60">Last 1h</option>
+                      <option value="180">Last 3h</option>
+                      <option value="360">Last 6h</option>
                     </select>
 
                     Custom range:
@@ -65,10 +73,10 @@
                 </thead>
                 <tbody>
                   <tr v-show="loading">
-                    <td colspan="5" style="text-align: center;"><img src="/images/loading.gif" alt=""></td>
+                    <td colspan="8" style="text-align: center;"><img src="/images/loading.gif" alt=""></td>
                   </tr>
                   <tr v-show="list.length === 0">
-                    <td colspan="5" style="text-align: center;color:red">Sorry, No Result !!!</td>
+                    <td colspan="8" style="text-align: center;color:red">Sorry, No Result !!!</td>
                   </tr>
                   <tr v-for="(item,index) in list" :key="item.id">
                     <td>#{{index}}</td>

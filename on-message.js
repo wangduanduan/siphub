@@ -69,6 +69,10 @@ function onMessage (msg, rinfo) {
   meta.src_host = hep_decoder.rcinfo.srcIp + ':' + hep_decoder.rcinfo.srcPort
   meta.dst_host = hep_decoder.rcinfo.dstIp + ':' + hep_decoder.rcinfo.dstPort
   meta.protocol = hep_decoder.rcinfo.protocol
+
+  log.info(hep_decoder.rcinfo)
+
+
   meta.timeSeconds = dayjs.unix(parseFloat(hep_decoder.rcinfo.timeSeconds + '.' + hep_decoder.rcinfo.timeUseconds)).format('YYYY-MM-DD HH:mm:ss.ms')
 
   log.info(meta)

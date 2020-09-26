@@ -3,47 +3,47 @@ const state = require('./state')
 const dayjs = require('dayjs')
 const config = require('config')
 
-function showTables() {
-    state.get('pool')
+function showTables () {
+  state.get('pool')
     .query(`show tables`, function (error, results, fields) {
-        if (error) {
-            log.error(error)
-            return
-        }
-        checkTable(results)
+      if (error) {
+        log.error(error)
+        return
+      }
+      checkTable(results)
     })
 }
 
-function checkTable(results) {
-    results.forEach((item) => {
-        let tableName = item[`Tables_in_${config.get('database')}`]
-        let day = tableName.substring(4).replace(/_/g, '-')
+function checkTable (results) {
+  results.forEach((item) => {
+    let tableName = item[`Tables_in_${config.get('database')}`]
+    let day = tableName.substring(4).replace(/_/g, '-')
 
-        let diff = dayjs().diff(dayjs(day), 'day')
+    let diff = dayjs().diff(dayjs(day), 'day')
 
-        if (diff > config.get('dataKeepDays')) {
-            dropTable(tableName)
-        }
-    })
+    if (diff >= config.get('dataKeepDays')) {
+      dropTable(tableName)
+    }
+  })
 }
 
-function dropTable(tableName) {
-    log.info('start drop table', tableName)
+function dropTable (tableName) {
+  log.info('start drop table', tableName)
 
-    state.get('pool')
+  state.get('pool')
     .query(`drop table if exists ${tableName}`, function (error, results, fields) {
-        if (error) {
-            log.error('drop table error', error)
-            return
-        }
-        log.info('drop table success', results)
+      if (error) {
+        log.error('drop table error', error)
+        return
+      }
+      log.info('drop table success', results)
     })
 }
 
-function createTable(tableDate) {
-    let tableName = tableDate || dayjs().add(1, 'day').format('YYYY_MM_DD')
+function createTable (tableDate) {
+  let tableName = tableDate || dayjs().add(1, 'day').format('YYYY_MM_DD')
 
-    let sql = `create table if not exists sip_${tableName} (
+  let sql = `create table if not exists sip_${tableName} (
     \`id\` int(11) unsigned NOT NULL AUTO_INCREMENT,
     \`method\` char(20) NOT NULL DEFAULT '',
     \`from_user\` char(40) NOT NULL DEFAULT '',
@@ -63,7 +63,7 @@ function createTable(tableDate) {
     KEY \`callid\` (\`callid\`)
   ) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8;`
 
-    let sql2 = `CREATE TABLE if not exists inv_${tableName} (
+  let sql2 = `CREATE TABLE if not exists inv_${tableName} (
     \`callid\` char(64) NOT NULL DEFAULT '',
     \`fs_callid\` char(64) NOT NULL DEFAULT '',
     \`protocol\` int(11) NOT NULL,
@@ -81,16 +81,16 @@ function createTable(tableDate) {
     KEY \`to_host\` (\`to_host\`)
   ) ENGINE=InnoDB DEFAULT CHARSET=utf8;`
 
-    // log.info(sql)
+  // log.info(sql)
 
-    state.get('pool').query(sql + sql2, function (error, results, fields) {
-        if (error) {
-            log.error(error)
-        }
-    })
+  state.get('pool').query(sql + sql2, function (error, results, fields) {
+    if (error) {
+      log.error(error)
+    }
+  })
 }
 
 module.exports = {
-    createTable,
-    showTables
+  createTable,
+  showTables
 }

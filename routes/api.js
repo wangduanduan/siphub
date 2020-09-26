@@ -73,7 +73,9 @@ router.get('/search', function (req, res, next) {
 
   let tableDate = dayjs(req.query.beginTime).format('YYYY_MM_DD')
 
-  let sql = `select ${fields.join(',')} from inv_${tableDate} where ${conditions.join(' and ')} order by time desc limit 200`
+  let limit = req.query.limit || '50'
+
+  let sql = `select ${fields.join(',')} from inv_${tableDate} where ${conditions.join(' and ')} order by time desc limit ${limit}`
 
   log.info(sql)
 

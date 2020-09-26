@@ -30,7 +30,9 @@ function peekOne (key) {
   if (typeof peekStat[`${key}_last`] === 'undefined') {
     peekStat[`${key}_last`] = 0
     peekStat[`${key}_max`] = 0
+    peekStat[`${key}_min`] = 0
     peekStat[`${key}_max_time`] = ''
+    peekStat[`${key}_min_time`] = ''
   }
 
   var dis = (statAll[key] - peekStat[`${key}_last`]) / peekSecond
@@ -38,6 +40,11 @@ function peekOne (key) {
   if (dis > peekStat[`${key}_max`]) {
     peekStat[`${key}_max`] = dis
     peekStat[`${key}_max_time`] = dayjs().format('YYYY-MM-DD HH:mm:ss')
+  }
+
+  if (dis < peekStat[`${key}_min`]) {
+    peekStat[`${key}_min`] = dis
+    peekStat[`${key}_min_time`] = dayjs().format('YYYY-MM-DD HH:mm:ss')
   }
 
   peekStat[`${key}_last`] = statAll[key]

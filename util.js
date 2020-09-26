@@ -8,12 +8,12 @@ function getLogger () {
   return logger
 }
 
-function reverseString(str){
-    if (!str) {
-      return ''
-    }
-    
-    return str.split("").reverse().join("")
+function reverseString (str) {
+  if (!str) {
+    return ''
+  }
+
+  return str.split('').reverse().join('')
 }
 
 module.exports = {

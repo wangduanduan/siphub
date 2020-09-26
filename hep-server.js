@@ -1,9 +1,6 @@
 const dgram = require('dgram')
 const server = dgram.createSocket('udp4')
-
-const {
-  onMessage
-} = require('./on-message')
+const { onMessage } = require('./on-message')
 const log = require('./util').getLogger()
 
 server.on('error', (err) => {

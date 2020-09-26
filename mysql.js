@@ -23,7 +23,7 @@ function initPool () {
   log.info(`start init mysql Pool ${config.get('user')}@${config.get('host')}/${config.get('database')}`)
 
   let pool = mysql.createPool({
-    connectionLimit: 10,
+    connectionLimit: config.get('dbPoolSize'),
     host: config.get('host'),
     user: config.get('user'),
     password: config.get('password'),

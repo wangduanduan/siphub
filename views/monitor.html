@@ -1,21 +1,14 @@
 <!DOCTYPE html>
 <html>
 
-<%- include('head.html'); %>
-<script src="/lib/dayjs.min.js"></script>
-
-
-<!-- {
-    hep_receive_all_last: 0,
-    hep_receive_all_max: 0,
-    hep_receive_all_max_time: '',
-    hep_drop_all_last: 0,
-    hep_drop_all_max: 0,
-    hep_drop_all_max_time: '',
-    db_insert_all_last: 0,
-    db_insert_all_max: 0,
-    db_insert_all_max_time: ''
-  } -->
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+        <title>siphub monitor</title>
+        <link rel="stylesheet" href="/lib/bootstrap.min.css">
+        <link rel="stylesheet" href="/lib/bootstrap-theme.min.css">
+    </head>
 
 <body>
     <div class="container">
@@ -23,21 +16,36 @@
             <div class="col-md-12">
                 <table class="table table-striped">
                     <tbody>
-                      <tr>
-                          <td>累计收包: <%= hep_receive_all %></td>
-                          <td>最大收包速度: <%= hep_receive_all_max %>/s <%= hep_receive_all_max_time %></td>
-                      </tr>
-                      <tr>
-                          <td>累计丢包: <%= hep_drop_all %></td>
-                          <td>最大丢包速度: <%= hep_drop_all_max %>/s <%= hep_drop_all_max_time %></td>
-                      </tr>
-                      <tr>
-                          <td>累计插入数据库: <%= db_insert_all %></td>
-                          <td>最大插入数据库速度: <%= db_insert_all_max %>/s <%= db_insert_all_max_time %></td>
-                      </tr>
+                        <tr>
+                            <td>累计收包: <%= hep_receive_all %></td>
+                            <td>最大收包速度: <%= hep_receive_all_max %>/s <%= hep_receive_all_max_time %></td>
+                            <td>最小收包速度: <%= hep_receive_all_min %>/s <%= hep_receive_all_min_time %></td>
+                        </tr>
+                        <tr>
+                            <td>累计丢包: <%= hep_drop_all %></td>
+                            <td>最大丢包速度: <%= hep_drop_all_max %>/s <%= hep_drop_all_max_time %></td>
+                            <td>最小丢包速度: <%= hep_drop_all_min %>/s <%= hep_drop_all_min_time %></td>
+                        </tr>
+                        <tr>
+                            <td>累计插入数据库: <%= db_insert_all %></td>
+                            <td>最大插入数据库速度: <%= db_insert_all_max %>/s <%= db_insert_all_max_time %></td>
+                            <td>最小插入数据库速度: <%= db_insert_all_min %>/s <%= db_insert_all_min_time %></td>
+                        </tr>
 
                     </tbody>
-                  </table>
+                </table>
+
+                <table class="table table-striped">
+                    <tbody>
+                        <tr><td>系统运行时间: <%= parseInt(uptime) %>s</td></tr>
+                        <tr><td>rss: <%= parseInt(rss/1024/1024) %>MB</td></tr>
+                        <tr><td>heapTotal: <%= parseInt(heapTotal/1024/1024) %>MB</td></tr>
+                        <tr><td>heapUsed: <%= parseInt(heapUsed/1024/1024) %>MB</td></tr>
+                        <tr><td>external: <%= parseInt(external/1024/1024) %>MB</td></tr>
+                        <tr><td>arrayBuffers: <%= parseInt(arrayBuffers/1024/1024) %>MB</td></tr>
+                        <tr><td>dbPoolSize: <%= dbPoolSize %></td></tr>
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>
