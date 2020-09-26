@@ -1,6 +1,3 @@
-# FROM node:12.16.0-stretch-slim
-
-
 FROM node:12.18.3-alpine3.11
 RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.tuna.tsinghua.edu.cn/g' /etc/apk/repositories
 RUN apk update && apk add bash tzdata curl net-tools && cp -r -f /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
@@ -10,8 +7,6 @@ ENV NODE_ENV production
 
 WORKDIR /app
 
-# RUN echo "export TZ='Asia/Shanghai'" >> /etc/profile \
-#   && ln -sf /bin/bash /bin/sh
 
 COPY package.json yarn.lock /app/
 
