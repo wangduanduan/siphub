@@ -2,10 +2,10 @@ const HEPjs = require('hep-js')
 const url = require('url')
 const dayjs = require('dayjs')
 
-const {insert} = require('./mysql')
-const {reverseString, getLogger} = require('./util')
-const {parse} = require('./src/parse')
-const {updateStat} = require('./statis')
+const { insertMsg } = require('./db/insertMsg')
+const { reverseString, getLogger } = require('./util')
+const { parse } = require('./src/parse')
+const { update } = require('./statistics/counter')
 
 const refuseFromUser = ['prober', 'dispatcher']
 
@@ -44,37 +44,35 @@ function getMetaFromPaylod (payload) {
 }
 
 function onMessage (msg, rinfo) {
-  updateStat('h', 'receive', 1)
+  // updateStat('h', 'receive', 1)
+  update('hep_receive_all')
 
-  let  hep_decoder = HEPjs.decapsulate(msg)
+  let hep_decoder = HEPjs.decapsulate(msg)
 
   log.debug(hep_decoder)
 
   let meta = getMetaFromPaylod(hep_decoder.payload)
 
   if (!meta) {
-    updateStat('h', 'drop', 1)
-    return
+    return update('hep_drop_all')
   }
 
   if (!meta.from_user) {
-    updateStat('h', 'drop', 1)
-    return
+    return update('hep_drop_all')
   }
 
   if (refuseFromUser.includes(meta.from_user)) {
-    updateStat('h', 'drop', 1)
-    return
+    return update('hep_drop_all')
   }
 
   // log.info(hep_decoder.rcinfo)
-  meta.src_host = hep_decoder.rcinfo.srcIp +':'+ hep_decoder.rcinfo.srcPort
-  meta.dst_host = hep_decoder.rcinfo.dstIp +':'+ hep_decoder.rcinfo.dstPort
+  meta.src_host = hep_decoder.rcinfo.srcIp + ':' + hep_decoder.rcinfo.srcPort
+  meta.dst_host = hep_decoder.rcinfo.dstIp + ':' + hep_decoder.rcinfo.dstPort
   meta.protocol = hep_decoder.rcinfo.protocol
-  meta.timeSeconds = dayjs.unix(parseFloat(hep_decoder.rcinfo.timeSeconds+'.'+hep_decoder.rcinfo.timeUseconds)).format('YYYY-MM-DD HH:mm:ss.ms')
+  meta.timeSeconds = dayjs.unix(parseFloat(hep_decoder.rcinfo.timeSeconds + '.' + hep_decoder.rcinfo.timeUseconds)).format('YYYY-MM-DD HH:mm:ss.ms')
 
   log.info(meta)
-  insert(meta)
+  insertMsg(meta)
 }
 
 module.exports = {

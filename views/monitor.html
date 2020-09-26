@@ -3,9 +3,44 @@
 
 <%- include('head.html'); %>
 <script src="/lib/dayjs.min.js"></script>
+
+
+<!-- {
+    hep_receive_all_last: 0,
+    hep_receive_all_max: 0,
+    hep_receive_all_max_time: '',
+    hep_drop_all_last: 0,
+    hep_drop_all_max: 0,
+    hep_drop_all_max_time: '',
+    db_insert_all_last: 0,
+    db_insert_all_max: 0,
+    db_insert_all_max_time: ''
+  } -->
+
 <body>
-    <!-- 为ECharts准备一个具备大小（宽高）的Dom -->
-    <div id="main" style="width: 100%;height:800px;"></div>
-<script src="/js/monitor.js"></script>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <table class="table table-striped">
+                    <tbody>
+                      <tr>
+                          <td>累计收包: <%= hep_receive_all %></td>
+                          <td>最大收包速度: <%= hep_receive_all_max %>/s <%= hep_receive_all_max_time %></td>
+                      </tr>
+                      <tr>
+                          <td>累计丢包: <%= hep_drop_all %></td>
+                          <td>最大丢包速度: <%= hep_drop_all_max %>/s <%= hep_drop_all_max_time %></td>
+                      </tr>
+                      <tr>
+                          <td>累计插入数据库: <%= db_insert_all %></td>
+                          <td>最大插入数据库速度: <%= db_insert_all_max %>/s <%= db_insert_all_max_time %></td>
+                      </tr>
+
+                    </tbody>
+                  </table>
+            </div>
+        </div>
+    </div>
 </body>
+
 </html>

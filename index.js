@@ -7,11 +7,11 @@ const responseTime = require('response-time')
 const routes = require('./routes/index')
 const api = require('./routes/api')
 const sipServer = require('./hep-server')
-const {createConn} = require('./mysql')
+const {initPool} = require('./mysql')
 
-require('./influxdb')
+// require('./influxdb')
 
-createConn()
+initPool()
 
 app.use(compression())
 

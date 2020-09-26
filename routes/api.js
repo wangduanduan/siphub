@@ -1,16 +1,27 @@
 const express = require('express')
 const router = express.Router()
-const { getLogger, reverseString } = require('../util')
-const { getConnection, createTable } = require('../mysql')
+const {
+  getLogger,
+  reverseString
+} = require('../util')
+const state = require('../db/state')
+const {
+  createTable
+} = require('../db/table')
 const dayjs = require('dayjs')
-const { getStat } = require('../statis')
-const { coreDump } = require('../core-dump')
+const {
+  getStat,
+  getPeekStat
+} = require('../statistics/counter')
+const {
+  coreDump
+} = require('../core-dump')
 const fsCallHand = require('./fs-callid')
 
 const log = getLogger()
 
 router.get('/search', function (req, res, next) {
-  let connection = getConnection()
+  let pool = state.get('pool')
 
   let fields = [
     'callid',
@@ -68,7 +79,7 @@ router.get('/search', function (req, res, next) {
 
   let t1 = new Date().getTime()
 
-  connection.query(sql, function (error, results, fields) {
+  pool.query(sql, function (error, results, fields) {
     let t2 = new Date().getTime()
 
     if (error) {
@@ -84,16 +95,16 @@ router.get('/search', function (req, res, next) {
       res.json(results)
     }
   })
-
 })
 
 router.get('/callid', function (req, res, next) {
-  let connection = getConnection()
+  let pool = state.get('pool')
+
   let sql = `select id, callid, time, cseq, protocol, method, src_host, dst_host, from_user, from_host, to_user, to_host, raw from sip_${req.query.table} where callid='${req.query.callid}' order by id`
 
   let t1 = new Date().getTime()
 
-  connection.query(sql, function (error, results, fields) {
+  pool.query(sql, function (error, results, fields) {
     let t2 = new Date().getTime()
 
     if (error) {
@@ -107,37 +118,40 @@ router.get('/callid', function (req, res, next) {
 })
 
 router.get('/stat', function (req, res, next) {
-  res.json(getStat())
+  res.json({
+    stat: getStat(),
+    peek: getPeekStat()
+  })
 })
 
 router.get('/core-dump', function (req, res, next) {
   coreDump()
-  res.status(204).end();
+  res.status(204).end()
 })
 
 router.get('/fs-callid', function getFsCallId (req, res, next) {
-    let day = req.query.day || dayjs().format('YYYY_MM_DD')
+  let day = req.query.day || dayjs().format('YYYY_MM_DD')
 
-    if(!fsCallHand.checkQuery(req.query.sipCallId, day)) return res.status(400).end()
+  if (!fsCallHand.checkQuery(req.query.sipCallId, day)) return res.status(400).end()
 
-    fsCallHand.find(getConnection(),req.query.sipCallId, day, (error, results, fields) => {
-        if(error) {
-            log.error(error)
-            return res.status(500).end()
-        }
+  fsCallHand.find(state.get('pool'), req.query.sipCallId, day, (error, results, fields) => {
+    if (error) {
+      log.error(error)
+      return res.status(500).end()
+    }
 
-        if (results.length === 0){
-            return res.status(404).end()
-        }
+    if (results.length === 0) {
+      return res.status(404).end()
+    }
 
-        if (!results[0].fs_callid){
-            return res.status(404).end()
-        }
-        
-        return res.json({
-            fs_callid: results[0].fs_callid
-        }).end()
-    })
+    if (!results[0].fs_callid) {
+      return res.status(404).end()
+    }
+
+    return res.json({
+      fs_callid: results[0].fs_callid
+    }).end()
+  })
 })
 
 module.exports = router
