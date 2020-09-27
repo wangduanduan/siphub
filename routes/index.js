@@ -3,7 +3,8 @@ var config = require('config')
 var router = express.Router()
 const {
   getStat,
-  getPeekStat
+  getPeekStat,
+  getMaxPackageSize
 } = require('../statistics/counter')
 
 router.get('/', function (req, res, next) {
@@ -26,7 +27,8 @@ router.get('/monitor', function (req, res, next) {
     ...getPeekStat(),
     ...process.memoryUsage(),
     uptime: process.uptime(),
-    dbPoolSize: config.get('dbPoolSize')
+    dbPoolSize: config.get('dbPoolSize'),
+    maxPackageSize: getMaxPackageSize()
   })
 })
 

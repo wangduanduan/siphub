@@ -10,6 +10,18 @@ const statAll = {
 
 const peekStat = {}
 
+let maxPackageSize = 0
+
+function setMaxPackageSize (size) {
+  if (size > maxPackageSize) {
+    maxPackageSize = size
+  }
+}
+
+function getMaxPackageSize (params) {
+  return maxPackageSize
+}
+
 function getPeekStat () {
   return peekStat
 }
@@ -63,5 +75,7 @@ function update (key) {
 module.exports = {
   getStat,
   getPeekStat,
-  update
+  update,
+  setMaxPackageSize,
+  getMaxPackageSize
 }

@@ -5,16 +5,18 @@ const dayjs = require('dayjs')
 const { insertMsg } = require('./db/insertMsg')
 const { reverseString, getLogger } = require('./util')
 const { parse } = require('./src/parse')
-const { update } = require('./statistics/counter')
+const { update, setMaxPackageSize } = require('./statistics/counter')
 
 const refuseFromUser = ['prober', 'dispatcher']
 
 const log = getLogger()
 
-function getMetaFromPaylod (payload) {
+function getMetaFromPaylod (payload, rinfo) {
   // console.log(payload)
 
   let msg = parse(payload)
+  
+  setMaxPackageSize(rinfo.size)
 
   if (!msg.call_id) {
     return
