@@ -11,12 +11,10 @@ const refuseFromUser = ['prober', 'dispatcher']
 
 const log = getLogger()
 
-function getMetaFromPaylod (payload, rinfo) {
+function getMetaFromPaylod (payload) {
   // console.log(payload)
 
   let msg = parse(payload)
-  
-  setMaxPackageSize(rinfo.size)
 
   if (!msg.call_id) {
     return
@@ -48,6 +46,7 @@ function getMetaFromPaylod (payload, rinfo) {
 function onMessage (msg, rinfo) {
   // updateStat('h', 'receive', 1)
   update('hep_receive_all')
+  setMaxPackageSize(rinfo.size)
 
   let hep_decoder = HEPjs.decapsulate(msg)
 
