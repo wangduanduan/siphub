@@ -8,7 +8,7 @@ var app = new Vue({
     method: 'INVITE',
     beginTime: dayjs().subtract(5, 'minute').format('YYYY-MM-DD HH:mm:ss'),
     endTime: dayjs().add(1, 'hour').format('YYYY-MM-DD HH:mm:ss'),
-    shortTime: 5,
+    shortTime: 10,
     loading: false
   },
   methods: {
