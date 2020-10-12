@@ -68,6 +68,7 @@
                     <th>User Agent</th>
                     <th>Protocol</th>
                     <th>From->To</th>
+                    <th>Status</th>
                     <th>src_host->dst_host</th>
                   </tr>
                 </thead>
@@ -86,6 +87,7 @@
                     <td>{{item.ua}}</td>
                     <td>{{item.protocol | transProtocol}}</td>
                     <td><a :href="'/call?' + item.table + item.callid" target="_blank">{{item.from_user}}@{{item.from_host}} -> {{item.to_user_r.split('').reverse().join('')}}@{{item.to_host}}</a></td>
+                    <td>{{item.code}}</td>
                     <td>{{item.src_host}}->{{item.dst_host}}</td>
                   </tr>
                 </tbody>
