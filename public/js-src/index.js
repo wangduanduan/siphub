@@ -24,6 +24,7 @@ var app = new Vue({
     },
     render: function (res) {
       this.loading = false
+
       res.data.forEach((item) => {
         item.time = dayjs(item.time).format('YYYY-MM-DD HH:mm:ss')
         item.table = dayjs(item.time).format('YYYY_MM_DD')
