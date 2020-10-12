@@ -3,7 +3,6 @@ const url = require('url')
 const dayjs = require('dayjs')
 
 const { insertMsg } = require('./db/insertMsg')
-const { updateCode } = require('./db/updateCode')
 const { reverseString, getLogger } = require('./util')
 const { parse } = require('./src/parse')
 const { update, setMaxPackageSize } = require('./statistics/counter')
@@ -15,18 +14,14 @@ const log = getLogger()
 function getMetaFromPaylod (payload) {
   // console.log(payload)
 
-  const msg = parse(payload)
+  let msg = parse(payload)
 
   if (!msg.call_id) {
     return
   }
 
-  const from = url.parse(msg.from)
-  const to = url.parse(msg.to)
-
-  if (msg.statusCode > 170) {
-    updateCode(msg.statusCode, msg.call_id, msg.cseq)
-  }
+  let from = url.parse(msg.from)
+  let to = url.parse(msg.to)
 
   // log.info(from)
 
@@ -44,8 +39,7 @@ function getMetaFromPaylod (payload) {
     src_host: '',
     dst_host: '',
     timeSeconds: 0,
-    raw: payload,
-    code: msg.statusCode
+    raw: payload
   }
 }
 
@@ -54,11 +48,11 @@ function onMessage (msg, rinfo) {
   update('hep_receive_all')
   setMaxPackageSize(rinfo.size)
 
-  const hep_decoder = HEPjs.decapsulate(msg)
+  let hep_decoder = HEPjs.decapsulate(msg)
 
   log.debug(hep_decoder)
 
-  const meta = getMetaFromPaylod(hep_decoder.payload)
+  let meta = getMetaFromPaylod(hep_decoder.payload)
 
   if (!meta) {
     return update('hep_drop_all')
@@ -78,6 +72,7 @@ function onMessage (msg, rinfo) {
   meta.protocol = hep_decoder.rcinfo.protocol
 
   log.info(hep_decoder.rcinfo)
+
 
   meta.timeSeconds = dayjs.unix(parseFloat(hep_decoder.rcinfo.timeSeconds + '.' + hep_decoder.rcinfo.timeUseconds)).format('YYYY-MM-DD HH:mm:ss.ms')
 
