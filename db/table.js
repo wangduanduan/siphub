@@ -75,8 +75,6 @@ function createTable (tableDate) {
     \`src_host\` char(32) NOT NULL DEFAULT '',
     \`dst_host\` char(32) NOT NULL DEFAULT '',
     \`time\` datetime NOT NULL ON UPDATE CURRENT_TIMESTAMP,
-    \`cseq\` int(11) NOT NULL,
-    \`code\` int(11) DEFAULT '0',
     PRIMARY KEY (\`callid\`),
     KEY \`from_host\` (\`from_host\`),
     KEY \`fs_callid\` (\`fs_callid\`),

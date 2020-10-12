@@ -34,8 +34,7 @@ router.get('/search', function (req, res, next) {
     'protocol',
     'dst_host',
     'src_host',
-    'fs_callid',
-    'code'
+    'fs_callid'
   ]
 
   let conditions = []
