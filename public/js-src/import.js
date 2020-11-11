@@ -38,7 +38,6 @@ var app = new Vue({
     },
     render: function (_res) {
       this.seq = _res.data
-      console.log(_res)
 
       let res = []
 
