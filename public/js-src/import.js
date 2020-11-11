@@ -1,7 +1,12 @@
 var app = new Vue({
   el: '#app',
   data: {
-    seq: []
+    seq: [],
+    pros: {
+      '6': 'TCP',
+      '17': 'UDP',
+      '50': 'ESP'
+    }
   },
   methods: {
     fileParse: function (str) {
@@ -14,6 +19,9 @@ var app = new Vue({
         console.log(error)
         alert('JSON Format Error')
       }
+    },
+    getProtocol (v) {
+      return this.pros[v] ? this.pros[v] : v
     },
     fileChange: function (event) {
       // console.log(files)
@@ -30,12 +38,19 @@ var app = new Vue({
     },
     render: function (_res) {
       this.seq = _res.data
+      console.log(_res)
 
       let res = []
 
       this.seq.forEach((item, index) => {
+        let v = this.getProtocol(item.protocol)
+        let dis = 0
+        if (index !== 0) {
+          dis = new Date(this.seq[index].time) - new Date(this.seq[index - 1].time)
+        }
+        dis = dis / 1000
         let na = isNaN(item.method) ? '->' : '-->'
-        res.push(`${item.src_host.replace(':', '_')}${na}${item.dst_host.replace(':', '_')}: #${index} [${item.method}] ${dayjs(item.time).format('mm:ss')}`)
+        res.push(`${item.src_host.replace(':', '_')}${na}${item.dst_host.replace(':', '_')}: #${index} ${dayjs(item.time).format('hh:mm:ss')} [${item.method}/${v}] ${dis.toFixed(1)} `)
       })
 
       this.seq.forEach((item) => {
