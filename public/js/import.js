@@ -3,7 +3,12 @@
 var app = new Vue({
   el: '#app',
   data: {
-    seq: []
+    seq: [],
+    pros: {
+      '6': 'TCP',
+      '17': 'UDP',
+      '50': 'ESP'
+    }
   },
   methods: {
     fileParse: function fileParse(str) {
@@ -16,6 +21,9 @@ var app = new Vue({
         console.log(error);
         alert('JSON Format Error');
       }
+    },
+    getProtocol: function getProtocol(v) {
+      return this.pros[v] ? this.pros[v] : v;
     },
     fileChange: function fileChange(event) {
       // console.log(files)
@@ -34,11 +42,23 @@ var app = new Vue({
       reader.readAsText(event.target.files[0]);
     },
     render: function render(_res) {
+      var _this = this;
+
       this.seq = _res.data;
+      console.log(_res);
       var res = [];
       this.seq.forEach(function (item, index) {
+        var v = _this.getProtocol(item.protocol);
+
+        var dis = 0;
+
+        if (index !== 0) {
+          dis = new Date(_this.seq[index].time) - new Date(_this.seq[index - 1].time);
+        }
+
+        dis = dis / 1000;
         var na = isNaN(item.method) ? '->' : '-->';
-        res.push("".concat(item.src_host.replace(':', '_')).concat(na).concat(item.dst_host.replace(':', '_'), ": #").concat(index, " [").concat(item.method, "] ").concat(dayjs(item.time).format('mm:ss')));
+        res.push("".concat(item.src_host.replace(':', '_')).concat(na).concat(item.dst_host.replace(':', '_'), ": #").concat(index, " ").concat(dayjs(item.time).format('hh:mm:ss'), " [").concat(item.method, "/").concat(v, "] ").concat(dis.toFixed(1), " "));
       });
       this.seq.forEach(function (item) {
         item.raw = item.raw.trim();
