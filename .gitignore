@@ -1,2 +1,4 @@
 node_modules
 *.heapsnapshot
+*.swp
+.DS_Store

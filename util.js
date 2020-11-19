@@ -4,6 +4,14 @@ const logger = log4js.getLogger()
 
 logger.level = config.get('logLevel')
 
+// log4js
+// trace
+// debug
+// info
+// warn
+// error
+// fatal
+
 function getLogger () {
   return logger
 }

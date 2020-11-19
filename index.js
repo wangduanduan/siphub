@@ -7,7 +7,7 @@ const responseTime = require('response-time')
 const routes = require('./routes/index')
 const api = require('./routes/api')
 const sipServer = require('./hep-server')
-const {initPool} = require('./mysql')
+const { initPool } = require('./mysql')
 
 // require('./influxdb')
 
@@ -20,7 +20,7 @@ app.engine('html', require('ejs').renderFile)
 app.set('view engine', 'html')
 
 app.use(responseTime())
-app.use(express.static(path.join(__dirname, 'public'), {maxAge: 0}))
+app.use(express.static(path.join(__dirname, 'public'), { maxAge: 0 }))
 app.use('/', routes)
 app.use('/api', api)
 

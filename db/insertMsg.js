@@ -12,14 +12,24 @@ function errorTips (errorCode) {
   }
 }
 
+function subLen (field, len) {
+  if (field.length > len) {
+    return field.substring(0, len)
+  }
+  return field
+}
+
 function insertMsg (msg) {
-  let tableDate = dayjs().format('YYYY_MM_DD')
+  const tableDate = dayjs().format('YYYY_MM_DD')
 
   Object.keys(msg).forEach((key) => {
     msg[key] = msg[key] || ''
   })
 
-  let sql = mysql.format(`insert into sip_${tableDate} (
+  msg.ua = subLen(msg.ua, 40)
+  msg.callid = subLen(msg.callid, 64)
+
+  const sql = mysql.format(`insert into sip_${tableDate} (
     method,from_user,from_host,to_user,to_user_r,
     to_host,callid,cseq,protocol,src_host,
     dst_host,time,raw,ua) 
@@ -31,7 +41,7 @@ function insertMsg (msg) {
     msg.dst_host, msg.timeSeconds, msg.raw, msg.ua
   ])
 
-  let sql2 = mysql.format(`insert into inv_${tableDate} (
+  const sql2 = mysql.format(`insert into inv_${tableDate} (
     from_user,from_host,to_user_r,to_host,callid,fs_callid,
     time,src_host,dst_host,ua,protocol) 
     values(?,?,?,?,?,?,
@@ -61,7 +71,7 @@ function insertMsg (msg) {
       }
       return log.info('insert fail inv_, maybe dumpcate')
     }
-    
+
     update('db_insert_all')
     log.info('insert success')
   })

@@ -3,13 +3,14 @@ module.exports = {
   user: process.env.dbUser || 'root',
   password: process.env.dbPwd || 'wellcloud',
   database: process.env.dbName || 'siphub',
-  
+
   dataKeepDays: 1,
   cronTimeSecond: 10,
   logLevel: 'debug',
   influxdb: process.env.influxdb || 'http://172.16.200.228:8086/write?db=siphub',
   influxdbSecond: process.env.influxdbSecond || '10',
-  dbPoolSize: process.env.dbPoolSize ? parseInt(process.env.dbPoolSize) : 10
+  dbPoolSize: process.env.dbPoolSize ? parseInt(process.env.dbPoolSize) : 10,
+  gateway: process.env.gateway || '192.168.1.1'
 }
 
 // curl -i -XPOST http://172.16.200.228:8086/query --data-urlencode "q=CREATE DATABASE siphub"
