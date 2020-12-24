@@ -1,4 +1,4 @@
-FROM node:12.18.3-alpine3.11
+FROM node:14.15.3-alpine3.11
 RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.tuna.tsinghua.edu.cn/g' /etc/apk/repositories
 RUN apk update && apk add bash tzdata curl net-tools && cp -r -f /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
 
