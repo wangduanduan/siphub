@@ -24,7 +24,6 @@
                     <div class="form-group">
                       To: <input v-model="to" type="text" class="form-control" placeholder="8002@test.cc">
                     </div>
-
                       Quick Ranges: 
                     <select class="form-control" v-model.number="shortTime" @change="changeTime">
                       <option value="10">Last 10m</option>
@@ -56,6 +55,7 @@
                 <thead>
                   <tr>
                     <th>#Index</th>
+                    <th>Method</th>
                     <th>Time</th>
                     <th>User Agent</th>
                     <th>Protocol</th>
@@ -72,6 +72,7 @@
                   </tr>
                   <tr v-for="(item,index) in list" :class="item.class" :key="item.id">
                     <td>#{{index}}</td>
+                    <td>{{item.method}}</td>
                     <td>{{item.time}}</td>
                     <td>{{item.ua}}</td>
                     <td>{{item.protocol | transProtocol}}</td>

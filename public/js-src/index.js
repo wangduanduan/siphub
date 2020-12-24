@@ -106,10 +106,10 @@ var app = new Vue({
   },
   filters: {
     transProtocol: function (v) {
-      let protocols = {
-        '17': 'UDP',
-        '6': 'TCP',
-        '50': 'ESP'
+      const protocols = {
+        17: 'UDP',
+        6: 'TCP',
+        50: 'ESP'
       }
 
       return protocols[v] ? protocols[v] : v

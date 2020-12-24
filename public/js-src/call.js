@@ -6,16 +6,16 @@ var app = new Vue({
     aLegId: '',
     table: '',
     pros: {
-      '6': 'TCP',
-      '17': 'UDP',
-      '50': 'ESP'
+      6: 'TCP',
+      17: 'UDP',
+      50: 'ESP'
     }
   },
   methods: {
     getALegId (raw) {
-      let msg = raw.split('\r\n')
+      const msg = raw.split('\r\n')
 
-      let key = msg.find((item) => {
+      const key = msg.find((item) => {
         return item.startsWith('A-Leg-Id')
       })
 
@@ -58,14 +58,14 @@ var app = new Vue({
       this.seq = _res.data
       this.raw = JSON.stringify(_res.data)
 
-      let res = []
+      const res = []
 
       this.seq.forEach((item, index) => {
         if (item.method === 'INVITE') {
           this.getALegId(item.raw)
         }
-        let na = isNaN(item.method) ? '->' : '-->'
-        let v = this.getProtocol(item.protocol)
+        const na = isNaN(item.method) ? '->' : '-->'
+        const v = this.getProtocol(item.protocol)
         let dis = 0
         if (index !== 0) {
           dis = new Date(this.seq[index].time) - new Date(this.seq[index - 1].time)
@@ -80,13 +80,13 @@ var app = new Vue({
         item.time = dayjs(item.time).format('hh:mm:ss')
       })
 
-      let seq = res.join('\n')
+      const seq = res.join('\n')
       $('#seq').html(seq)
       $('#seq').sequenceDiagram({ theme: 'simple' })
-        },
+    },
     getData (params) {
-      let callid = location.search.substr(11)
-      let table = location.search.substr(1, 10)
+      const callid = location.search.substr(11)
+      const table = location.search.substr(1, 10)
       this.table = table
 
       axios.get('/api/callid?callid=' + callid + '&table=' + table)
@@ -102,12 +102,12 @@ var app = new Vue({
       $('.diagram').on('click', function (e) {
         console.log('dg')
         console.log(e)
-        let id = $(e.target).text()
+        const id = $(e.target).text()
 
         if (id.startsWith('#')) {
-          let key = id.split(' ')[0]
+          const key = id.split(' ')[0]
           console.log(key)
-          let ele = document.getElementById('raw-' + key)
+          const ele = document.getElementById('raw-' + key)
           ele.scrollIntoView()
         }
       })

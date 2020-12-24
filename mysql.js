@@ -22,7 +22,7 @@ function reconnetMysql () {
 function initPool () {
   log.info(`start init mysql Pool ${config.get('user')}@${config.get('host')}/${config.get('database')}`)
 
-  let pool = mysql.createPool({
+  const pool = mysql.createPool({
     connectionLimit: config.get('dbPoolSize'),
     host: config.get('host'),
     user: config.get('user'),
@@ -56,7 +56,7 @@ function initPool () {
     log.debug('mysql Connection %d released', connection.threadId)
   })
 
-  let today = dayjs().format('YYYY_MM_DD')
+  const today = dayjs().format('YYYY_MM_DD')
 
   createTable(today)
   startCronJob()

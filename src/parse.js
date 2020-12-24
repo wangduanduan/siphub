@@ -1,26 +1,33 @@
-const sipUtil  = require('./sip')
+const sipUtil = require('./sip')
 
 const filterMethods = ['REGISTER', 'OPTIONS']
 
 function parse (msg) {
-  let headLine = sipUtil.findHeadLine(msg)
-  let method = sipUtil.getMethod(headLine)
+  const headLine = sipUtil.findHeadLine(msg)
+  const method = sipUtil.getMethod(headLine)
 
   if (filterMethods.includes(method)) {
     return {}
   }
 
   let cseq = sipUtil.getHeadValue(msg, 'CSeq:')
+  const cseqMeta = cseq.split(' ')
+  let tmMethod = ''
+
+  // read method from cseq
+  if (cseqMeta.length === 2) {
+    tmMethod = cseqMeta[1]
+  }
 
   if (cseq.includes('REGISTER') || cseq.includes('OPTIONS')) {
     return {}
   }
 
-  let from = sipUtil.getHeadBodyUrl(msg, 'From:')
-  let to = sipUtil.getHeadBodyUrl(msg, 'To:')
-  let call_id = sipUtil.getHeadValue(msg, 'Call-ID:')
-  let ua = sipUtil.getHeadValue(msg, 'User-Agent:')
-  let fs_call_id = sipUtil.getHeadValue(msg, 'Wellcloud_Call_ID:')
+  const from = sipUtil.getHeadBodyUrl(msg, 'From:')
+  const to = sipUtil.getHeadBodyUrl(msg, 'To:')
+  const call_id = sipUtil.getHeadValue(msg, 'Call-ID:')
+  const ua = sipUtil.getHeadValue(msg, 'User-Agent:')
+  const fs_call_id = sipUtil.getHeadValue(msg, 'Wellcloud_Call_ID:')
 
   cseq = parseInt(cseq)
 
@@ -31,7 +38,8 @@ function parse (msg) {
     ua,
     cseq,
     call_id,
-    fs_call_id
+    fs_call_id,
+    tmMethod
   }
 }
 

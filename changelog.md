@@ -1,3 +1,7 @@
+# 2020-1224
+- inv_表数据结构改变，增加method字段
+- web页面显示请求方法
+
 [f37df74] build: 修改dockerfile
 [a12a97d] feat: 增加最大UDP包统计字段
 [f2548db] feat: mysql执行错误时，给出友好的提示

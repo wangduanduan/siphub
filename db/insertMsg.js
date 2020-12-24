@@ -29,6 +29,7 @@ function insertMsg (msg) {
   msg.ua = subLen(msg.ua, 40)
   msg.callid = subLen(msg.callid, 64)
 
+  // this table for sip raw detail
   const sql = mysql.format(`insert into sip_${tableDate} (
     method,from_user,from_host,to_user,to_user_r,
     to_host,callid,cseq,protocol,src_host,
@@ -41,11 +42,12 @@ function insertMsg (msg) {
     msg.dst_host, msg.timeSeconds, msg.raw, msg.ua
   ])
 
+  // this table for sip search list
   const sql2 = mysql.format(`insert into inv_${tableDate} (
-    from_user,from_host,to_user_r,to_host,callid,fs_callid,
+    method,from_user,from_host,to_user_r,to_host,callid,fs_callid,
     time,src_host,dst_host,ua,protocol) 
-    values(?,?,?,?,?,?,
-      ?,?,?,?,?)`, [msg.from_user, msg.from_host, msg.to_user_r, msg.to_host, msg.callid, msg.fs_callid,
+    values(?,?,?,?,?,?,?,
+      ?,?,?,?,?)`, [msg.tmMethod, msg.from_user, msg.from_host, msg.to_user_r, msg.to_host, msg.callid, msg.fs_callid,
     msg.timeSeconds, msg.src_host, msg.dst_host, msg.ua, msg.protocol
   ])
 

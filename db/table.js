@@ -5,7 +5,7 @@ const config = require('config')
 
 function showTables () {
   state.get('pool')
-    .query(`show tables`, function (error, results, fields) {
+    .query('show tables', function (error, results, fields) {
       if (error) {
         log.error(error)
         return
@@ -16,10 +16,10 @@ function showTables () {
 
 function checkTable (results) {
   results.forEach((item) => {
-    let tableName = item[`Tables_in_${config.get('database')}`]
-    let day = tableName.substring(4).replace(/_/g, '-')
+    const tableName = item[`Tables_in_${config.get('database')}`]
+    const day = tableName.substring(4).replace(/_/g, '-')
 
-    let diff = dayjs().diff(dayjs(day), 'day')
+    const diff = dayjs().diff(dayjs(day), 'day')
 
     if (diff >= config.get('dataKeepDays')) {
       dropTable(tableName)
@@ -41,9 +41,9 @@ function dropTable (tableName) {
 }
 
 function createTable (tableDate) {
-  let tableName = tableDate || dayjs().add(1, 'day').format('YYYY_MM_DD')
+  const tableName = tableDate || dayjs().add(1, 'day').format('YYYY_MM_DD')
 
-  let sql = `create table if not exists sip_${tableName} (
+  const sql = `create table if not exists sip_${tableName} (
     \`id\` int(11) unsigned NOT NULL AUTO_INCREMENT,
     \`method\` char(20) NOT NULL DEFAULT '',
     \`from_user\` char(40) NOT NULL DEFAULT '',
@@ -63,10 +63,11 @@ function createTable (tableDate) {
     KEY \`callid\` (\`callid\`)
   ) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8;`
 
-  let sql2 = `CREATE TABLE if not exists inv_${tableName} (
+  const sql2 = `CREATE TABLE if not exists inv_${tableName} (
     \`callid\` char(64) NOT NULL DEFAULT '',
     \`fs_callid\` char(64) NOT NULL DEFAULT '',
     \`protocol\` int(11) NOT NULL,
+    \`method\` char(20) NOT NULL DEFAULT '',
     \`from_user\` char(40) NOT NULL DEFAULT '',
     \`from_host\` char(64) NOT NULL DEFAULT '',
     \`to_user_r\` char(40) NOT NULL DEFAULT '',

@@ -45,7 +45,6 @@ var app = new Vue({
       var _this = this;
 
       this.seq = _res.data;
-      console.log(_res);
       var res = [];
       this.seq.forEach(function (item, index) {
         var v = _this.getProtocol(item.protocol);

@@ -21,10 +21,11 @@ const fsCallHand = require('./fs-callid')
 const log = getLogger()
 
 router.get('/search', function (req, res, next) {
-  let pool = state.get('pool')
+  const pool = state.get('pool')
 
-  let fields = [
+  const fields = [
     'callid',
+    'method',
     'time',
     'from_user',
     'from_host',
@@ -37,11 +38,11 @@ router.get('/search', function (req, res, next) {
     'fs_callid'
   ]
 
-  let conditions = []
+  const conditions = []
 
   if (req.query.from) {
     if (req.query.from.includes('@')) {
-      let t = req.query.from.split('@')
+      const t = req.query.from.split('@')
       t[0] && conditions.push(`from_user='${t[0]}'`)
       t[1] && conditions.push(`from_host='${t[1]}'`)
     } else {
@@ -51,7 +52,7 @@ router.get('/search', function (req, res, next) {
 
   if (req.query.to) {
     if (req.query.to.includes('@')) {
-      let t = req.query.to.split('@')
+      const t = req.query.to.split('@')
       t[0] && conditions.push(`to_user_r like '${reverseString(t[0])}%'`)
       t[1] && conditions.push(`to_host='${t[1]}'`)
     } else {
@@ -71,18 +72,18 @@ router.get('/search', function (req, res, next) {
     conditions.push(`fs_callid = '${req.query.fs_callid}'`)
   }
 
-  let tableDate = dayjs(req.query.beginTime).format('YYYY_MM_DD')
+  const tableDate = dayjs(req.query.beginTime).format('YYYY_MM_DD')
 
-  let limit = '200'
+  const limit = '200'
 
-  let sql = `select ${fields.join(',')} from inv_${tableDate} where ${conditions.join(' and ')} order by time desc limit ${limit}`
+  const sql = `select ${fields.join(',')} from inv_${tableDate} where ${conditions.join(' and ')} order by time desc limit ${limit}`
 
   log.info(sql)
 
-  let t1 = new Date().getTime()
+  const t1 = new Date().getTime()
 
   pool.query(sql, function (error, results, fields) {
-    let t2 = new Date().getTime()
+    const t2 = new Date().getTime()
 
     if (error) {
       log.error(error)
@@ -100,14 +101,14 @@ router.get('/search', function (req, res, next) {
 })
 
 router.get('/callid', function (req, res, next) {
-  let pool = state.get('pool')
+  const pool = state.get('pool')
 
-  let sql = `select id, callid, time, cseq, protocol, method, src_host, dst_host, from_user, from_host, to_user, to_host, raw from sip_${req.query.table} where callid='${req.query.callid}' order by id`
+  const sql = `select id, callid, time, cseq, protocol, method, src_host, dst_host, from_user, from_host, to_user, to_host, raw from sip_${req.query.table} where callid='${req.query.callid}' order by id`
 
-  let t1 = new Date().getTime()
+  const t1 = new Date().getTime()
 
   pool.query(sql, function (error, results, fields) {
-    let t2 = new Date().getTime()
+    const t2 = new Date().getTime()
 
     if (error) {
       log.error(error)
@@ -132,7 +133,7 @@ router.get('/core-dump', function (req, res, next) {
 })
 
 router.get('/fs-callid', function getFsCallId (req, res, next) {
-  let day = req.query.day || dayjs().format('YYYY_MM_DD')
+  const day = req.query.day || dayjs().format('YYYY_MM_DD')
 
   if (!fsCallHand.checkQuery(req.query.sipCallId, day)) return res.status(400).end()
 

@@ -1,5 +1,4 @@
 const HEPjs = require('hep-js')
-const url = require('url')
 const dayjs = require('dayjs')
 
 const { insertMsg } = require('./db/insertMsg')
@@ -14,14 +13,14 @@ const log = getLogger()
 function getMetaFromPaylod (payload) {
   // console.log(payload)
 
-  let msg = parse(payload)
+  const msg = parse(payload)
 
   if (!msg.call_id) {
     return
   }
 
-  let from = url.parse(msg.from)
-  let to = url.parse(msg.to)
+  const from = new URL(msg.from)
+  const to = new URL(msg.to)
 
   // log.info(from)
 
@@ -39,6 +38,7 @@ function getMetaFromPaylod (payload) {
     src_host: '',
     dst_host: '',
     timeSeconds: 0,
+    tmMethod: msg.tmMethod,
     raw: payload
   }
 }
@@ -48,11 +48,11 @@ function onMessage (msg, rinfo) {
   update('hep_receive_all')
   setMaxPackageSize(rinfo.size)
 
-  let hep_decoder = HEPjs.decapsulate(msg)
+  const hepDecoder = HEPjs.decapsulate(msg)
 
-  log.debug(hep_decoder)
+  log.debug(hepDecoder)
 
-  let meta = getMetaFromPaylod(hep_decoder.payload)
+  const meta = getMetaFromPaylod(hepDecoder.payload)
 
   if (!meta) {
     return update('hep_drop_all')
@@ -66,15 +66,14 @@ function onMessage (msg, rinfo) {
     return update('hep_drop_all')
   }
 
-  // log.info(hep_decoder.rcinfo)
-  meta.src_host = hep_decoder.rcinfo.srcIp + ':' + hep_decoder.rcinfo.srcPort
-  meta.dst_host = hep_decoder.rcinfo.dstIp + ':' + hep_decoder.rcinfo.dstPort
-  meta.protocol = hep_decoder.rcinfo.protocol
+  // log.info(hepDecoder.rcinfo)
+  meta.src_host = hepDecoder.rcinfo.srcIp + ':' + hepDecoder.rcinfo.srcPort
+  meta.dst_host = hepDecoder.rcinfo.dstIp + ':' + hepDecoder.rcinfo.dstPort
+  meta.protocol = hepDecoder.rcinfo.protocol
 
-  log.info(hep_decoder.rcinfo)
+  log.info(hepDecoder.rcinfo)
 
-
-  meta.timeSeconds = dayjs.unix(parseFloat(hep_decoder.rcinfo.timeSeconds + '.' + hep_decoder.rcinfo.timeUseconds)).format('YYYY-MM-DD HH:mm:ss.ms')
+  meta.timeSeconds = dayjs.unix(parseFloat(hepDecoder.rcinfo.timeSeconds + '.' + hepDecoder.rcinfo.timeUseconds)).format('YYYY-MM-DD HH:mm:ss.ms')
 
   log.info(meta)
   insertMsg(meta)

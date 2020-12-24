@@ -8,9 +8,9 @@ var app = new Vue({
     aLegId: '',
     table: '',
     pros: {
-      '6': 'TCP',
-      '17': 'UDP',
-      '50': 'ESP'
+      6: 'TCP',
+      17: 'UDP',
+      50: 'ESP'
     }
   },
   methods: {

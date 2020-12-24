@@ -105,9 +105,9 @@ var app = new Vue({
   filters: {
     transProtocol: function transProtocol(v) {
       var protocols = {
-        '17': 'UDP',
-        '6': 'TCP',
-        '50': 'ESP'
+        17: 'UDP',
+        6: 'TCP',
+        50: 'ESP'
       };
       return protocols[v] ? protocols[v] : v;
     }
