@@ -1,5 +1,6 @@
 const HEPjs = require('hep-js')
 const dayjs = require('dayjs')
+const url = require('url')
 
 const { insertMsg } = require('./db/insertMsg')
 const { reverseString, getLogger } = require('./util')
@@ -8,19 +9,50 @@ const { update, setMaxPackageSize } = require('./statistics/counter')
 
 const refuseFromUser = ['prober', 'dispatcher']
 
+const MIN_MESSAGE_LENGTH = 24
+
 const log = getLogger()
+
+function getUserFromUrl (str) {
+  if (!str || typeof str !== 'string' || str.length <= 2) {
+    log.error('bad str', str)
+    return ''
+  }
+
+  let startIndex = str.indexOf(':')
+  if (startIndex === -1) {
+    startIndex = 0
+  }
+
+  let endIndex = str.indexOf('@')
+  if (endIndex === -1) {
+    log.error('bad str', str)
+    endIndex = str.length
+  }
+
+  if (startIndex >= endIndex) {
+    log.error('bad str', str)
+    return ''
+  }
+
+  return str.substring(startIndex, endIndex)
+}
 
 function getMetaFromPaylod (payload) {
   // console.log(payload)
+  log.debug('function: getMetaFromPaylod', payload)
 
   const msg = parse(payload)
 
+  log.debug('function: getMetaFromPaylod result', msg)
+
   if (!msg.call_id) {
+    log.error('function: getMetaFromPaylod msg.call_id not exist', msg)
     return
   }
 
-  const from = new URL(msg.from)
-  const to = new URL(msg.to)
+  const from = url.parse(msg.from)
+  const to = url.parse(msg.to)
 
   // log.info(from)
 
@@ -50,19 +82,37 @@ function onMessage (msg, rinfo) {
 
   const hepDecoder = HEPjs.decapsulate(msg)
 
+  if (hepDecoder.payload === '\r\n') {
+    log.debug('useless empty .r.n message')
+    return
+  }
+
+  if (hepDecoder.payload.length < MIN_MESSAGE_LENGTH) {
+    log.debug('msg is two short', hepDecoder.payload)
+    return
+  }
+
+  if (typeof hepDecoder.payload === 'string' && hepDecoder.payload.includes('OPTIONS\r\n')) {
+    log.debug('useless options message')
+    return
+  }
+
   log.debug(hepDecoder)
 
   const meta = getMetaFromPaylod(hepDecoder.payload)
 
   if (!meta) {
+    log.error('on-message getMeta', meta)
     return update('hep_drop_all')
   }
 
   if (!meta.from_user) {
+    log.error('on-message getMeta', meta)
     return update('hep_drop_all')
   }
 
   if (refuseFromUser.includes(meta.from_user)) {
+    log.error('on-message getMeta', meta)
     return update('hep_drop_all')
   }
 
