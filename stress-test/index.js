@@ -4,7 +4,7 @@ const { nanoid } = require('nanoid')
 const client = dgram.createSocket('udp4')
 
 const sendInter = 1
-const sendTimes = 10000
+const sendTimes = 1
 
 var all = 0
 
@@ -13,7 +13,7 @@ function sendMsg (msg) {
 
   all++
   // client.send(msg, 31235, '192.168.40.174', (err) => {
-  client.send(msg, 9060, '192.168.60.228', (err) => {
+  client.send(msg, 9060, 'localhost', (err) => {
   // client.send(msg, 9060, 'localhost', (err) => {
     if (err) {
       console.error(err)
@@ -40,7 +40,7 @@ const rcinfo = {
 
 // console.log(rcinfo)
 
-function createBody (params) {
+function createBody1 (params) {
   return 'INVITE sip:8001@001.com SIP/2.0\r\n' +
     'Via: SIP/2.0/UDP 192.168.1.101:57039;rport;branch=z9hG4bKPjTrHOXMu0JO7S-Gvxp4mLg2K0kolc6LGk\r\n' +
     'Max-Forwards: 69\r\n' +
@@ -53,9 +53,25 @@ function createBody (params) {
     '\r\n'
 }
 
+function createBody2 () {
+  return 'REGISTER sip:001.com SIP/2.0\r\n' +
+  'Via: SIP/2.0/UDP 192.168.2.13:59782;rport;branch=z9hG4bKPjyHhEVr-4LAM8UOH5wzO640mWMllHHo76\r\n' +
+  'Route: <sip:192.168.40.21:18627;lr>\r\n' +
+  'Max-Forwards: 70\r\n' +
+  'From: "8003" <sip:8003@001.com>;tag=0IBGEpncOzTrtjcx4DjdU6kEVIJw8s0Q\r\n' +
+  'To: "8003" <sip:8003@001.com>\r\n' +
+  'Call-ID: ' + nanoid() + '\r\n' +
+  'CSeq: 38689 REGISTER\r\n' +
+  'User-Agent: Telephone 1.5.1\r\n' +
+  'Contact: "8003" <sip:8003@192.168.2.13:59782;ob>\r\n' +
+  'Expires: 300\r\n' +
+  'Allow: PRACK, INVITE, ACK, BYE, CANCEL, UPDATE, INFO, SUBSCRIBE, NOTIFY, REFER, MESSAGE, OPTIONS\r\n' +
+  'Content-Length:  0\r\n'
+}
+
 function job () {
   for (let index = 0; index < sendTimes; index++) {
-    var body = createBody()
+    var body = createBody2()
     var hepEncoder = HEPjs.encapsulate(body, rcinfo)
     sendMsg(hepEncoder)
   }

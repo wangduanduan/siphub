@@ -92,11 +92,6 @@ function onMessage (msg, rinfo) {
     return
   }
 
-  if (typeof hepDecoder.payload === 'string' && hepDecoder.payload.includes('OPTIONS\r\n')) {
-    log.debug('useless options message')
-    return
-  }
-
   log.debug(hepDecoder)
 
   const meta = getMetaFromPaylod(hepDecoder.payload)
@@ -104,6 +99,11 @@ function onMessage (msg, rinfo) {
   if (!meta) {
     log.error('on-message getMeta', meta)
     return update('hep_drop_all')
+  }
+
+  if (meta.tmMethod === 'OPTIONS') {
+    log.debug('useless options message')
+    return
   }
 
   if (!meta.from_user) {
