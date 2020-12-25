@@ -1,14 +1,8 @@
 const sipUtil = require('./sip')
 
-const filterMethods = ['REGISTER', 'OPTIONS']
-
 function parse (msg) {
   const headLine = sipUtil.findHeadLine(msg)
   const method = sipUtil.getMethod(headLine)
-
-  if (filterMethods.includes(method)) {
-    return {}
-  }
 
   let cseq = sipUtil.getHeadValue(msg, 'CSeq:')
   const cseqMeta = cseq.split(' ')
@@ -17,10 +11,6 @@ function parse (msg) {
   // read method from cseq
   if (cseqMeta.length === 2) {
     tmMethod = cseqMeta[1]
-  }
-
-  if (cseq.includes('REGISTER') || cseq.includes('OPTIONS')) {
-    return {}
   }
 
   const from = sipUtil.getHeadBodyUrl(msg, 'From:')
