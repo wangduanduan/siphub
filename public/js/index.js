@@ -35,12 +35,9 @@ var app = new Vue({
     getQuery: function getQuery() {
       var re = [];
 
-      if (!this.method) {
-        this.method = 'INVITE';
+      if (this.method) {
+        re.push('method=' + this.method);
       }
-
-      this.method = this.method.toUpperCase();
-      re.push('method=' + this.method);
 
       if (this.from) {
         re.push('from=' + this.from);
@@ -62,6 +59,7 @@ var app = new Vue({
         re.push('shortTime=' + this.shortTime);
       }
 
+      console.log(re);
       return re.join('&');
     },
     checkTime: function checkTime(params) {

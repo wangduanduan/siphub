@@ -24,6 +24,13 @@
                     <div class="form-group">
                       To: <input v-model="to" type="text" class="form-control" placeholder="8002@test.cc">
                     </div>
+                    Method filter: 
+                    <select class="form-control" v-model="method">
+                      <option value=""></option>
+                      <option value="INVITE">INVITE</option>
+                      <option value="REGISTER">REGISTER</option>
+                      <option value="SUBSCRIBE">SUBSCRIBE</option>
+                    </select>
                       Quick Ranges: 
                     <select class="form-control" v-model.number="shortTime" @change="changeTime">
                       <option value="10">Last 10m</option>
