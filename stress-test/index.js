@@ -69,9 +69,44 @@ function createBody2 () {
   'Content-Length:  0\r\n'
 }
 
+function body3 () {
+  return 'INVITE sip:80003@172.16.10.226:18627 SIP/2.0\r\n' +
+  'Via: SIP/2.0/UDP 172.16.10.221:8629;rport;branch=z9hG4bK20te23BUp95He\r\n' +
+  'Max-Forwards: 69\r\n' +
+  'From: "80003" <sip:80003@172.16.10.221>;tag=yF6vUF0vceXSK\r\n' +
+  'To: <sip:80003@shljz.cc>\r\n' +
+  'Call-ID: ' + nanoid() + '\r\n' +
+  'CSeq: 29877181 INVITE\r\n' +
+  'Contact: <sip:mod_sofia@172.16.10.221:8629>\r\n' +
+  'Call-Info: <Answer-After=0>\r\n' +
+  'User-Agent: wms\r\n' +
+  'Allow: INVITE, ACK, BYE, CANCEL, OPTIONS, MESSAGE, INFO, UPDATE, REGISTER, REFER, NOTIFY\r\n' +
+  'Supported: timer, path, replaces\r\n' +
+  'Allow-Events: talk, hold, conference, refer\r\n' +
+  'Content-Type: application/sdp\r\n' +
+  'Content-Disposition: session\r\n' +
+  'Content-Length: 235\r\n' +
+  'Wellcloud_Call_ID: 6886c310-28a8-4f04-9170-6a79f4ab2285\r\n' +
+  'Wellcloud_Call_Cause: MakeCall\r\n' +
+  'X-FS-Support: update_display,send_info\r\n' +
+  'Remote-Party-ID: "80003" <sip:80003@172.16.10.221>;party=calling;screen=yes;privacy=off\r\n' +
+  '\r\n' +
+  'v=0\r\n' +
+  'o=wms 1608844694 1608844695 IN IP4 172.16.10.221\r\n' +
+  's=wms\r\n' +
+  'c=IN IP4 172.16.10.221\r\n' +
+  't=0 0\r\n' +
+  'm=audio 17252 RTP/AVP 0 8 101 13\r\n' +
+  'a=rtpmap:0 PCMU/8000\r\n' +
+  'a=rtpmap:8 PCMA/8000\r\n' +
+  'a=rtpmap:101 telephone-event/8000\r\n' +
+  'a=fmtp:101 0-16\r\n' +
+  'a=ptime:20\r\n'
+}
+
 function job () {
   for (let index = 0; index < sendTimes; index++) {
-    var body = createBody2()
+    var body = body3()
     var hepEncoder = HEPjs.encapsulate(body, rcinfo)
     sendMsg(hepEncoder)
   }
