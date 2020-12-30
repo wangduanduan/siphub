@@ -10,10 +10,10 @@ test('parse response', () => {
         ua: 'WSS',
         cseq: 22855,
         call_id: 'cH.VUFyVvmS5aNUWQtsmgoLylRAEXnMW',
-        fs_call_id: ''
+        fs_call_id: '',
+        tmMethod: 'INVITE'
     })
 })
-
 test('parse request', () => {
     expect(parse(msg2)).toStrictEqual({
         method: 'ACK',
@@ -22,10 +22,20 @@ test('parse request', () => {
         ua: 'WSS',
         cseq: 22855,
         call_id: 'cH.VUFyVvmS5aNUWQtsmgoLylRAEXnMW',
-        fs_call_id: 'abcd'
+        fs_call_id: 'abcd',
+        tmMethod: 'ACK'
     })
 })
 
 test('parse register response', () => {
-    expect(parse(msg3)).toStrictEqual({})
+    expect(parse(msg3)).toStrictEqual({
+        method: 'REGISTER',
+        from: 'sip:1002@192.168.159.12',
+        to: 'sip:1002@192.168.159.12',
+        ua: 'wellphone/Ver3.0.5',
+        cseq: 23477,
+        call_id: 'f44177ddd2aa4e078d4bacbd36a25445',
+        fs_call_id: '',
+        tmMethod: 'REGISTER'
+    })
 })
