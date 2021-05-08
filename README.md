@@ -25,6 +25,7 @@ sip-hub服务仅有3个页面
 	- dbHost 数据库地址
 	- dbUser 数据库用户
 	- dbName 数据库名
+    - dbPort 数据库端口号，可不填，默认为3306
 	- dataKeepDays 抓包保存天数
 	- 3000端口是web页面端口
 	- 9060是hep消息收取端口
@@ -36,6 +37,7 @@ docker run -d -p 3000:3000 -p 9060:9060/udp \
 --env dbUser=root \
 --env dbPwd=123456 \
 --env dbName=siphub \
+--env dbPort=13309 \
 --env dataKeepDays=3 \
 --env logLevel=error \
 --log-opt max-size=10M \
