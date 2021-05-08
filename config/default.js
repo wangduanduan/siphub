@@ -3,6 +3,7 @@ module.exports = {
   user: process.env.dbUser || 'root',
   password: process.env.dbPwd || 'wellcloud',
   database: process.env.dbName || 'siphub',
+  dbPort: process.env.dbPort ? parseInt(process.env.dbPort) : 3306,
 
   dataKeepDays: 1,
   cronTimeSecond: 10,

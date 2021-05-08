@@ -26,6 +26,7 @@ function initPool () {
     connectionLimit: config.get('dbPoolSize'),
     host: config.get('host'),
     user: config.get('user'),
+    port: config.get('dbPort'),
     password: config.get('password'),
     database: config.get('database'),
     multipleStatements: true
