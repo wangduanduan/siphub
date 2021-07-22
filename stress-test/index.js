@@ -4,14 +4,18 @@ const { nanoid } = require('nanoid')
 const client = dgram.createSocket('udp4')
 
 const sendInter = 1
-const sendTimes = 1
+const sendTimes = 100
 
 var all = 0
+const MAX = 2000000
 
 function sendMsg (msg) {
-  console.log(all, 'send')
+  console.log(new Date(), all, 'send')
 
   all++
+  if (all > MAX) {
+    process.exit(0)
+  }
   // client.send(msg, 31235, '192.168.40.174', (err) => {
   client.send(msg, 9060, 'localhost', (err) => {
   // client.send(msg, 9060, 'localhost', (err) => {

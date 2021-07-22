@@ -27,13 +27,9 @@ function getPeekStat () {
 }
 
 function peek () {
-  log.info('start peek')
-  
   Object.keys(statAll).forEach((key) => {
     peekOne(key)
   })
-
-  log.info(peekStat)
 }
 
 setInterval(peek, peekSecond * 1000)
@@ -45,7 +41,7 @@ function peekOne (key) {
     peekStat[`${key}_max_time`] = ''
   }
 
-  var dis = (statAll[key] - peekStat[`${key}_last`]) / peekSecond
+  const dis = (statAll[key] - peekStat[`${key}_last`]) / peekSecond
 
   if (dis > peekStat[`${key}_max`]) {
     peekStat[`${key}_max`] = dis

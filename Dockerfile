@@ -20,6 +20,6 @@ COPY --from=builder /usr/share/zoneinfo /usr/share/zoneinfo
 RUN date
 
 EXPOSE 3000
-EXPOSE 9060
+EXPOSE 9060/udp
 
 CMD node --experimental-report --report-on-fatalerror --report-uncaught-exception index.js

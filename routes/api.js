@@ -72,8 +72,7 @@ router.get('/search', function (req, res, next) {
     conditions.push(`fs_callid = '${req.query.fs_callid}'`)
   }
 
-  if(req.query.method)
-  {
+  if (req.query.method) {
     conditions.push(`method = '${req.query.method}'`)
   }
   const tableDate = dayjs(req.query.beginTime).format('YYYY_MM_DD')

@@ -42,6 +42,7 @@ function dropTable (tableName) {
 
 function createTable (tableDate) {
   const tableName = tableDate || dayjs().add(1, 'day').format('YYYY_MM_DD')
+  let partDate = tableName.replace(/_/g, '-')
 
   const sql = `create table if not exists sip_${tableName} (
     \`id\` int(11) unsigned NOT NULL AUTO_INCREMENT,
@@ -76,11 +77,28 @@ function createTable (tableDate) {
     \`src_host\` char(32) NOT NULL DEFAULT '',
     \`dst_host\` char(32) NOT NULL DEFAULT '',
     \`time\` datetime NOT NULL ON UPDATE CURRENT_TIMESTAMP,
-    PRIMARY KEY (\`callid\`),
+    PRIMARY KEY (\`callid\`,\`time\`),
     KEY \`from_host\` (\`from_host\`),
     KEY \`fs_callid\` (\`fs_callid\`),
-    KEY \`to_host\` (\`to_host\`)
-  ) ENGINE=InnoDB DEFAULT CHARSET=utf8;`
+    KEY \`to_host\` (\`to_host\`),
+    KEY \`time\` (\`time\`)
+  ) ENGINE=InnoDB DEFAULT CHARSET=utf8
+      PARTITION BY RANGE COLUMNS(\`time\`) (
+      PARTITION p9 values less than ('${partDate} 09:00:00'),
+      PARTITION p10 values less than ('${partDate} 10:00:00'),
+      PARTITION p11 values less than ('${partDate} 11:00:00'),
+      PARTITION p12 values less than ('${partDate} 12:00:00'),
+      PARTITION p13 values less than ('${partDate} 13:00:00'),
+      PARTITION p14 values less than ('${partDate} 14:00:00'),
+      PARTITION p15 values less than ('${partDate} 15:00:00'),
+      PARTITION p16 values less than ('${partDate} 16:00:00'),
+      PARTITION p17 values less than ('${partDate} 17:00:00'),
+      PARTITION p18 values less than ('${partDate} 18:00:00'),
+      PARTITION p19 values less than ('${partDate} 19:00:00'),
+      PARTITION p20 values less than ('${partDate} 20:00:00'),
+      PARTITION p24 values less than ('${partDate} 23:59:59')
+  )
+  `
 
   // log.info(sql)
 

@@ -10,20 +10,16 @@
     "test": "jest"
   },
   "dependencies": {
-    "@log4js-node/logstashudp": "^1.2.1",
-    "axios": "^0.19.2",
-    "compression": "^1.7.4",
     "config": "^3.2.5",
     "dayjs": "^1.8.19",
     "debug": "^4.1.1",
     "ejs": "^3.0.1",
     "express": "^4.17.1",
     "hep-js": "^1.0.20",
-    "log4js": "^6.1.0",
     "mysql": "^2.18.0",
     "nanoid": "^3.1.12",
-    "response-time": "^2.3.2",
-    "sip": "^0.0.6"
+    "pino": "^7.0.0-rc.1",
+    "response-time": "^2.3.2"
   },
   "devDependencies": {
     "@babel/cli": "^7.8.4",

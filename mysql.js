@@ -19,11 +19,13 @@ function reconnetMysql () {
   }, 4000)
 }
 
-function initPool () {
-  log.info(`start init mysql Pool ${config.get('user')}@${config.get('host')}/${config.get('database')}`)
+function initPool (poolSize) {
+  poolSize = poolSize || config.get('dbPoolSize')
+
+  log.info(`init mysql Pool: ${poolSize} ${config.get('user')}@${config.get('host')}/${config.get('database')}`)
 
   const pool = mysql.createPool({
-    connectionLimit: config.get('dbPoolSize'),
+    connectionLimit: poolSize,
     host: config.get('host'),
     user: config.get('user'),
     port: config.get('dbPort'),
