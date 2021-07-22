@@ -46,7 +46,6 @@ function getMetaFromPaylod (payload) {
   log.debug('function: getMetaFromPaylod result', msg)
 
   if (!msg || !msg.call_id) {
-    log.error('function: getMetaFromPaylod msg.call_id not exist', msg)
     return
   }
 
