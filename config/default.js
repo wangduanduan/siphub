@@ -11,7 +11,8 @@ module.exports = {
   influxdb: process.env.influxdb || 'http://172.16.200.228:8086/write?db=siphub',
   influxdbSecond: process.env.influxdbSecond || '10',
   dbPoolSize: process.env.dbPoolSize ? parseInt(process.env.dbPoolSize) : 30,
-  gateway: process.env.gateway || '192.168.1.1'
+  gateway: process.env.gateway || '192.168.1.1',
+  refuseMethods: process.env.refuseMethods ?? 'REGISTER'
 }
 
 // curl -i -XPOST http://172.16.200.228:8086/query --data-urlencode "q=CREATE DATABASE siphub"

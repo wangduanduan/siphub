@@ -42,7 +42,7 @@ function dropTable (tableName) {
 
 function createTable (tableDate) {
   const tableName = tableDate || dayjs().add(1, 'day').format('YYYY_MM_DD')
-  let partDate = tableName.replace(/_/g, '-')
+  const partDate = tableName.replace(/_/g, '-')
 
   const sql = `create table if not exists sip_${tableName} (
     \`id\` int(11) unsigned NOT NULL AUTO_INCREMENT,
@@ -61,7 +61,9 @@ function createTable (tableDate) {
     \`time\` datetime NOT NULL ON UPDATE CURRENT_TIMESTAMP,
     \`RAW\` text NOT NULL,
     PRIMARY KEY (\`id\`),
-    KEY \`callid\` (\`callid\`)
+    KEY \`callid\` (\`callid\`),
+    KEY \`method\` (\`method\`),
+    KEY \`src_host\` (\`src_host\`)
   ) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8;`
 
   const sql2 = `CREATE TABLE if not exists inv_${tableName} (

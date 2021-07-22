@@ -6,5 +6,6 @@ module.exports = {
   dataKeepDays: process.env.dataKeepDays ? parseInt(process.env.dataKeepDays) : 3,
   cronTimeSecond: 7200,
   logLevel: process.env.logLevel || 'error',
-  dbPoolSize: process.env.dbPoolSize ? parseInt(process.env.dbPoolSize) : 15
+  dbPoolSize: process.env.dbPoolSize ? parseInt(process.env.dbPoolSize) : 15,
+  refuseMethods: process.env.refuseMethods ?? 'REGISTER'
 }

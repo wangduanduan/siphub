@@ -6,7 +6,7 @@ const client = dgram.createSocket('udp4')
 const sendInter = 1
 const sendTimes = 100
 
-var all = 0
+let all = 0
 const MAX = 2000000
 
 function sendMsg (msg) {
@@ -110,8 +110,8 @@ function body3 () {
 
 function job () {
   for (let index = 0; index < sendTimes; index++) {
-    var body = body3()
-    var hepEncoder = HEPjs.encapsulate(body, rcinfo)
+    const body = body3()
+    const hepEncoder = HEPjs.encapsulate(body, rcinfo)
     sendMsg(hepEncoder)
   }
 }

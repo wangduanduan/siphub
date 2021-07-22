@@ -1,4 +1,7 @@
 const sipUtil = require('./sip')
+const config = require('config')
+
+const refuseMethods = config.get('refuseMethods')
 
 function parse (msg) {
   const headLine = sipUtil.findHeadLine(msg)
@@ -11,6 +14,10 @@ function parse (msg) {
   // read method from cseq
   if (cseqMeta.length === 2) {
     tmMethod = cseqMeta[1]
+  }
+
+  if (refuseMethods.includes(tmMethod)) {
+    return
   }
 
   const from = sipUtil.getHeadBodyUrl(msg, 'From:')

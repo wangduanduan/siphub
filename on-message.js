@@ -39,14 +39,13 @@ function getUserFromUrl (str) {
 }
 
 function getMetaFromPaylod (payload) {
-  // console.log(payload)
   log.debug('function: getMetaFromPaylod', payload)
 
   const msg = parse(payload)
 
   log.debug('function: getMetaFromPaylod result', msg)
 
-  if (!msg.call_id) {
+  if (!msg || !msg.call_id) {
     log.error('function: getMetaFromPaylod msg.call_id not exist', msg)
     return
   }
@@ -57,16 +56,16 @@ function getMetaFromPaylod (payload) {
   // log.info(from)
 
   return {
-    method: msg.method,
-    from_user: from.auth,
-    from_host: from.host,
-    to_user: to.auth,
-    to_host: to.host,
-    to_user_r: reverseString(to.auth),
-    callid: msg.call_id,
-    fs_callid: msg.fs_call_id,
-    cseq: msg.cseq,
-    ua: msg.ua,
+    method: msg.method || '',
+    from_user: from.auth || '',
+    from_host: from.host || '',
+    to_user: to.auth || '',
+    to_host: to.host || '',
+    to_user_r: reverseString(to.auth) || '',
+    callid: msg.call_id || '',
+    fs_callid: msg.fs_call_id || '',
+    cseq: msg.cseq || '',
+    ua: msg.ua || '',
     src_host: '',
     dst_host: '',
     timeSeconds: 0,
@@ -76,16 +75,10 @@ function getMetaFromPaylod (payload) {
 }
 
 function onMessage (msg, rinfo) {
-  // updateStat('h', 'receive', 1)
   update('hep_receive_all')
   setMaxPackageSize(rinfo.size)
 
   const hepDecoder = HEPjs.decapsulate(msg)
-
-  if (hepDecoder.payload === '\r\n') {
-    log.debug('useless empty .r.n message')
-    return
-  }
 
   if (hepDecoder.payload.length < MIN_MESSAGE_LENGTH) {
     log.debug('msg is two short', hepDecoder.payload)
@@ -123,7 +116,7 @@ function onMessage (msg, rinfo) {
 
   log.info(hepDecoder.rcinfo)
 
-  meta.timeSeconds = dayjs.unix(parseFloat(hepDecoder.rcinfo.timeSeconds + '.' + hepDecoder.rcinfo.timeUseconds)).format('YYYY-MM-DD HH:mm:ss.ms')
+  meta.timeSeconds = dayjs.unix(hepDecoder.rcinfo.timeSeconds).format('YYYY-MM-DD HH:mm:ss')
 
   log.info(meta)
   insertMsg(meta)
