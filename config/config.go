@@ -1,11 +1,22 @@
 package config
 
 import (
-	"time"
+	"github.com/caarlos0/env/v6"
+	"log"
 )
 
-var UDPPort = 8866
+type config struct {
+	UDPListenPort         int    `env:"UDPListenPort" envDefault:"9060"`
+	MaxPackgeLength       int    `env:"MaxPackgeLength" envDefault:"2048"`
+	MaxReadTimeoutSeconds int    `env:"MaxReadTimeoutSecond" envDefault:"5"`
+	LogLevel              string `env:"LogLevel" envDefault:"debug"`
+	Hostname              string `env:"HOSTNAME" envDefault:"unknow"`
+}
 
-var MaxUDPSize = 2 * 1024
+var Conf = config{}
 
-var MaxReadTimeoutSecond = 5 * time.Second
+func init() {
+	if err := env.Parse(&Conf); err != nil {
+		log.Fatalf("%+v\n", err)
+	}
+}

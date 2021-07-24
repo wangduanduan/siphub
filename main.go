@@ -16,16 +16,16 @@ func main() {
 }
 
 func CreateUDPServer() {
-	conn, err := net.ListenUDP("udp", &net.UDPAddr{Port: config.UDPPort})
+	conn, err := net.ListenUDP("udp", &net.UDPAddr{Port: config.Conf.UDPListenPort})
 	if err != nil {
 		log.Fatalf("Udp Service listen report udp fail:%v", err)
 	}
 	log.Println("create udp success")
 	defer conn.Close()
-	var data = make([]byte, config.MaxUDPSize)
+	var data = make([]byte, config.Conf.MaxPackgeLength)
 	var raw []byte
 	for {
-		conn.SetDeadline(time.Now().Add(config.MaxReadTimeoutSecond))
+		conn.SetDeadline(time.Now().Add(time.Duration(config.Conf.MaxReadTimeoutSeconds) * time.Second))
 		n, remoteAddr, err := conn.ReadFromUDP(data)
 
 		if err != nil {
