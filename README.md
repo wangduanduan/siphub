@@ -2,11 +2,12 @@
 - 开发中
 
 # roadmap
-- [ ] add logger lib
-- [ ] add env parse lib
+- [x] add logger lib
+- [x] add env parse lib
 - [ ] add unit test lib
 - [ ] add sip parse function
 - [ ] add some db sql
+- [ ] add mysql db handler
 - [ ] add webserver fiber
 - [ ] add http route
 - [ ] add web pages
