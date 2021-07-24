@@ -1,6 +1,17 @@
 # Golang版本
 - 开发中
 
+# roadmap
+- [ ] add logger lib
+- [ ] add env parse lib
+- [ ] add unit test lib
+- [ ] add sip parse function
+- [ ] add some db sql
+- [ ] add webserver fiber
+- [ ] add http route
+- [ ] add web pages
+- [ ] add a-leg and b-leg show on same page
+
 # 功能介绍
 sip-hub是一个专注sip信令的搜索以及时序图可视化展示的服务。
 
