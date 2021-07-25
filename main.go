@@ -1,9 +1,10 @@
 package main
 
 import (
-	"log"
 	"net"
 	"siphub/config"
+	"siphub/hep"
+	"siphub/log"
 	"time"
 )
 
@@ -20,7 +21,7 @@ func CreateUDPServer() {
 	if err != nil {
 		log.Fatalf("Udp Service listen report udp fail:%v", err)
 	}
-	log.Println("create udp success")
+	log.Infof("create udp success")
 	defer conn.Close()
 	var data = make([]byte, config.Conf.MaxPackgeLength)
 	var raw []byte
@@ -32,7 +33,7 @@ func CreateUDPServer() {
 			if opErr, ok := err.(*net.OpError); ok && opErr.Timeout() {
 				continue
 			} else {
-				log.Printf("read udp error: %v", err)
+				log.Errorf("read udp error: %v", err)
 			}
 		}
 
@@ -43,5 +44,14 @@ func CreateUDPServer() {
 }
 
 func HepDecode(p []byte, remoteAddr *net.UDPAddr) {
-	log.Printf("%s %v", string(p), remoteAddr)
+	log.Debugf("%s %v", string(p), remoteAddr)
+	hepMsg, err := hep.NewHepMsg(p)
+
+	if err != nil {
+		log.Errorf("%+v", err)
+		log.Errorf("%s", p)
+		return
+	}
+
+	log.Infof("%+v", hepMsg)
 }

@@ -10,7 +10,12 @@ import (
 
 /* Debugw Infow Warnw Errorw Fatalw Panicw */
 
-var Log *zap.SugaredLogger
+var log *zap.SugaredLogger
+
+var Debugf = log.Debugf
+var Infof = log.Infof
+var Errorf = log.Errorf
+var Fatalf = log.Fatalf
 
 func getLogLevel(level string) zapcore.Level {
 	switch level {
@@ -51,7 +56,12 @@ func initLogger() {
 	)
 
 	logger := zap.New(core, zap.AddCaller())
-	Log = logger.Sugar()
+	log = logger.Sugar()
+
+	Infof = log.Infof
+	Errorf = log.Errorf
+	Fatalf = log.Fatalf
+	Debugf = log.Debugf
 }
 
 func init() {

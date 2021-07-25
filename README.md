@@ -4,7 +4,7 @@
 # roadmap
 - [x] add logger lib
 - [x] add env parse lib
-- [ ] add unit test lib
+- [x] add unit test lib
 - [ ] add sip parse function
 - [ ] add some db sql
 - [ ] add mysql db handler

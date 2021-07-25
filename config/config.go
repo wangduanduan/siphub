@@ -18,5 +18,7 @@ var Conf = config{}
 func init() {
 	if err := env.Parse(&Conf); err != nil {
 		log.Fatalf("%+v\n", err)
+	} else {
+		log.Printf("%+v\n", err)
 	}
 }
