@@ -7,6 +7,7 @@
 <script src="/lib/snap.svg-min.js"></script>
 <script src="/lib/sequence-diagram-min.js"></script>
 <script src="/lib/dayjs.min.js"></script>
+<script src="/lib/qs.js"></script>
 
 <style>
     .raw-sip{
@@ -54,8 +55,9 @@
         </div>
         <div class="row">
             <div class="col-md-8 raw-seq">
-                <div class="diagram" id="seq">
-                </div>
+                <h4>A Leg</h4>
+                <div class="diagram" id="seq"> </div>
+                <hr>
             </div>
             <div class="col-md-4 raw-sip">
                 <div v-for="(item,index) in seq" :key="item.id">

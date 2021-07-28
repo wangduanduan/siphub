@@ -1,9 +1,12 @@
-var app = new Vue({
+/* global Qs location, dayjs, Vue, Blob */
+const app = new Vue({
   el: '#app',
   data: {
     seq: [],
     raw: '',
     aLegId: '',
+    callid: '',
+    uid: '',
     table: '',
     pros: {
       6: 'TCP',
@@ -12,6 +15,12 @@ var app = new Vue({
     }
   },
   methods: {
+    queryString () {
+      const qs = Qs.parse(location.search, { ignoreQueryPrefix: true })
+      this.table = qs.table
+      this.callid = qs.callid
+      this.uid = qs.uid
+    },
     getALegId (raw) {
       const msg = raw.split('\r\n')
 
@@ -20,29 +29,37 @@ var app = new Vue({
       })
 
       if (key) {
-        this.aLegId = '/call?' + this.table + key.split(': ')[1]
+        this.aLegId = `/call?table=${this.table}&callid=${key.split(': ')[1]}&uid=${this.uid}`
+      } else {
+        axios.get('/api/other-leg?callid=' + this.callid + '&table=' + this.table + '&uid=' + this.uid)
+          .then((res) => {
+            console.log(res.data)
+            this.aLegId = `/call?table=${this.table}&callid=${res.data[0].callid}&uid=${this.uid}`
+          })
+          .catch((err) => {
+            console.log(err)
+          })
       }
-
       console.log(this.aLegId)
     },
     downloadRawSIP () {
-      var downloadFileName = dayjs().format('YYYYMMDD-HHmmss') + '.json'
-      var output = this.raw
+      const downloadFileName = dayjs().format('YYYYMMDD-HHmmss') + '.json'
+      const output = this.raw
 
       if (window.navigator.msSaveBlob) {
         // for ie 10 and later
         try {
-          var blobObject = new Blob([output])
+          const blobObject = new Blob([output])
           window.navigator.msSaveBlob(blobObject, downloadFileName)
         } catch (e) {
           console.log(e)
         }
       } else {
-        var file = 'data:text/plain;charset=utf-8,'
-        var logFile = output
-        var encoded = encodeURIComponent(logFile)
+        let file = 'data:text/plain;charset=utf-8,'
+        const logFile = output
+        const encoded = encodeURIComponent(logFile)
         file += encoded
-        var a = document.createElement('a')
+        const a = document.createElement('a')
         a.href = file
         a.target = '_blank'
         a.download = downloadFileName
@@ -85,11 +102,7 @@ var app = new Vue({
       $('#seq').sequenceDiagram({ theme: 'simple' })
     },
     getData (params) {
-      const callid = location.search.substr(11)
-      const table = location.search.substr(1, 10)
-      this.table = table
-
-      axios.get('/api/callid?callid=' + callid + '&table=' + table)
+      axios.get('/api/callid?callid=' + this.callid + '&table=' + this.table)
         .then(this.render)
         .catch((err) => {
           console.log(err)
@@ -114,6 +127,7 @@ var app = new Vue({
     }
   },
   mounted (params) {
+    this.queryString()
     this.getData()
     this.registerEvent()
   }

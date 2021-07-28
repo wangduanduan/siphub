@@ -1,6 +1,6 @@
 process.env.refuseMethods = ''
 const { parse } = require('./parse')
-const { msg1, msg2, msg3 } = require('./sip.data')
+const { msg1, msg2, msg3, msg4 } = require('./sip.data')
 
 test('parse response', () => {
   expect(parse(msg1)).toStrictEqual({
@@ -11,7 +11,8 @@ test('parse response', () => {
     cseq: 22855,
     call_id: 'cH.VUFyVvmS5aNUWQtsmgoLylRAEXnMW',
     fs_call_id: '',
-    tmMethod: 'INVITE'
+    tmMethod: 'INVITE',
+    u_id: ''
   })
 })
 test('parse request', () => {
@@ -23,7 +24,22 @@ test('parse request', () => {
     cseq: 22855,
     call_id: 'cH.VUFyVvmS5aNUWQtsmgoLylRAEXnMW',
     fs_call_id: 'abcd',
-    tmMethod: 'ACK'
+    tmMethod: 'ACK',
+    u_id: ''
+  })
+})
+
+test('parse invite request', () => {
+  expect(parse(msg4)).toStrictEqual({
+    method: 'INVITE',
+    from: 'sip:800004@001.com',
+    to: 'sip:8888@001.com',
+    ua: 'WSS',
+    cseq: 22855,
+    call_id: 'cH.VUFyVvmS5aNUWQtsmgoLylRAEXnMW',
+    fs_call_id: 'abcd',
+    tmMethod: 'INVITE',
+    u_id: ''
   })
 })
 
@@ -36,6 +52,7 @@ test('parse register response', () => {
     cseq: 23477,
     call_id: 'f44177ddd2aa4e078d4bacbd36a25445',
     fs_call_id: '',
-    tmMethod: 'REGISTER'
+    tmMethod: 'REGISTER',
+    u_id: ''
   })
 })

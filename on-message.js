@@ -69,7 +69,8 @@ function getMetaFromPaylod (payload) {
     dst_host: '',
     timeSeconds: 0,
     tmMethod: msg.tmMethod,
-    raw: payload
+    raw: payload,
+    u_id: msg.u_id
   }
 }
 

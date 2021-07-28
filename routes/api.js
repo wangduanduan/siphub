@@ -1,21 +1,12 @@
 const express = require('express')
+const mysql = require('mysql')
 const router = express.Router()
-const {
-  getLogger,
-  reverseString
-} = require('../util')
+const { getLogger, reverseString } = require('../util')
 const state = require('../db/state')
-const {
-  createTable
-} = require('../db/table')
+const { createTable } = require('../db/table')
 const dayjs = require('dayjs')
-const {
-  getStat,
-  getPeekStat
-} = require('../statistics/counter')
-const {
-  coreDump
-} = require('../core-dump')
+const { getStat, getPeekStat } = require('../statistics/counter')
+const { coreDump } = require('../core-dump')
 const fsCallHand = require('./fs-callid')
 
 const log = getLogger()
@@ -35,7 +26,8 @@ router.get('/search', function (req, res, next) {
     'protocol',
     'dst_host',
     'src_host',
-    'fs_callid'
+    'fs_callid',
+    'u_id'
   ]
 
   const conditions = []
@@ -157,6 +149,30 @@ router.get('/fs-callid', function getFsCallId (req, res, next) {
     return res.json({
       fs_callid: results[0].fs_callid
     }).end()
+  })
+})
+
+router.get('/other-leg', function (req, res) {
+  if (!req.query.table || !req.query.uid || !req.query.callid) {
+    return res.status(404).end()
+  }
+
+  const pool = state.get('pool')
+
+  const sql = mysql.format(`select callid from inv_${req.query.table} where u_id = ? and callid != ? limit 1`, [req.query.uid, req.query.callid])
+
+  const t1 = new Date().getTime()
+
+  pool.query(sql, function (error, results, fields) {
+    const t2 = new Date().getTime()
+
+    if (error) {
+      log.error(error)
+      res.status(500).end()
+    } else {
+      res.set('X-Sql-Time', (t2 - t1) + 'ms')
+      res.json(results)
+    }
   })
 })
 

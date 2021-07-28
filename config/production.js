@@ -7,5 +7,6 @@ module.exports = {
   cronTimeSecond: 7200,
   logLevel: process.env.logLevel || 'error',
   dbPoolSize: process.env.dbPoolSize ? parseInt(process.env.dbPoolSize) : 15,
-  refuseMethods: process.env.refuseMethods ?? 'REGISTER'
+  refuseMethods: process.env.refuseMethods ?? 'REGISTER',
+  uidName: process.env.uidName ?? 'X-callid'
 }

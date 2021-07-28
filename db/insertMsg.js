@@ -45,10 +45,12 @@ function insertMsg (msg) {
   // this table for sip search list
   const sql2 = mysql.format(`insert into inv_${tableDate} (
     method,from_user,from_host,to_user_r,to_host,callid,fs_callid,
-    time,src_host,dst_host,ua,protocol) 
+    time,src_host,dst_host,ua,protocol,
+    u_id) 
     values(?,?,?,?,?,?,?,
-      ?,?,?,?,?)`, [msg.tmMethod, msg.from_user, msg.from_host, msg.to_user_r, msg.to_host, msg.callid, msg.fs_callid,
-    msg.timeSeconds, msg.src_host, msg.dst_host, msg.ua, msg.protocol
+      ?,?,?,?,?,?)`, [msg.tmMethod, msg.from_user, msg.from_host, msg.to_user_r, msg.to_host, msg.callid, msg.fs_callid,
+    msg.timeSeconds, msg.src_host, msg.dst_host, msg.ua, msg.protocol,
+    msg.u_id
   ])
 
   log.info(sql, sql2)
@@ -69,7 +71,7 @@ function insertMsg (msg) {
     if (error) {
       if (error.code !== 'ER_DUP_ENTRY') {
         errorTips(error.code)
-        log.info(error)
+        log.error(error)
       }
       return log.info('insert fail inv_, maybe dumpcate')
     }

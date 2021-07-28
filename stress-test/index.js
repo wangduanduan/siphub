@@ -4,10 +4,10 @@ const { nanoid } = require('nanoid')
 const client = dgram.createSocket('udp4')
 
 const sendInter = 1
-const sendTimes = 100
+const sendTimes = 3
 
 let all = 0
-const MAX = 2000000
+const MAX = 3
 
 function sendMsg (msg) {
   console.log(new Date(), all, 'send')
@@ -88,6 +88,7 @@ function body3 () {
   'Supported: timer, path, replaces\r\n' +
   'Allow-Events: talk, hold, conference, refer\r\n' +
   'Content-Type: application/sdp\r\n' +
+  'X-callid: 1234567\r\n' +
   'Content-Disposition: session\r\n' +
   'Content-Length: 235\r\n' +
   'Wellcloud_Call_ID: 6886c310-28a8-4f04-9170-6a79f4ab2285\r\n' +

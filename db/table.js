@@ -79,28 +79,14 @@ function createTable (tableDate) {
     \`src_host\` char(32) NOT NULL DEFAULT '',
     \`dst_host\` char(32) NOT NULL DEFAULT '',
     \`time\` datetime NOT NULL ON UPDATE CURRENT_TIMESTAMP,
-    PRIMARY KEY (\`callid\`,\`time\`),
+    \`u_id\` char(64) NOT NULL DEFAULT '',
+    PRIMARY KEY (\`callid\`),
     KEY \`from_host\` (\`from_host\`),
     KEY \`fs_callid\` (\`fs_callid\`),
     KEY \`to_host\` (\`to_host\`),
+    KEY \`u_id\` (\`u_id\`),
     KEY \`time\` (\`time\`)
-  ) ENGINE=InnoDB DEFAULT CHARSET=utf8
-      PARTITION BY RANGE COLUMNS(\`time\`) (
-      PARTITION p9 values less than ('${partDate} 09:00:00'),
-      PARTITION p10 values less than ('${partDate} 10:00:00'),
-      PARTITION p11 values less than ('${partDate} 11:00:00'),
-      PARTITION p12 values less than ('${partDate} 12:00:00'),
-      PARTITION p13 values less than ('${partDate} 13:00:00'),
-      PARTITION p14 values less than ('${partDate} 14:00:00'),
-      PARTITION p15 values less than ('${partDate} 15:00:00'),
-      PARTITION p16 values less than ('${partDate} 16:00:00'),
-      PARTITION p17 values less than ('${partDate} 17:00:00'),
-      PARTITION p18 values less than ('${partDate} 18:00:00'),
-      PARTITION p19 values less than ('${partDate} 19:00:00'),
-      PARTITION p20 values less than ('${partDate} 20:00:00'),
-      PARTITION p24 values less than ('${partDate} 23:59:59')
-  )
-  `
+  ) ENGINE=InnoDB DEFAULT CHARSET=utf8`
 
   // log.info(sql)
 

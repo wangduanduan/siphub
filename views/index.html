@@ -83,7 +83,7 @@
                     <td>{{item.time}}</td>
                     <td>{{item.ua}}</td>
                     <td>{{item.protocol | transProtocol}}</td>
-                    <td><a :href="'/call?' + item.table + item.callid" target="_blank">{{item.from_user}}@{{item.from_host}} -> {{item.to_user_r.split('').reverse().join('')}}@{{item.to_host}}</a></td>
+                    <td><a :href="'/call?table=' + item.table + '&callid=' + item.callid + '&uid=' + item.u_id" target="_blank">{{item.from_user}}@{{item.from_host}} -> {{item.to_user_r.split('').reverse().join('')}}@{{item.to_host}}</a></td>
                     <td>{{item.src_host}}->{{item.dst_host}}</td>
                   </tr>
                 </tbody>

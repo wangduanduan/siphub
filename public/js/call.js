@@ -1,11 +1,14 @@
 "use strict";
 
+/* global Qs location, dayjs, Vue, Blob */
 var app = new Vue({
   el: '#app',
   data: {
     seq: [],
     raw: '',
     aLegId: '',
+    callid: '',
+    uid: '',
     table: '',
     pros: {
       6: 'TCP',
@@ -14,14 +17,31 @@ var app = new Vue({
     }
   },
   methods: {
+    queryString: function queryString() {
+      var qs = Qs.parse(location.search, {
+        ignoreQueryPrefix: true
+      });
+      this.table = qs.table;
+      this.callid = qs.callid;
+      this.uid = qs.uid;
+    },
     getALegId: function getALegId(raw) {
+      var _this = this;
+
       var msg = raw.split('\r\n');
       var key = msg.find(function (item) {
         return item.startsWith('A-Leg-Id');
       });
 
       if (key) {
-        this.aLegId = '/call?' + this.table + key.split(': ')[1];
+        this.aLegId = "/call?table=".concat(this.table, "&callid=").concat(key.split(': ')[1], "&uid=").concat(this.uid);
+      } else {
+        axios.get('/api/other-leg?callid=' + this.callid + '&table=' + this.table + '&uid=' + this.uid).then(function (res) {
+          console.log(res.data);
+          _this.aLegId = "/call?table=".concat(_this.table, "&callid=").concat(res.data[0].callid, "&uid=").concat(_this.uid);
+        })["catch"](function (err) {
+          console.log(err);
+        });
       }
 
       console.log(this.aLegId);
@@ -56,24 +76,24 @@ var app = new Vue({
       return this.pros[v] ? this.pros[v] : v;
     },
     render: function render(_res) {
-      var _this = this;
+      var _this2 = this;
 
       this.seq = _res.data;
       this.raw = JSON.stringify(_res.data);
       var res = [];
       this.seq.forEach(function (item, index) {
         if (item.method === 'INVITE') {
-          _this.getALegId(item.raw);
+          _this2.getALegId(item.raw);
         }
 
         var na = isNaN(item.method) ? '->' : '-->';
 
-        var v = _this.getProtocol(item.protocol);
+        var v = _this2.getProtocol(item.protocol);
 
         var dis = 0;
 
         if (index !== 0) {
-          dis = new Date(_this.seq[index].time) - new Date(_this.seq[index - 1].time);
+          dis = new Date(_this2.seq[index].time) - new Date(_this2.seq[index - 1].time);
         }
 
         item.timeH = dayjs(item.time).format('hh:mm:ss');
@@ -91,10 +111,7 @@ var app = new Vue({
       });
     },
     getData: function getData(params) {
-      var callid = location.search.substr(11);
-      var table = location.search.substr(1, 10);
-      this.table = table;
-      axios.get('/api/callid?callid=' + callid + '&table=' + table).then(this.render)["catch"](function (err) {
+      axios.get('/api/callid?callid=' + this.callid + '&table=' + this.table).then(this.render)["catch"](function (err) {
         console.log(err);
       });
     },
@@ -117,6 +134,7 @@ var app = new Vue({
     }
   },
   mounted: function mounted(params) {
+    this.queryString();
     this.getData();
     this.registerEvent();
   }

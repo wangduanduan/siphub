@@ -56,6 +56,16 @@ function getMethod (headLine) {
   return isRequest(headLine) ? meta[0] : meta[1]
 }
 
+function getRequestURL (headLine) {
+  if (isNotString(headLine) || isEmpty(headLine)) return ''
+
+  const meta = headLine.split(' ')
+
+  if (meta.length < 2) return ''
+
+  return isRequest(headLine) ? meta[1] : ''
+}
+
 function getHeadValue (raw, token) {
   const v = eatToken(raw, token)
 
@@ -92,5 +102,6 @@ module.exports = {
   getMethod,
   getHeadValue,
   getBodyUrl,
-  getHeadBodyUrl
+  getHeadBodyUrl,
+  getRequestURL
 }
