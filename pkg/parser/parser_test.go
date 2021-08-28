@@ -19,6 +19,7 @@ const inviteMsg = "INVITE sip:bob@biloxi.example.com SIP/2.0\r\n" +
 	"Contact: <sip:alice@client.atlanta.example.com;transport=tcp>\r\n" +
 	"Content-Type: application/sdp\r\n" +
 	"Content-Length: 151\r\n" +
+	"User-Agent: iphone\r\n" +
 	"\r\n" +
 	"\r\n" +
 	"v=0\r\n" +
@@ -245,5 +246,50 @@ func test(t *testing.T) {
 		assert.Equal(t, c.IsRequest, sip.IsRequest)
 		assert.Equal(t, c.Title, sip.Title)
 		assert.Equal(t, c.RequestURL, sip.RequestURL)
+	}
+}
+
+func TestParseFromToUA(t *testing.T) {
+
+	successCases := []struct {
+		in         string
+		header     string
+		fromUser   string
+		fromDomain string
+		toUser     string
+		toDomain   string
+		callID     string
+		ua         string
+	}{
+		{
+			in:         inviteMsg,
+			header:     "From",
+			fromUser:   "alice",
+			fromDomain: "atlanta.example.com",
+			toUser:     "bob",
+			toDomain:   "biloxi.example.com",
+			ua:         "iphone",
+			callID:     "3848276298220188511@atlanta.example.com",
+		},
+	}
+
+	for _, item := range successCases {
+		sip := Parser{
+			models.SIP{
+				Raw: &item.in,
+			}}
+
+		sip.ParseFrom()
+		sip.ParseTo()
+		sip.ParseFrom()
+		sip.ParseUserAgent()
+		sip.ParseCallID()
+
+		assert.Equal(t, item.fromUser, sip.FromUsername)
+		assert.Equal(t, item.fromDomain, sip.FromDomain)
+		assert.Equal(t, item.toUser, sip.ToUsername)
+		assert.Equal(t, item.toDomain, sip.ToDomain)
+		assert.Equal(t, item.ua, sip.UserAgent)
+		assert.Equal(t, item.callID, sip.CallID)
 	}
 }

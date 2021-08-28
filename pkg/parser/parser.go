@@ -54,7 +54,6 @@ func (p *Parser) ParseFirstLine() {
 	p.RequestURL = firstLineMeta[1]
 }
 
-func (p *Parser) ParseFrom() {}
 func (p *Parser) ParseRequestURL() {
 	if p.RequestURL == "" {
 		return
@@ -63,8 +62,42 @@ func (p *Parser) ParseRequestURL() {
 	p.RequestDomain = domain
 	p.RequestUsername = user
 }
-func (p *Parser) ParseTo()        {}
-func (p *Parser) ParseUserAgent() {}
+
+func (p *Parser) ParseFrom() {
+	v := p.GetHeaderValue(models.HeaderFrom)
+	if v == EmptyStr {
+		return
+	}
+	user, domain := ParseSIPURL(v)
+	p.FromUsername = user
+	p.FromDomain = domain
+}
+
+func (p *Parser) ParseTo() {
+	v := p.GetHeaderValue(models.HeaderTo)
+	if v == EmptyStr {
+		return
+	}
+	user, domain := ParseSIPURL(v)
+	p.ToUsername = user
+	p.ToDomain = domain
+}
+
+func (p *Parser) ParseUserAgent() {
+	v := p.GetHeaderValue(models.HeaderUA)
+	if v == EmptyStr {
+		return
+	}
+	p.UserAgent = v
+}
+
+func (p *Parser) ParseCallID() {
+	v := p.GetHeaderValue(models.HeaderCallID)
+	if v == EmptyStr {
+		return
+	}
+	p.CallID = v
+}
 
 // "Bob" <sips:bob@biloxi.com> ;tag=a48s
 // sip:+12125551212@phone2net.com;tag=887s
@@ -154,6 +187,30 @@ func (p *Parser) GetHeaderValue(header string) (v string) {
 	}
 
 	return strings.TrimSpace(newStr[len(header)+1 : endIndex])
+}
+
+func (p *Parser) ParseUID(HeaderUIDName string) {
+	if HeaderUIDName == "" {
+		return
+	}
+
+	v := p.GetHeaderValue(HeaderUIDName)
+	if v == EmptyStr {
+		return
+	}
+	p.UID = v
+}
+
+func (p *Parser) ParseFSCallID(FSCallID string) {
+	if FSCallID == "" {
+		return
+	}
+
+	v := p.GetHeaderValue(FSCallID)
+	if v == EmptyStr {
+		return
+	}
+	p.FSCallID = v
 }
 
 func init() {

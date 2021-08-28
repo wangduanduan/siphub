@@ -5,7 +5,7 @@ import (
 	"go.uber.org/zap/zapcore"
 	"gopkg.in/natefinch/lumberjack.v2"
 	"os"
-	"siphub/config"
+	"siphub/pkg/env"
 )
 
 /* Debugw Infow Warnw Errorw Fatalw Panicw */
@@ -33,10 +33,10 @@ func getLogLevel(level string) zapcore.Level {
 
 func initLogger() {
 
-	logLevel := getLogLevel(config.Conf.LogLevel)
+	logLevel := getLogLevel(env.Conf.LogLevel)
 
 	lumberJackLogger := &lumberjack.Logger{
-		Filename:   "./logs/" + config.Conf.Hostname + "/app.log",
+		Filename:   "./logs/" + env.Conf.Hostname + "/app.log",
 		MaxSize:    10,
 		MaxBackups: 10,
 		MaxAge:     7,

@@ -2,9 +2,9 @@ package main
 
 import (
 	"net"
-	"siphub/config"
-	"siphub/hep"
-	"siphub/log"
+	"siphub/pkg/env"
+	"siphub/pkg/hep"
+	"siphub/pkg/log"
 	"time"
 )
 
@@ -17,16 +17,16 @@ func main() {
 }
 
 func CreateUDPServer() {
-	conn, err := net.ListenUDP("udp", &net.UDPAddr{Port: config.Conf.UDPListenPort})
+	conn, err := net.ListenUDP("udp", &net.UDPAddr{Port: env.Conf.UDPListenPort})
 	if err != nil {
 		log.Fatalf("Udp Service listen report udp fail:%v", err)
 	}
 	log.Infof("create udp success")
 	defer conn.Close()
-	var data = make([]byte, config.Conf.MaxPackgeLength)
+	var data = make([]byte,env.Conf.MaxPackgeLength)
 	var raw []byte
 	for {
-		conn.SetDeadline(time.Now().Add(time.Duration(config.Conf.MaxReadTimeoutSeconds) * time.Second))
+		conn.SetDeadline(time.Now().Add(time.Duration(env.Conf.MaxReadTimeoutSeconds) * time.Second))
 		n, remoteAddr, err := conn.ReadFromUDP(data)
 
 		if err != nil {

@@ -1,8 +1,9 @@
-package config
+package env
 
 import (
-	"github.com/caarlos0/env/v6"
 	"log"
+
+	"github.com/caarlos0/env/v6"
 )
 
 type config struct {
@@ -11,6 +12,8 @@ type config struct {
 	MaxReadTimeoutSeconds int    `env:"MaxReadTimeoutSecond" envDefault:"5"`
 	LogLevel              string `env:"LogLevel" envDefault:"debug"`
 	Hostname              string `env:"HOSTNAME" envDefault:"unknow"`
+	HeaderUIDName         string `env:"HeaderUIDName"`
+	HeaderFSCallIDName    string `env:"HeaderFSCallIDName"`
 }
 
 var Conf = config{}
