@@ -20,6 +20,8 @@ const inviteMsg = "INVITE sip:bob@biloxi.example.com SIP/2.0\r\n" +
 	"Content-Type: application/sdp\r\n" +
 	"Content-Length: 151\r\n" +
 	"User-Agent: iphone\r\n" +
+	"X-UID: uid\r\n" +
+	"X-FID: fsid\r\n" +
 	"\r\n" +
 	"\r\n" +
 	"v=0\r\n" +
@@ -291,5 +293,33 @@ func TestParseFromToUA(t *testing.T) {
 		assert.Equal(t, item.toDomain, sip.ToDomain)
 		assert.Equal(t, item.ua, sip.UserAgent)
 		assert.Equal(t, item.callID, sip.CallID)
+	}
+}
+
+func TestParseUIDAndFSCallID(t *testing.T) {
+
+	successCases := []struct {
+		in  string
+		uid string
+		fid string
+	}{
+		{
+			in:  "X-UID: myuid\r\nX-FID: test-fs-id\r\n",
+			uid: "",
+			fid: "",
+		},
+		{
+			in:  inviteMsg,
+			uid: "Content-Length",
+			fid: "151",
+		},
+	}
+
+	for _, item := range successCases {
+		sip := Parser{
+			models.SIP{
+				Raw: &item.in,
+			}}
+		assert.Equal(t, item.expectedValue, sip.GetHeaderValue(item.header))
 	}
 }
