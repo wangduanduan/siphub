@@ -5,6 +5,7 @@ import (
 	"siphub/pkg/hep"
 	"siphub/pkg/log"
 	"siphub/pkg/models"
+	"siphub/pkg/parser"
 )
 
 func HepServer(p []byte, remoteAddr *net.UDPAddr) {
@@ -23,12 +24,12 @@ func HepServer(p []byte, remoteAddr *net.UDPAddr) {
 		return
 	}
 
-	sip := Parser{
+	sip := parser.Parser{
 		models.SIP{
 			Raw: hepMsg.Body,
 		},
 	}
 
-	sip.Parse
+	sip.ParseCseq()
 
 }
