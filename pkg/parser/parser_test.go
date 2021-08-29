@@ -305,13 +305,13 @@ func TestParseUIDAndFSCallID(t *testing.T) {
 	}{
 		{
 			in:  "X-UID: myuid\r\nX-FID: test-fs-id\r\n",
-			uid: "",
-			fid: "",
+			uid: "myuid",
+			fid: "test-fs-id",
 		},
 		{
 			in:  inviteMsg,
-			uid: "Content-Length",
-			fid: "151",
+			uid: "uid",
+			fid: "fsid",
 		},
 	}
 
@@ -320,6 +320,32 @@ func TestParseUIDAndFSCallID(t *testing.T) {
 			models.SIP{
 				Raw: &item.in,
 			}}
-		assert.Equal(t, item.expectedValue, sip.GetHeaderValue(item.header))
+
+        sip.ParseUID("X-UID")
+        sip.ParseFSCallID("X-FID")
+
+		assert.Equal(t, item.uid, sip.UID)
+		assert.Equal(t, item.fid, sip.FSCallID)
+	}
+}
+
+func TestParseCallID(t *testing.T) {
+	successCases := []struct {
+		msg    string
+		callID   string
+	}{
+		{inviteMsg, "3848276298220188511@atlanta.example.com"},
+		{"", ""},
+	}
+
+	for _, c := range successCases {
+		sip := Parser{
+			models.SIP{
+				Raw: &c.msg,
+			}}
+
+        sip.ParseCallID()
+
+		assert.Equal(t, c.callID, sip.CallID)
 	}
 }
