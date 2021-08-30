@@ -14,7 +14,8 @@ type config struct {
 	Hostname              string `env:"HOSTNAME" envDefault:"unknow"`
 	HeaderUIDName         string `env:"HeaderUIDName"`
 	HeaderFSCallIDName    string `env:"HeaderFSCallIDName"`
-    DiscardMethods        string `env:"DiscardMethods" envDefault:"OPTIONS,REGISTER"`
+	DiscardMethods        string `env:"DiscardMethods" envDefault:"OPTIONS,REGISTER"`
+	MinPackgeLength       int    `env:"MinPackgeLength" envDefault:"24"`
 }
 
 var Conf = config{}
