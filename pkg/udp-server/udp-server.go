@@ -11,7 +11,7 @@ import (
 	"strings"
 )
 
-func SIPServer(p []byte, remoteAddr *net.UDPAddr) (s *models.SIP, e error) {
+func SIPServer(p []byte) (s *models.SIP, e error) {
 	log.Debugf("%s %v", string(p), remoteAddr)
 	hepMsg, err := hep.NewHepMsg(p)
 
@@ -44,19 +44,19 @@ func SIPServer(p []byte, remoteAddr *net.UDPAddr) (s *models.SIP, e error) {
 
 	// message need be discarded
 	if strings.Contains(env.Conf.DiscardMethods, sip.CSeqMethod) {
-		return
+        return nil, errors.Errorf("discard method: %s", sip.CSeqMethod)
 	}
 
 	sip.ParseCallID()
 
 	if sip.CallID == "" {
-		return
+        return nil, errors.New("has no callid")
 	}
 
 	sip.ParseFirstLine()
 
 	if sip.Title == "" {
-		return
+        return nil, errors.New("has no title")
 	}
 
 	if sip.RequestURL != "" {
@@ -75,4 +75,10 @@ func SIPServer(p []byte, remoteAddr *net.UDPAddr) (s *models.SIP, e error) {
 	if env.Conf.HeaderUIDName != "" {
 		sip.ParseFSCallID(env.Conf.HeaderUIDName)
 	}
+
+    sip.Protocol = int(hepMsg.ProtocolType)
+    sip.SrcAddr = fmt.Sprintf("%s_%d", hepMsg.IP4SourceAddress, hepMsg.SourcePort)
+    sip.DstAddr = fmt.Sprintf("%s_%d", hepMsg.IP4DestinationAddress, hepMsg.DestinationPort)
+
+    return  &sip.SIP, nil
 }
