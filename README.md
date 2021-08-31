@@ -62,8 +62,7 @@ DataKeepDays | 数据保存天数 | 2
 
 # 相关截图
 
-![](./docs/search.jpg)
-![](./docs/sips.jpg)
+![](./demo.png)
 
 
 # 安装
