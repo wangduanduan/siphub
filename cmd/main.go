@@ -17,18 +17,18 @@ type app struct {
 }
 
 func (p *app) OnMessage(b []byte) {
-    sip, err := msg.Format(b)
-    if err != nil {
-        log.Infof("format msg error: %v", err)
-        return
-    }
+	sip, err := msg.Format(b)
+	if err != nil {
+		log.Infof("format msg error: %v", err)
+		return
+	}
 
-    _, err = p.record.Save(sip)
+	_, err = p.record.Save(sip)
 
-    if err != nil {
-        log.Infof("write db error: %v", err)
-        return
-    }
+	if err != nil {
+		log.Infof("write db error: %v", err)
+		return
+	}
 }
 
 func initDB(dbUserPasswd, dbAddr, dbName string) (*sql.DB, error) {
@@ -62,9 +62,9 @@ func main() {
 
 	defer db.Close()
 
-    App := &app{
-        record: &mysql.Record{DB: db},
-    }
+	App := &app{
+		record: &mysql.Record{DB: db},
+	}
 
 	conn, err := net.ListenUDP("udp", &net.UDPAddr{Port: env.Conf.UDPListenPort})
 	if err != nil {
@@ -92,4 +92,3 @@ func main() {
 	}
 
 }
-

@@ -321,8 +321,8 @@ func TestParseUIDAndFSCallID(t *testing.T) {
 				Raw: &item.in,
 			}}
 
-        sip.ParseUID("X-UID")
-        sip.ParseFSCallID("X-FID")
+		sip.ParseUID("X-UID")
+		sip.ParseFSCallID("X-FID")
 
 		assert.Equal(t, item.uid, sip.UID)
 		assert.Equal(t, item.fid, sip.FSCallID)
@@ -332,7 +332,7 @@ func TestParseUIDAndFSCallID(t *testing.T) {
 func TestParseCallID(t *testing.T) {
 	successCases := []struct {
 		msg    string
-		callID   string
+		callID string
 	}{
 		{inviteMsg, "3848276298220188511@atlanta.example.com"},
 		{"", ""},
@@ -344,7 +344,7 @@ func TestParseCallID(t *testing.T) {
 				Raw: &c.msg,
 			}}
 
-        sip.ParseCallID()
+		sip.ParseCallID()
 
 		assert.Equal(t, c.callID, sip.CallID)
 	}

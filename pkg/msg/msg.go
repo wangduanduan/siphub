@@ -11,7 +11,7 @@ import (
 	"strings"
 )
 
-func Format (p []byte) (s *models.SIP, e error) {
+func Format(p []byte) (s *models.SIP, e error) {
 	log.Debugf("%s", string(p))
 	hepMsg, err := hep.NewHepMsg(p)
 
