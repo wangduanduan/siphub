@@ -5,11 +5,13 @@
 - [x] add logger lib
 - [x] add env parse lib
 - [x] add unit test lib
-- [ ] add sip parse function
-- [ ] add some db sql
-- [ ] add mysql db handler
+- [x] add sip parse function
+- [x] add some db sql
+- [x] add mysql db handler
+- [ ] add statistics
+- [ ] add prometheus exporter
+- [ ] add api for search, exporter
 - [ ] add webserver fiber
-- [ ] add http route
 - [ ] add web pages
 - [ ] add a-leg and b-leg show on same page
 
