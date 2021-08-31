@@ -19,7 +19,9 @@ type config struct {
 	SqlMaxOpenConn        int    `env:"SqlMaxOpenConn" envDefault:"24"`
 	DBUserPasswd          string `env:"DBUserPasswd"`
 	DBAddr                string `env:"DBAddr"`
-	DBName                string `env:"DBName"`
+	DBName                string `env:"DBName" envDefault:"siphub"`
+	CalleeFrom            string `env:"CalleeFrom" envDefault:"RURI"`
+	DataKeepDays          int    `env:"DataKeepDays" envDefault:"2"`
 }
 
 var Conf = config{}
