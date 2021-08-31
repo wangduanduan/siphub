@@ -16,6 +16,10 @@ type config struct {
 	HeaderFSCallIDName    string `env:"HeaderFSCallIDName"`
 	DiscardMethods        string `env:"DiscardMethods" envDefault:"OPTIONS,REGISTER"`
 	MinPackgeLength       int    `env:"MinPackgeLength" envDefault:"24"`
+	SqlMaxOpenConn        int    `env:"SqlMaxOpenConn" envDefault:"24"`
+	DBUserPasswd          string `env:"DBUserPasswd"`
+	DBAddr                string `env:"DBAddr"`
+	DBName                string `env:"DBName"`
 }
 
 var Conf = config{}
