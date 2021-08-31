@@ -41,8 +41,6 @@ sip-hub服务仅有3个页面
 - 时序图展示页面: 用于展示SIP时序图和原始SIP消
 - 监控页面
 
-做siphub的原因是homer太难用了，经常查不到想查的数据，查询的速度也蛮。
-
 # 环境变量说明
 
 变量名 | 说明 | 默认值 | 可选值
@@ -59,7 +57,7 @@ SqlMaxOpenConn | 数据库连接池大小 | 默认24
 DBUserPasswd | 数据库用户名和密码，格式如user:passswd |
 DBAddr | 数据库地址, 格式如IP:PORT | 
 DBName |  数据库名 | siphub
-CalleeFrom | 被叫号码来自, 默认RURI, | RURI,FROM
+CalleeFrom | 被叫号码来自 | RURI, | RURI,FROM
 DataKeepDays | 数据保存天数 | 2 
 
 # 相关截图
