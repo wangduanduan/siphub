@@ -1,7 +1,7 @@
 package mysql
 
-const RawTable = `create table if not exists sip_?
-(   id int(11) unsigned NOT NULL AUTO_INCREMENT,
+const RawTable = `create table if not exists sip_TABLE_DATE (
+    id int(11) unsigned NOT NULL AUTO_INCREMENT,
     method char(20) NOT NULL DEFAULT '',
     from_user char(40) NOT NULL DEFAULT '',
     from_host char(64) NOT NULL DEFAULT '',
@@ -22,8 +22,7 @@ const RawTable = `create table if not exists sip_?
     KEY src_host (src_host)
 ) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8;`
 
-const IndexTable = `CREATE TABLE if not exists inv_?
-(
+const IndexTable = `create table if not exists inv_TABLE_DATE (
     callid char(64) NOT NULL DEFAULT '',
     fs_callid char(64) NOT NULL DEFAULT '',
     protocol int(11) NOT NULL,
@@ -43,4 +42,4 @@ const IndexTable = `CREATE TABLE if not exists inv_?
     KEY to_host (to_host),
     KEY u_id (u_id),
     KEY time (time)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8`
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;`

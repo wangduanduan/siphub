@@ -2,14 +2,28 @@ package msg
 
 import (
 	"fmt"
-	"github.com/pkg/errors"
 	"siphub/pkg/env"
 	"siphub/pkg/hep"
 	"siphub/pkg/log"
 	"siphub/pkg/models"
 	"siphub/pkg/parser"
 	"strings"
+	"time"
+
+	"github.com/pkg/errors"
 )
+
+type dbSave func(*models.SIP)
+
+func OnMessage(b []byte, fn dbSave) {
+	sip, err := Format(b)
+	if err != nil {
+		log.Infof("format msg error: %v", err)
+		return
+	}
+	log.Infof("sip %+v", sip)
+	fn(sip)
+}
 
 func Format(p []byte) (s *models.SIP, e error) {
 	log.Debugf("%s", string(p))
@@ -67,6 +81,7 @@ func Format(p []byte) (s *models.SIP, e error) {
 	sip.ParseTo()
 	sip.ParseTo()
 	sip.ParseUserAgent()
+	sip.CreateAt = time.Unix(int64(hepMsg.Timestamp), 0)
 
 	if env.Conf.HeaderFSCallIDName != "" {
 		sip.ParseFSCallID(env.Conf.HeaderFSCallIDName)

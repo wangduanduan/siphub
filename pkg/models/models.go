@@ -1,5 +1,7 @@
 package models
 
+import "time"
+
 const (
 	HeaderCallID = "Call-ID"
 	HeaderFrom   = "From"
@@ -24,7 +26,7 @@ type SIP struct {
 	UserAgent       string
 	SrcAddr         string // IP:PORT
 	DstAddr         string // IP:PORT
-	CreateAt        string
+	CreateAt        time.Time
 	Protocol        int
 	UID             string  // correlative id for AB call leg
 	FSCallID        string  // freeswitch CallID

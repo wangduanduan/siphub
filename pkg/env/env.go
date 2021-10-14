@@ -17,8 +17,8 @@ type config struct {
 	DiscardMethods        string `env:"DiscardMethods" envDefault:"OPTIONS,REGISTER"`
 	MinPackgeLength       int    `env:"MinPackgeLength" envDefault:"24"`
 	SqlMaxOpenConn        int    `env:"SqlMaxOpenConn" envDefault:"24"`
-	DBUserPasswd          string `env:"DBUserPasswd"`
-	DBAddr                string `env:"DBAddr"`
+	DBUserPasswd          string `env:"DBUserPasswd" envDefault:"root:123456"`
+	DBAddr                string `env:"DBAddr" envDefault:"localhost"`
 	DBName                string `env:"DBName" envDefault:"siphub"`
 	CalleeFrom            string `env:"CalleeFrom" envDefault:"RURI"`
 	DataKeepDays          int    `env:"DataKeepDays" envDefault:"2"`

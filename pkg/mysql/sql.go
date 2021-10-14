@@ -3,38 +3,32 @@ package mysql
 import (
 	"database/sql"
 	"siphub/pkg/log"
+	"strings"
+	"time"
 )
 
-type Table struct {
-	DB *sql.DB
-}
-
-func (p *Table) CreateTable(tableDate string) {
-	stmtRawTable, err := p.DB.Prepare(RawTable)
-
-	if err != nil {
-		if _, err := stmtRawTable.Exec(tableDate); err != nil {
-			log.Errorf("create rawTable sip_%s error: %v", tableDate, err)
-		} else {
-			log.Infof("create rawTable sip_%s success", tableDate)
-		}
-	} else {
-		log.Errorf("Prepare rawTable sip_%s error: %v", err)
+func CreateTable(db *sql.DB, tableDate string) {
+	if tableDate == "" {
+		tableDate = time.Now().Format("2006_01_02")
 	}
 
-	stmtIndexTable, err := p.DB.Prepare(IndexTable)
+	_, err1 := db.Exec(strings.Replace(RawTable, "TABLE_DATE", tableDate, 1))
 
-	if err != nil {
-		stmtIndexTable.Exec("2021_02_01")
+	if err1 != nil {
+		log.Errorf("create rawTable error: %v", err1)
 	} else {
+		log.Infof("create rawTable success %s", tableDate)
+	}
 
+	_, err2 := db.Exec(strings.Replace(IndexTable, "TABLE_DATE", tableDate, 1))
+
+	if err2 != nil {
+		log.Errorf("create indexTable error: %v", tableDate, err2)
+	} else {
+		log.Infof("cteate IndexTable success %s", tableDate)
 	}
 }
 
-func (p *Table) DeleteTable(tableName string) {
-
-}
-
-func (p *Table) CleanTable() {
+func DeleteTable(tableName string) {
 
 }
