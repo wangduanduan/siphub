@@ -7,12 +7,33 @@ import (
 	"siphub/pkg/msg"
 	"siphub/pkg/mysql"
 	"time"
+
+	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/template/html"
 )
 
 func main() {
 
 	mysql.Connect(env.Conf.DBUserPasswd, env.Conf.DBAddr, env.Conf.DBName)
+	go createHepServer()
 
+	engine := html.New("./views", ".html")
+	engine.Delims("<%", "%>")
+	engine.Reload(true)
+	engine.Debug(true)
+
+	app := fiber.New(fiber.Config{Views: engine})
+
+	app.Static("/", "./ui")
+
+	app.Get("/", func(c *fiber.Ctx) error {
+		return c.Render("index", fiber.Map{})
+	})
+
+	app.Listen(":3000")
+}
+
+func createHepServer() {
 	conn, err := net.ListenUDP("udp", &net.UDPAddr{Port: env.Conf.UDPListenPort})
 
 	if err != nil {
@@ -38,5 +59,4 @@ func main() {
 		copy(raw, data[:n])
 		go msg.OnMessage(raw, mysql.Save)
 	}
-
 }
