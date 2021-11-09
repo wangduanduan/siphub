@@ -7,42 +7,39 @@ import (
 	"siphub/pkg/log"
 	"siphub/pkg/models"
 	"siphub/pkg/parser"
+	"siphub/pkg/prom"
 	"strings"
 	"time"
 
-	"github.com/pkg/errors"
+	"github.com/prometheus/client_golang/prometheus"
 )
 
 type dbSave func(*models.SIP)
 
 func OnMessage(b []byte, fn dbSave) {
-	sip, err := Format(b)
-	if err != nil {
-		log.Infof("format msg error: %v", err)
+	sip, errMsg := Format(b)
+	if errMsg != "" {
+		log.Infof("format msg error: %v; raw: %d, %s", errMsg, len(b), b)
+		prom.MsgCount.With(prometheus.Labels{"type": errMsg})
 		return
 	}
-	log.Infof("sip %+v", sip)
+	prom.MsgCount.With(prometheus.Labels{"type": "hep_parse_ok"})
 	fn(sip)
 }
 
-func Format(p []byte) (s *models.SIP, e error) {
-	log.Debugf("%s", string(p))
+func Format(p []byte) (s *models.SIP, errMsg string) {
 	hepMsg, err := hep.NewHepMsg(p)
 
 	if err != nil {
-		log.Errorf("%+v", err)
-		log.Errorf("%s", p)
-		return nil, errors.Wrap(err, "parse hep erro")
+		return nil, "hep_parse_error"
 	}
 
-	log.Infof("%+v", hepMsg)
-
 	if hepMsg.Body == "" {
-		return nil, errors.New("body is empty")
+		return nil, "hep_body_is_empty"
 	}
 
 	if len(hepMsg.Body) < env.Conf.MinPackgeLength {
-		return nil, errors.Errorf("body too small: %d", len(hepMsg.Body))
+		return nil, "hep_body_is_too_small"
 	}
 
 	sip := parser.Parser{
@@ -53,24 +50,23 @@ func Format(p []byte) (s *models.SIP, e error) {
 	sip.ParseCseq()
 
 	if sip.CSeqMethod == "" {
-		return nil, errors.Errorf("body too small: %d", len(hepMsg.Body))
+		return nil, "cseq_is_empty"
 	}
 
-	// message need be discarded
 	if strings.Contains(env.Conf.DiscardMethods, sip.CSeqMethod) {
-		return nil, errors.Errorf("discard method: %s", sip.CSeqMethod)
+		return nil, "method_discarded"
 	}
 
 	sip.ParseCallID()
 
 	if sip.CallID == "" {
-		return nil, errors.New("has no callid")
+		return nil, "callid_is_empty"
 	}
 
 	sip.ParseFirstLine()
 
 	if sip.Title == "" {
-		return nil, errors.New("has no title")
+		return nil, "title_is_empty"
 	}
 
 	if sip.RequestURL != "" {
@@ -95,5 +91,5 @@ func Format(p []byte) (s *models.SIP, e error) {
 	sip.SrcAddr = fmt.Sprintf("%s_%d", hepMsg.IP4SourceAddress, hepMsg.SourcePort)
 	sip.DstAddr = fmt.Sprintf("%s_%d", hepMsg.IP4DestinationAddress, hepMsg.DestinationPort)
 
-	return &sip.SIP, nil
+	return &sip.SIP, ""
 }

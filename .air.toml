@@ -2,12 +2,12 @@
 
 # Working directory
 # . or absolute path, please note that the directories following must be under root.
-root = "./cmd/"
+root = "."
 tmp_dir = "tmp"
 
 [build]
 # Just plain old shell command. You could use `make` as well.
-cmd = "make build"
+cmd = "go build -o ./tmp/main ."
 # Binary file yields from `cmd`.
 bin = "tmp/main"
 # Customize binary.

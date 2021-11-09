@@ -13,6 +13,8 @@ import (
 
 var db *gorm.DB
 
+const MaxUserAgentLength = 40
+
 type Record struct {
 	ID          uint      `gorm:"primaryKey"`                                             // `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
 	FsCallid    string    `gorm:"type:char(64);not null; default:''"`                     // `fs_callid` char(64) NOT NULL DEFAULT '',
@@ -28,7 +30,7 @@ type Record struct {
 	SrcHost     string    `gorm:"type:char(32);not null;default:''"`                      // `src_host` char(32) NOT NULL DEFAULT '',
 	DstHost     string    `gorm:"type:char(32);not null;default:''"`                      // `dst_host` char(32) NOT NULL DEFAULT '',
 	CreateTime  time.Time `gorm:"index;type:datetime;not null;default:CURRENT_TIMESTAMP"` // `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
-	RawMsg      string    `gorm:"type:text;not null;default:''"`                          // `raw_msg` text NOT NULL,
+	RawMsg      string    `gorm:"type:text;not null"`                                     // `raw_msg` text NOT NULL,
 }
 
 func Search(FromUser string, FromDomain string, ToUser string, ToDomain string, BeginTime time.Time, EndTime time.Time) {
@@ -71,6 +73,12 @@ func Search(FromUser string, FromDomain string, ToUser string, ToDomain string, 
 }
 
 func Save(s *models.SIP) {
+	ua := s.UserAgent
+
+	if len(ua) > MaxUserAgentLength {
+		ua = ua[:MaxUserAgentLength]
+	}
+
 	item := Record{
 		FsCallid:    s.FSCallID,
 		LegUid:      s.UID,
@@ -81,7 +89,7 @@ func Save(s *models.SIP) {
 		ToHost:      s.ToDomain,
 		SipCallid:   s.CallID,
 		SipProtocol: uint(s.Protocol),
-		UserAgent:   s.UserAgent,
+		UserAgent:   ua,
 		SrcHost:     s.SrcAddr,
 		DstHost:     s.DstAddr,
 		CreateTime:  s.CreateAt,

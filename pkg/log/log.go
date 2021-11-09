@@ -1,11 +1,12 @@
 package log
 
 import (
+	"os"
+	"siphub/pkg/env"
+
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
 	"gopkg.in/natefinch/lumberjack.v2"
-	"os"
-	"siphub/pkg/env"
 )
 
 /* Debugw Infow Warnw Errorw Fatalw Panicw */
@@ -16,6 +17,7 @@ var Debugf = log.Debugf
 var Infof = log.Infof
 var Errorf = log.Errorf
 var Fatalf = log.Fatalf
+var Warnf = log.Warnf
 
 func getLogLevel(level string) zapcore.Level {
 	switch level {
@@ -62,6 +64,7 @@ func initLogger() {
 	Errorf = log.Errorf
 	Fatalf = log.Fatalf
 	Debugf = log.Debugf
+	Warnf = log.Warnf
 }
 
 func init() {
