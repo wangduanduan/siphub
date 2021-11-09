@@ -4,9 +4,11 @@ import (
 	"fmt"
 	"siphub/pkg/log"
 	"siphub/pkg/models"
+	"siphub/pkg/prom"
 	"siphub/pkg/util"
 	"time"
 
+	"github.com/prometheus/client_golang/prometheus"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 )
@@ -95,7 +97,15 @@ func Save(s *models.SIP) {
 		CreateTime:  s.CreateAt,
 		RawMsg:      *s.Raw,
 	}
-	db.Create(&item)
+
+	result := db.Create(&item)
+
+	if result.Error != nil {
+		prom.MsgCount.With(prometheus.Labels{"type": "save_to_db_error"}).Inc()
+		log.Errorf("save to db error: %v", result.Error)
+	} else {
+		prom.MsgCount.With(prometheus.Labels{"type": "save_to_db_success"}).Inc()
+	}
 }
 
 func Connect(UserPasswd, Addr, DBName string) {

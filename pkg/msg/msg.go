@@ -23,7 +23,7 @@ func OnMessage(b []byte, fn dbSave) {
 		prom.MsgCount.With(prometheus.Labels{"type": errMsg})
 		return
 	}
-	prom.MsgCount.With(prometheus.Labels{"type": "hep_parse_ok"})
+	prom.MsgCount.With(prometheus.Labels{"type": "hep_parse_ok"}).Inc()
 	fn(sip)
 }
 
