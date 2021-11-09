@@ -87,7 +87,7 @@ func Format(p []byte) (s *models.SIP, errMsg string) {
 		sip.ParseFSCallID(env.Conf.HeaderUIDName)
 	}
 
-	sip.Protocol = int(hepMsg.ProtocolType)
+	sip.Protocol = int(hepMsg.IPProtocolID)
 	sip.SrcAddr = fmt.Sprintf("%s_%d", hepMsg.IP4SourceAddress, hepMsg.SourcePort)
 	sip.DstAddr = fmt.Sprintf("%s_%d", hepMsg.IP4DestinationAddress, hepMsg.DestinationPort)
 

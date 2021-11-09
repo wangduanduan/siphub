@@ -28,6 +28,7 @@ type Record struct {
 	ToHost      string    `gorm:"index;type:char(64);not null;default:''"`                // `to_host` char(64) NOT NULL DEFAULT '',
 	SipCallid   string    `gorm:"index;type:char(64);not null;default:''"`                // `sip_callid` char(64) NOT NULL DEFAULT '',
 	SipProtocol uint      `gorm:"type:int(11);not null;default:0"`                        // `sip_protocol` int(11) NOT NULL,
+	IsRequest   uint      `gorm:"index;type:int(11);not null;default:0"`                  // `sip_protocol` int(11) NOT NULL,
 	UserAgent   string    `gorm:"type:char(40);not null;default:''"`                      // `user_agent` char(40) NOT NULL DEFAULT '',
 	SrcHost     string    `gorm:"type:char(32);not null;default:''"`                      // `src_host` char(32) NOT NULL DEFAULT '',
 	DstHost     string    `gorm:"type:char(32);not null;default:''"`                      // `dst_host` char(32) NOT NULL DEFAULT '',
@@ -76,9 +77,14 @@ func Search(FromUser string, FromDomain string, ToUser string, ToDomain string, 
 
 func Save(s *models.SIP) {
 	ua := s.UserAgent
+	isRequest := 0
 
 	if len(ua) > MaxUserAgentLength {
 		ua = ua[:MaxUserAgentLength]
+	}
+
+	if s.IsRequest == true {
+		isRequest = 1
 	}
 
 	item := Record{
@@ -90,6 +96,7 @@ func Save(s *models.SIP) {
 		ToUser:      util.ReverseString(s.ToUsername), // 被叫号码翻转后存储, 方便查询时不需要加前缀
 		ToHost:      s.ToDomain,
 		SipCallid:   s.CallID,
+		IsRequest:   uint(isRequest),
 		SipProtocol: uint(s.Protocol),
 		UserAgent:   ua,
 		SrcHost:     s.SrcAddr,
