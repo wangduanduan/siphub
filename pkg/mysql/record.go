@@ -36,43 +36,11 @@ type Record struct {
 	RawMsg      string    `gorm:"type:text;not null"`                                     // `raw_msg` text NOT NULL,
 }
 
-func Search(FromUser string, FromDomain string, ToUser string, ToDomain string, BeginTime time.Time, EndTime time.Time) {
-	var records []Record
-
-	query := db.Select(
-		"id",
-		"fs_callid",
-		"leg_uid",
-		"sip_method",
-		"from_user",
-		"from_host",
-		"to_user",
-		"to_host",
-		"sip_callid",
-		"sip_protocol",
-		"user_agent",
-		"src_host",
-		"dst_host",
-		"create_time",
-	).Limit(200).Where("create_time between ? and ?", BeginTime, EndTime)
-
-	if FromUser != "" {
-		query = query.Where("from_user = ?", FromUser)
-	}
-
-	if FromDomain != "" {
-		query = query.Where("from_host = ?", FromDomain)
-	}
-
-	if ToUser != "" {
-		query = query.Where("to_user = ?", ToUser)
-	}
-
-	if ToDomain != "" {
-		query = query.Where("to_host = ?", ToDomain)
-	}
-
-	query.Find(&records)
+func DeleteOldRecords(keepHours int) {
+	deadLine := time.Now().Add(-time.Hour * time.Duration(keepHours))
+	log.Infof("delete old file before %v", deadLine)
+	result := db.Debug().Delete(Record{}, "create_time < ?", deadLine.Format("2006-01-02 15:04:05"))
+	log.Infof("delete old %v records, error: %v", result.RowsAffected, result.Error)
 }
 
 func Save(s *models.SIP) {

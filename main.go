@@ -18,17 +18,27 @@ const MinRawPacketLenth = 105
 
 func main() {
 	mysql.Connect(env.Conf.DBUserPasswd, env.Conf.DBAddr, env.Conf.DBName)
+	mysql.DeleteOldRecords(env.Conf.DataKeepHours)
+
 	go createHepServer()
+	go removeOldRecords()
 
 	app := http.NewServeMux()
 
-	app.Handle("/metrics", promhttp.Handler())
+	app.Handle("/metrics/prometheus", promhttp.Handler())
 	log.Infof("app listen on :3000")
 
 	err := http.ListenAndServe(":3000", app)
 
 	if err != nil {
 		log.Fatalf("app listen error: %v", err)
+	}
+}
+
+func removeOldRecords() {
+	for {
+		time.Sleep(time.Hour)
+		mysql.DeleteOldRecords(env.Conf.DataKeepHours)
 	}
 }
 

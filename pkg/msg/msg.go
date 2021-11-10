@@ -17,29 +17,34 @@ import (
 type dbSave func(*models.SIP)
 
 func OnMessage(b []byte, fn dbSave) {
-	sip, errMsg := Format(b)
-	if errMsg != "" {
-		log.Infof("format msg error: %v; raw: %d, %s", errMsg, len(b), b)
-		prom.MsgCount.With(prometheus.Labels{"type": errMsg})
+	sip, errType, errMsg := Format(b)
+	if errType != "" {
+		if errType == "method_discarded" {
+			log.Infof("format msg error: %v: %v; raw length: %d", errType, errMsg, len(b))
+		} else {
+			log.Infof("format msg error: %v; raw length: %d, %s", errType, len(b), b)
+		}
+		prom.MsgCount.With(prometheus.Labels{"type": errType}).Inc()
 		return
 	}
 	prom.MsgCount.With(prometheus.Labels{"type": "hep_parse_ok"}).Inc()
+	log.Infof("%s %s->%s", sip.Title, sip.FromUsername+sip.FromDomain, sip.ToUsername+sip.FromDomain)
 	fn(sip)
 }
 
-func Format(p []byte) (s *models.SIP, errMsg string) {
+func Format(p []byte) (s *models.SIP, errorType string, errMsg string) {
 	hepMsg, err := hep.NewHepMsg(p)
 
 	if err != nil {
-		return nil, "hep_parse_error"
+		return nil, "hep_parse_error", ""
 	}
 
 	if hepMsg.Body == "" {
-		return nil, "hep_body_is_empty"
+		return nil, "hep_body_is_empty", ""
 	}
 
 	if len(hepMsg.Body) < env.Conf.MinPackgeLength {
-		return nil, "hep_body_is_too_small"
+		return nil, "hep_body_is_too_small", ""
 	}
 
 	sip := parser.Parser{
@@ -50,23 +55,23 @@ func Format(p []byte) (s *models.SIP, errMsg string) {
 	sip.ParseCseq()
 
 	if sip.CSeqMethod == "" {
-		return nil, "cseq_is_empty"
+		return nil, "cseq_is_empty", ""
 	}
 
 	if strings.Contains(env.Conf.DiscardMethods, sip.CSeqMethod) {
-		return nil, "method_discarded"
+		return nil, "method_discarded", sip.CSeqMethod
 	}
 
 	sip.ParseCallID()
 
 	if sip.CallID == "" {
-		return nil, "callid_is_empty"
+		return nil, "callid_is_empty", ""
 	}
 
 	sip.ParseFirstLine()
 
 	if sip.Title == "" {
-		return nil, "title_is_empty"
+		return nil, "title_is_empty", ""
 	}
 
 	if sip.RequestURL != "" {
@@ -91,5 +96,5 @@ func Format(p []byte) (s *models.SIP, errMsg string) {
 	sip.SrcAddr = fmt.Sprintf("%s_%d", hepMsg.IP4SourceAddress, hepMsg.SourcePort)
 	sip.DstAddr = fmt.Sprintf("%s_%d", hepMsg.IP4DestinationAddress, hepMsg.DestinationPort)
 
-	return &sip.SIP, ""
+	return &sip.SIP, "", ""
 }

@@ -93,7 +93,7 @@ fs version 版本要高于 1.6.8+
 用真实的siphub ip:port替换SIP_HUB_IP_PORT
 
 ```
-<param name="capture-server" value="udp:SIP_HUB_IP_PORT"/>
+<param name="capture-server" value="udp:SIP_HUB_IP_PORT;hep=3;capture_id=100"/>
 ```
 
 ```
@@ -104,3 +104,12 @@ freeswitch@fsnode04> sofia global capture off
  
 +OK Global capture off
 ```
+
+然后将
+- sofia_internal.conf.xml
+- sofia_external.conf.xml
+
+中的
+
+```
+<param name="sip-capture" value="yes"/>
