@@ -2,6 +2,7 @@ package msg
 
 import (
 	"fmt"
+	"net"
 	"siphub/pkg/env"
 	"siphub/pkg/hep"
 	"siphub/pkg/log"
@@ -16,13 +17,11 @@ import (
 
 type dbSave func(*models.SIP)
 
-func OnMessage(b []byte, fn dbSave) {
-	sip, errType, errMsg := Format(b)
+func OnMessage(b []byte, fn dbSave, ip net.IP) {
+	sip, errType, _ := Format(b)
 	if errType != "" {
-		if errType == "method_discarded" {
-			log.Infof("format msg error: %v: %v; raw length: %d", errType, errMsg, len(b))
-		} else {
-			log.Infof("format msg error: %v; raw length: %d, %s", errType, len(b), b)
+		if errType != "method_discarded" {
+			log.Infof("format msg error: %v; raw length: %d, %s, from: %v", errType, len(b), b, ip)
 		}
 		prom.MsgCount.With(prometheus.Labels{"type": errType}).Inc()
 		return
@@ -89,7 +88,7 @@ func Format(p []byte) (s *models.SIP, errorType string, errMsg string) {
 	}
 
 	if env.Conf.HeaderUIDName != "" {
-		sip.ParseFSCallID(env.Conf.HeaderUIDName)
+		sip.ParseUID(env.Conf.HeaderUIDName)
 	}
 
 	sip.Protocol = int(hepMsg.IPProtocolID)

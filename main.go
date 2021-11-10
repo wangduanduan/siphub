@@ -80,6 +80,6 @@ func createHepServer() {
 
 		prom.MsgCount.With(prometheus.Labels{"type": "on_message"}).Inc()
 
-		go msg.OnMessage(raw, mysql.Save)
+		go msg.OnMessage(raw, mysql.Save, remoteAddr.IP)
 	}
 }

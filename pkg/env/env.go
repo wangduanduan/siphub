@@ -12,7 +12,7 @@ type config struct {
 	MaxReadTimeoutSeconds int    `env:"MaxReadTimeoutSecond" envDefault:"5"`
 	LogLevel              string `env:"LogLevel" envDefault:"debug"`
 	Hostname              string `env:"HOSTNAME" envDefault:"unknow"`
-	HeaderUIDName         string `env:"HeaderUIDName"`
+	HeaderUIDName         string `env:"HeaderUIDName" envDefault:"Wellcloud_Call_ID"`
 	HeaderFSCallIDName    string `env:"HeaderFSCallIDName"`
 	DiscardMethods        string `env:"DiscardMethods" envDefault:"OPTIONS"`
 	MinPackgeLength       int    `env:"MinPackgeLength" envDefault:"24"`
@@ -30,6 +30,6 @@ func init() {
 	if err := env.Parse(&Conf); err != nil {
 		log.Fatalf("%+v\n", err)
 	} else {
-		log.Printf("%+v\n", err)
+		log.Printf("%#v\n", Conf)
 	}
 }
