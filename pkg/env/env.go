@@ -12,7 +12,7 @@ type config struct {
 	MaxReadTimeoutSeconds int    `env:"MaxReadTimeoutSecond" envDefault:"5"`
 	LogLevel              string `env:"LogLevel" envDefault:"debug"`
 	Hostname              string `env:"HOSTNAME" envDefault:"unknow"`
-	HeaderUIDName         string `env:"HeaderUIDName" envDefault:"Wellcloud_Call_ID"`
+	HeaderUIDName         string `env:"HeaderUIDName"`
 	HeaderFSCallIDName    string `env:"HeaderFSCallIDName"`
 	DiscardMethods        string `env:"DiscardMethods" envDefault:"OPTIONS"`
 	MinPackgeLength       int    `env:"MinPackgeLength" envDefault:"24"`
