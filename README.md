@@ -1,19 +1,18 @@
-# Golang版本
-- 开发中 
-- 仅支持hep3协议
+# 相关截图
 
-# roadmap
-- [x] 增加日志模块 
-- [x] 增加环境变量解析模块 
-- [x] 增加SIP消息解析模块，只解析必要的字段 
-- [x] 增加数据库链接模块 
-- [x] 增加数据库写入模块
-- [ ] 增加sip消息查询等rest api
-    - SIP消息查询接口
-    - 按照CallID查询相关的SIP消息接口
-    - 按照SIP CallID查询FS CallID接口
-- [ ] 增加webserver
-- [ ] 优化信令图展示，同时展示两个callLeg
+## 搜索界面
+![](./call-list.png)
+
+## 时序图展示界面
+![](./seq.png)
+
+# siphub 组件
+- siphub-go: 负责处理hep消息，写入数据库 
+- siphub-ui: 负责web界面展示，数据搜索
+
+# Golang版本
+
+- 仅支持hep3协议
 
 # 功能介绍
 
@@ -34,35 +33,42 @@ sip-hub服务仅有3个页面
 
 - 搜索页面: 用于按照主被叫、域名和时间范围搜索呼叫记录
 - 时序图展示页面: 用于展示SIP时序图和原始SIP消
-- 监控页面
 
 # 环境变量说明
 
-变量名 | 说明 | 默认值 | 可选值
---- | --- | --- | ---
-UDPListenPort | UDP监听端口 | 9060
-MaxPackgeLength | 最大UDP包字节 | 2048
-MaxReadTimeoutSeconds | UDP读取超时分钟 | 默认5
-LogLevel | 日志级别 | debug | debug, info, warning, error
-HeaderUIDName | UID消息头的名字 siphub解析这个头来关联两个呼叫 | "" 
-HeaderFSCallIDName | FSCallID消息头的名字，用来读取FS CallID | ""
-DiscardMethods | 丢弃的SIP消息类型 | OPTIONS,REGISTER |
-MinPackgeLength | 最小的SIP消息长度 | 24
-SqlMaxOpenConn | 数据库连接池大小 | 默认24
-DBUserPasswd | 数据库用户名和密码，格式如user:passswd |
-DBAddr | 数据库地址, 格式如IP:PORT | 
-DBName |  数据库名 | siphub
-CalleeFrom | 被叫号码来自 | RURI, | RURI,FROM
-DataKeepDays | 数据保存天数 | 2 
+```
+    // UDP监听端口
+	UDPListenPort         int    `env:"UDPListenPort" envDefault:"9060"`
+    // 最大UDP包的长度
+	MaxPackgeLength       int    `env:"MaxPackgeLength" envDefault:"2048"`
+    // UDP读取超时秒数
+	MaxReadTimeoutSeconds int    `env:"MaxReadTimeoutSecond" envDefault:"5"`
+    // 日志级别
+	LogLevel              string `env:"LogLevel" envDefault:"debug"`
+    // 主机名称
+	Hostname              string `env:"HOSTNAME" envDefault:"unknow"`
+    // 关联两个Leg的UID SIP头名称
+	HeaderUIDName         string `env:"HeaderUIDName"`
+    // FS CallID名称 
+	HeaderFSCallIDName    string `env:"HeaderFSCallIDName"`
+    // 丢弃的方法，方法之间用英文逗号隔开
+	DiscardMethods        string `env:"DiscardMethods" envDefault:"OPTIONS"`
+    // 最小的UDP包长度，比这个小的会丢弃
+	MinPackgeLength       int    `env:"MinPackgeLength" envDefault:"24"`
+    // 数据库连接数
+	SqlMaxOpenConn        int    `env:"SqlMaxOpenConn" envDefault:"24"`
+    // 数据库用户名和密码
+	DBUserPasswd          string `env:"DBUserPasswd" envDefault:"root:123456"`
+    // 数据库地址
+	DBAddr                string `env:"DBAddr" envDefault:"localhost"`
+    // 数据库名称
+	DBName                string `env:"DBName" envDefault:"siphub"`
+    // 被叫号码从哪个地方抽取，RURI 或者 TO
+	CalleeFrom            string `env:"CalleeFrom" envDefault:"RURI"`
+    // 数据保留多少小时
+	DataKeepHours         int    `env:"DataKeepHours" envDefault:"2"`
+```
 
-# 相关截图
-
-![](./demo.png)
-
-
-# Docker安装
-
-1. 首先需要安装MySql数据库，并在其中建立一个名为siphub的数据库
 
 # 集成
 
@@ -86,6 +92,7 @@ if(!is_method("REGISTER") && !has_totag()){
 ```
 
 ## FreeSWITCH集成
+
 fs version 版本要高于 1.6.8+ 
 
 编辑： sofia.conf.xml
@@ -109,7 +116,7 @@ freeswitch@fsnode04> sofia global capture off
 - sofia_internal.conf.xml
 - sofia_external.conf.xml
 
-中的
 
 ```
 <param name="sip-capture" value="yes"/>
+```
