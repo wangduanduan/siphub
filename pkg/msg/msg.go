@@ -79,7 +79,6 @@ func Format(p []byte) (s *models.SIP, errorType string, errMsg string) {
 
 	sip.ParseFrom()
 	sip.ParseTo()
-	sip.ParseTo()
 	sip.ParseUserAgent()
 	sip.CreateAt = time.Unix(int64(hepMsg.Timestamp), 0)
 
