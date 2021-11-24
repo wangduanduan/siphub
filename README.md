@@ -1,10 +1,11 @@
 # 相关截图
 
 ## 搜索界面
-![](./img/search.png)
+![](./img/search2.png)
 
 ## 时序图展示界面
-![](./img/seq2.png)
+![](./img/call-fail.png)
+![](./img/call-success.png)
 
 # siphub 组件
 - siphub-go: 负责处理hep消息，写入数据库 

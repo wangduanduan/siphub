@@ -23,6 +23,7 @@ type Record struct {
 	FsCallid    string    `gorm:"type:char(64);not null; default:''"`                     // `fs_callid` char(64) NOT NULL DEFAULT '',
 	LegUid      string    `gorm:"index;type:char(64);not null;default:''"`                // `leg_uid` char(64) NOT NULL DEFAULT '',
 	SipMethod   string    `gorm:"index;type:char(20);not null;default:''"`                // `sip_method` char(20) NOT NULL DEFAULT '',
+	CseqMethod  string    `gorm:"index;type:char(20);not null;default:''"`                // `cseq_method` char(20) NOT NULL DEFAULT '',
 	FromUser    string    `gorm:"index;type:char(40);not null;default:''"`                // `from_user` char(40) NOT NULL DEFAULT '',
 	FromHost    string    `gorm:"index;type:char(64);not null;default:''"`                // `from_host` char(64) NOT NULL DEFAULT '',
 	ToUser      string    `gorm:"index;type:char(40);not null;default:''"`                // `to_user` char(40) NOT NULL DEFAULT '',
@@ -60,6 +61,7 @@ func Save(s *models.SIP) {
 		FsCallid:    s.FSCallID,
 		LegUid:      s.UID,
 		SipMethod:   s.Title,
+		CseqMethod:  s.CSeqMethod,
 		FromUser:    s.FromUsername,
 		FromHost:    s.FromDomain,
 		ToUser:      util.ReverseString(s.ToUsername), // 被叫号码翻转后存储, 方便查询时不需要加前缀
