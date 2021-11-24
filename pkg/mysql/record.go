@@ -2,6 +2,7 @@ package mysql
 
 import (
 	"fmt"
+	"siphub/pkg/env"
 	"siphub/pkg/log"
 	"siphub/pkg/models"
 	"siphub/pkg/prom"
@@ -92,6 +93,17 @@ func Connect(UserPasswd, Addr, DBName string) {
 	if err != nil {
 		log.Fatalf("connect mysql error: %s", err)
 	}
+
+	sqlDB, err := db.DB()
+
+	// SetMaxIdleConns sets the maximum number of connections in the idle connection pool.
+	sqlDB.SetMaxIdleConns(env.Conf.SqlMaxIdleConn)
+
+	// SetMaxOpenConns sets the maximum number of open connections to the database.
+	sqlDB.SetMaxOpenConns(env.Conf.SqlMaxOpenConn)
+
+	// SetConnMaxLifetime sets the maximum amount of time a connection may be reused.
+	sqlDB.SetConnMaxLifetime(time.Minute)
 
 	db.AutoMigrate(&Record{})
 }

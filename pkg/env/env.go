@@ -16,7 +16,8 @@ type config struct {
 	HeaderFSCallIDName    string `env:"HeaderFSCallIDName"`
 	DiscardMethods        string `env:"DiscardMethods" envDefault:"OPTIONS"`
 	MinPackgeLength       int    `env:"MinPackgeLength" envDefault:"24"`
-	SqlMaxOpenConn        int    `env:"SqlMaxOpenConn" envDefault:"24"`
+	SqlMaxOpenConn        int    `env:"SqlMaxOpenConn" envDefault:"64"`
+	SqlMaxIdleConn        int    `env:"SqlMaxIdleConn" envDefault:"64"`
 	DBUserPasswd          string `env:"DBUserPasswd" envDefault:"root:123456"`
 	DBAddr                string `env:"DBAddr" envDefault:"localhost"`
 	DBName                string `env:"DBName" envDefault:"siphub"`
