@@ -31,7 +31,7 @@ docker 安装siphub-go
     -e DataKeepHours=6 \
     -e LogLevel="info" \
     -e HeaderUIDName="X-UID" \
-    harbor:5000/wecloud/siphub-go:21.11.24
+    wangduanduan/siphub-go:21.11.24
 ```
 
 - 3000/HTTP 端口
@@ -76,7 +76,7 @@ docker 安装siphub-go
 
 ## siphub-ui
 
-docker 安装siphub-ui
+docker运行siphub-ui
 
 ```bash
     docker run -d \
@@ -88,7 +88,7 @@ docker 安装siphub-ui
     -e dbPwd="some-password" \
     -e dbName="siphub" \
     -e logLevel="info" \
-    harbor:5000/wecloud/siphub-ui:21.11.24
+    wangduanduan/siphub-ui:21.11.24
 ```
 
 - 8080/HTTP 端口 提供Web查询和展示界面
