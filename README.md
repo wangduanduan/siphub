@@ -17,6 +17,23 @@
 # 功能介绍
 
 ## siphub-go
+
+docker 安装siphub-go
+
+```bash
+    docker run -d \
+    --name siphub-go \
+    -p 3000:3000 \
+    -p 9060:9060/udp \
+    -e DBAddr="localhost" \
+    -e DBUserPasswd="root:password" \
+    -e DBName="siphub" \
+    -e DataKeepHours=6 \
+    -e LogLevel="info" \
+    -e HeaderUIDName="X-UID" \
+    harbor:5000/wecloud/siphub-go:21.11.24
+```
+
 - 3000/HTTP 端口
     - GET /metrics/prometheus 提供普罗米修斯统计的监控接口
 - 9060/UDP hep消息接收端口
@@ -56,7 +73,23 @@
 	DataKeepHours         int    `env:"DataKeepHours" envDefault:"2"`
 ```
 
+
 ## siphub-ui
+
+docker 安装siphub-ui
+
+```bash
+    docker run -d \
+    --name siphub-ui \
+    -p 8080:8080 \
+    -e NODE_ENV="production" \
+    -e dbHost="localhost" \
+    -e dbUser="root" \
+    -e dbPwd="some-password" \
+    -e dbName="siphub" \
+    -e logLevel="info" \
+    harbor:5000/wecloud/siphub-ui:21.11.24
+```
 
 - 8080/HTTP 端口 提供Web查询和展示界面
 
