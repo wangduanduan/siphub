@@ -132,3 +132,27 @@ freeswitch@fsnode04> sofia global capture off
 ```
 <param name="sip-capture" value="yes"/>
 ```
+
+最后，建议重启一下fs.
+
+## heplify集成
+
+参考 https://github.com/sipcapture/heplify
+
+heplify是一个go语言开发的，基于网卡抓包的方式，捕获sip消息的客户端程序，整个程序就是一个二进制文件，可以不依赖其他组件运行。
+
+- -i 指定网卡。需要更具机器真实网卡进行修改
+- -m SIP 指定抓SIP消息
+- -hs 指定siphub-go的地址。需要根据siphub-go的真实地址进行修改
+- -p 指定生成日志文件的位置
+- -dim 排除某些类型的SIP包，例如排除OPTIONS和REGISTER注册的包
+- -pr 指定抓包的端口范围。
+
+```
+nohup ./heplify -i eno1 \
+  -m SIP \
+  -hs 192.168.3.3:9060 \
+  -p "/var/log/" \
+  -dim OPTIONS,REGISTER \
+  -pr "5060-5061" &
+```
