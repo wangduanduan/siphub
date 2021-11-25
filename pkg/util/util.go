@@ -1,6 +1,7 @@
 package util
 
 import (
+	"strconv"
 	"time"
 )
 
@@ -12,6 +13,14 @@ func ReverseString(s string) string {
 		runes[i], runes[j] = runes[j], runes[i]
 	}
 	return string(runes)
+}
+
+func StrToInt(s string) int {
+	num, err := strconv.Atoi(s)
+	if err != nil {
+		return 0
+	}
+	return num
 }
 
 func GetDay(days int) string {

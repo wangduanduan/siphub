@@ -4,8 +4,8 @@
 ![](./img/search2.png)
 
 ## 时序图展示界面
-![](./img/call-fail.png)
-![](./img/call-success.png)
+![](./img/1.png)
+![](./img/2.png)
 
 # siphub 组件
 - siphub-go: 负责处理hep消息，写入数据库 

@@ -1,7 +1,9 @@
 t=$(shell date +%y.%m.%d)
+name="harbor:5000/wecloud/siphub-go:$t"
+hub_name="wangduanduan/siphub-go:$t"
 
 build:
-	go build -o siphub main.go
+	docker build . -t $(name)
 test:
 	go test -v ./...
 fmt:
