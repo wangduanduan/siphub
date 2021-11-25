@@ -32,7 +32,7 @@ docker 安装siphub-go
     -e DataKeepHours=6 \
     -e LogLevel="info" \
     -e HeaderUIDName="X-UID" \
-    wangduanduan/siphub-go:21.11.24
+    wangduanduan/siphub-go:21.11.25
 ```
 
 - 3000/HTTP 端口
@@ -89,7 +89,7 @@ docker运行siphub-ui
     -e dbPwd="some-password" \
     -e dbName="siphub" \
     -e logLevel="info" \
-    wangduanduan/siphub-ui:21.11.24
+    wangduanduan/siphub-ui:21.11.25
 ```
 
 - 8080/HTTP 端口 提供Web查询和展示界面

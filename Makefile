@@ -4,6 +4,11 @@ hub_name="wangduanduan/siphub-go:$t"
 
 build:
 	docker build . -t $(name)
+push:
+	docker push $(name)
+push-hub:
+	docker tag $(name) $(hub_name)
+	docker push $(hub_name)
 test:
 	go test -v ./...
 fmt:
