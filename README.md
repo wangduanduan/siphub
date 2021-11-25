@@ -1,7 +1,7 @@
 # 相关截图
 
 ## 搜索界面
-![](./img/search2.png)
+![](./img/search.png)
 
 ## 时序图展示界面
 ![](./img/1.png)
