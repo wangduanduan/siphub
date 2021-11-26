@@ -13,6 +13,7 @@ const (
 type SIP struct {
 	Title           string // Method or Status
 	IsRequest       bool
+	ResponseCode    int
 	CallID          string
 	RequestURL      string
 	RequestUsername string
@@ -21,7 +22,7 @@ type SIP struct {
 	ToDomain        string
 	FromUsername    string
 	FromDomain      string
-	CSeqNumber      string
+	CSeqNumber      int
 	CSeqMethod      string
 	UserAgent       string
 	SrcAddr         string // IP:PORT

@@ -32,31 +32,49 @@ const inviteMsg = "INVITE sip:bob@biloxi.example.com SIP/2.0\r\n" +
 	"m=audio 49172 RTP/AVP 0\r\n" +
 	"a=rtpmap:0 PCMU/8000\r\n"
 
+const res2 = "SIP/2.0 200 OK\r\n" +
+	"Via: SIP/2.0/UDP 192.168.40.216:18627;received=192.168.40.216;branch=z9hG4bKac0f.d8a7e9b2.0\r\n" +
+	"Call-ID: b546fe7e-c83e-123a-14b2-005056896fef\r\n" +
+	"From: \"8004\" <sip:8004@192.168.40.246>;tag=21rK7D7tBjZ5K\r\n" +
+	"To: <sip:8004@cmbc.poc>;tag=4255d177dd87458581d581c9f075ac8a\r\n" +
+	"CSeq: 44350829 NOTIFY\r\n" +
+	"Content-Length:  0\r\n"
+
 func TestParseCSeq(t *testing.T) {
 	successCases := []struct {
 		in                 string
-		expectedCseqNumber string
+		expectedCseqNumber int
 		expectedCseqMethod string
 	}{
 		{
+			in:                 res2,
+			expectedCseqNumber: 44350829,
+			expectedCseqMethod: "NOTIFY",
+		},
+		{
 			in:                 "CSeq: 123 INVITE\r\n",
-			expectedCseqNumber: "123",
+			expectedCseqNumber: 123,
 			expectedCseqMethod: "INVITE",
 		},
 		{
 			in:                 "",
-			expectedCseqNumber: "",
+			expectedCseqNumber: 0,
 			expectedCseqMethod: "",
 		},
 		{
 			in:                 "CSeq: 123 INVITE\r\n",
-			expectedCseqNumber: "123",
+			expectedCseqNumber: 123,
 			expectedCseqMethod: "INVITE",
 		},
 		{
 			in:                 "CSeq: INVITE\r\n",
-			expectedCseqNumber: "",
+			expectedCseqNumber: 0,
 			expectedCseqMethod: "",
+		},
+		{
+			in:                 "CSeq: 44350826 INVITE\r\n",
+			expectedCseqNumber: 44350826,
+			expectedCseqMethod: "INVITE",
 		},
 	}
 
@@ -180,14 +198,15 @@ func TestGetHeaderValue(t *testing.T) {
 
 func TestParseFirstLine(t *testing.T) {
 	successCases := []struct {
-		msg        string
-		IsRequest  bool
-		Title      string
-		RequestURL string
+		msg          string
+		IsRequest    bool
+		ResponseCode int
+		Title        string
+		RequestURL   string
 	}{
-		{"REGISTER sip:registrar.biloxi.com SIP/2.0\r\nVia: SIP/2.0/UDP bobspc.biloxi.com:5060;branch=z9hG4bKnashds7", true, "REGISTER", "sip:registrar.biloxi.com"},
-		{"SIP/2.0 200 OK\r\nVia: SIP/2.0/UDP bobspc.biloxi.com:5060;branch=z9hG4bKnashds7", false, "200", ""},
-		{"", false, "", ""},
+		{"REGISTER sip:registrar.biloxi.com SIP/2.0\r\nVia: SIP/2.0/UDP bobspc.biloxi.com:5060;branch=z9hG4bKnashds7", true, 0, "REGISTER", "sip:registrar.biloxi.com"},
+		{"SIP/2.0 200 OK\r\nVia: SIP/2.0/UDP bobspc.biloxi.com:5060;branch=z9hG4bKnashds7", false, 200, "200", ""},
+		{"", false, 0, "", ""},
 	}
 
 	for _, c := range successCases {
@@ -197,6 +216,7 @@ func TestParseFirstLine(t *testing.T) {
 		sip.ParseFirstLine()
 		assert.Equal(t, c.IsRequest, sip.IsRequest)
 		assert.Equal(t, c.Title, sip.Title)
+		assert.Equal(t, c.ResponseCode, sip.ResponseCode)
 		assert.Equal(t, c.RequestURL, sip.RequestURL)
 	}
 }

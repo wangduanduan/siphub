@@ -2,6 +2,7 @@ package parser
 
 import (
 	"siphub/pkg/models"
+	"siphub/pkg/util"
 	"strings"
 )
 
@@ -47,6 +48,7 @@ func (p *Parser) ParseFirstLine() {
 	if strings.HasPrefix(firstLineMeta[0], "SIP") {
 		p.IsRequest = false
 		p.Title = firstLineMeta[1]
+		p.ResponseCode = util.StrToInt(firstLineMeta[1])
 		return
 	}
 	p.IsRequest = true
@@ -155,7 +157,7 @@ func (p *Parser) ParseCseq() {
 	if len(cs) != 2 {
 		return
 	}
-	p.CSeqNumber = cs[0]
+	p.CSeqNumber = util.StrToInt(cs[0])
 	p.CSeqMethod = cs[1]
 }
 
