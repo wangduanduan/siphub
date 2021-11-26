@@ -19,13 +19,14 @@ var db *gorm.DB
 const MaxUserAgentLength = 40
 
 type Record struct {
-	ID           uint      `gorm:"primaryKey"`                                             // `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
-	FsCallid     string    `gorm:"type:char(64);not null; default:''"`                     // `fs_callid` char(64) NOT NULL DEFAULT '',
-	LegUid       string    `gorm:"index;type:char(64);not null;default:''"`                // `leg_uid` char(64) NOT NULL DEFAULT '',
-	SipMethod    string    `gorm:"index;type:char(20);not null;default:''"`                // `sip_method` char(20) NOT NULL DEFAULT '',
-	ResponseCode int       `gorm:"index;type:int(11);not null;default:0"`                  // `cseq_number` int(11) NOT NULL DEFAULT '',
-	CseqMethod   string    `gorm:"index;type:char(20);not null;default:''"`                // `cseq_method` char(20) NOT NULL DEFAULT '',
-	CseqNumber   int       `gorm:"type:int(11);not null;default:0"`                        // `cseq_number` int(11) NOT NULL DEFAULT '',
+	ID           uint      `gorm:"primaryKey"`                              // `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+	FsCallid     string    `gorm:"type:char(64);not null; default:''"`      // `fs_callid` char(64) NOT NULL DEFAULT '',
+	LegUid       string    `gorm:"index;type:char(64);not null;default:''"` // `leg_uid` char(64) NOT NULL DEFAULT '',
+	SipMethod    string    `gorm:"index;type:char(20);not null;default:''"` // `sip_method` char(20) NOT NULL DEFAULT '',
+	ResponseCode int       `gorm:"index;type:int(11);not null;default:0"`
+	ResponseDesc string    `gorm:"index;type:char(64);not null;default:''"`
+	CseqMethod   string    `gorm:"index;type:char(20);not null;default:''"`
+	CseqNumber   int       `gorm:"type:int(11);not null;default:0"`
 	FromUser     string    `gorm:"index;type:char(40);not null;default:''"`                // `from_user` char(40) NOT NULL DEFAULT '',
 	FromHost     string    `gorm:"index;type:char(64);not null;default:''"`                // `from_host` char(64) NOT NULL DEFAULT '',
 	ToUser       string    `gorm:"index;type:char(40);not null;default:''"`                // `to_user` char(40) NOT NULL DEFAULT '',
@@ -64,6 +65,7 @@ func Save(s *models.SIP) {
 		LegUid:       s.UID,
 		SipMethod:    s.Title,
 		ResponseCode: s.ResponseCode,
+		ResponseDesc: s.ResponseDesc,
 		CseqMethod:   s.CSeqMethod,
 		CseqNumber:   s.CSeqNumber,
 		FromUser:     s.FromUsername,

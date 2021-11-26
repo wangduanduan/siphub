@@ -49,6 +49,7 @@ func (p *Parser) ParseFirstLine() {
 		p.IsRequest = false
 		p.Title = firstLineMeta[1]
 		p.ResponseCode = util.StrToInt(firstLineMeta[1])
+		p.ResponseDesc = firstLineMeta[2]
 		return
 	}
 	p.IsRequest = true

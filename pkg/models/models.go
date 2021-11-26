@@ -14,6 +14,7 @@ type SIP struct {
 	Title           string // Method or Status
 	IsRequest       bool
 	ResponseCode    int
+	ResponseDesc    string
 	CallID          string
 	RequestURL      string
 	RequestUsername string
