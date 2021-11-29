@@ -43,8 +43,7 @@ type Record struct {
 
 func DeleteOldRecords(keepHours int) {
 	deadLine := time.Now().Add(-time.Hour * time.Duration(keepHours))
-	log.Infof("delete old file before %v", deadLine)
-	result := db.Debug().Delete(Record{}, "create_time < ?", deadLine.Format("2006-01-02 15:04:05"))
+	result := db.Debug().Delete(Record{}, "create_time < ? limit ?", deadLine.Format("2006-01-02 15:04:05"), env.Conf.MaxDeleteLimit)
 	log.Infof("delete old %v records, error: %v", result.RowsAffected, result.Error)
 }
 

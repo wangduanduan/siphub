@@ -23,6 +23,8 @@ type config struct {
 	DBName                string `env:"DBName" envDefault:"siphub"`
 	CalleeFrom            string `env:"CalleeFrom" envDefault:"RURI"`
 	DataKeepHours         int    `env:"DataKeepHours" envDefault:"2"`
+	MaxDeleteLimit        int    `env:"MaxDeleteLimit" envDefault:"10000"`
+	DeleteSecondInterval  int    `env:"DeleteSecondInterval" envDefault:"10"`
 }
 
 var Conf = config{}

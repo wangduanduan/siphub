@@ -18,7 +18,6 @@ const MinRawPacketLenth = 105
 
 func main() {
 	mysql.Connect(env.Conf.DBUserPasswd, env.Conf.DBAddr, env.Conf.DBName)
-	mysql.DeleteOldRecords(env.Conf.DataKeepHours)
 
 	go createHepServer()
 	go removeOldRecords()
@@ -37,7 +36,7 @@ func main() {
 
 func removeOldRecords() {
 	for {
-		time.Sleep(time.Hour)
+		time.Sleep(time.Second * time.Duration(env.Conf.DeleteSecondInterval))
 		mysql.DeleteOldRecords(env.Conf.DataKeepHours)
 	}
 }
