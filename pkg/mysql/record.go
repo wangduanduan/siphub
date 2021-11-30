@@ -69,7 +69,7 @@ func DeleteOldRecords(keepHours int) {
 }
 
 var maxBatchItems = env.Conf.MaxBatchItems
-var batchChan = make(chan *Record, maxBatchItems)
+var batchChan = make(chan *Record, maxBatchItems*2)
 
 func BatchSaveInit() {
 	for {
@@ -81,7 +81,7 @@ func BatchSaveInit() {
 
 		log.Infof("start batch insert: %v", len(batchItems))
 		prom.MsgCount.With(prometheus.Labels{"type": "batch_insert"}).Inc()
-		db.Create(&batchItems)
+		go db.Create(&batchItems)
 	}
 }
 
