@@ -57,13 +57,33 @@ func DeleteOldRecords(keepHours int) {
 
 	log.Infof("will loop %d detete record", loop)
 
+	prom.MsgCount.With(prometheus.Labels{"type": "batch_delete"}).Inc()
+
 	for i = 0; i < loop+1; i++ {
+		prom.MsgCount.With(prometheus.Labels{"type": "batch_delete_item"}).Inc()
+
 		result := db.Debug().Delete(Record{}, "create_time < ? limit ?", deadLineStr, env.Conf.MaxDeleteLimit)
+
 		log.Infof("%d: delete old %v records, error: %v", i, result.RowsAffected, result.Error)
 	}
 }
 
-//var batchChan = make(chan *models.SIP, 100)
+var maxBatchItems = env.Conf.MaxBatchItems
+var batchChan = make(chan *Record, maxBatchItems)
+
+func BatchSaveInit() {
+	for {
+		batchItems := make([]*Record, maxBatchItems)
+
+		for i := 0; i < maxBatchItems; i++ {
+			batchItems[i] = <-batchChan
+		}
+
+		log.Infof("start batch insert: %v", len(batchItems))
+		prom.MsgCount.With(prometheus.Labels{"type": "batch_insert"}).Inc()
+		db.Create(&batchItems)
+	}
+}
 
 func Save(s *models.SIP) {
 	ua := s.UserAgent
@@ -107,14 +127,9 @@ func Save(s *models.SIP) {
 		RawMsg:       *s.Raw,
 	}
 
-	result := db.Create(&item)
+	prom.MsgCount.With(prometheus.Labels{"type": "ready_save_to_db"}).Inc()
 
-	if result.Error != nil {
-		prom.MsgCount.With(prometheus.Labels{"type": "save_to_db_error"}).Inc()
-		log.Errorf("save to db error: %v", result.Error)
-	} else {
-		prom.MsgCount.With(prometheus.Labels{"type": "save_to_db_success"}).Inc()
-	}
+	batchChan <- &item
 }
 
 func Connect(UserPasswd, Addr, DBName string) {

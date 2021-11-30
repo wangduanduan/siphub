@@ -20,7 +20,8 @@ const MinRawPacketLenth = 105
 func main() {
 	mysql.Connect(env.Conf.DBUserPasswd, env.Conf.DBAddr, env.Conf.DBName)
 
-	// mysql.DeleteOldRecords(env.Conf.DataKeepHours)
+	go mysql.BatchSaveInit()
+
 	c := cron.New()
 	c.AddFunc(env.Conf.DeleteCronStr, func() {
 		log.Infof("start delete record")
