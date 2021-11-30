@@ -9,6 +9,7 @@ import (
 	"siphub/pkg/util"
 	"time"
 
+	gonanoid "github.com/matoous/go-nanoid/v2"
 	"github.com/prometheus/client_golang/prometheus"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
@@ -19,10 +20,10 @@ var db *gorm.DB
 const MaxUserAgentLength = 40
 
 type Record struct {
-	ID           uint      `gorm:"primaryKey"`                              // `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
-	FsCallid     string    `gorm:"type:char(64);not null; default:''"`      // `fs_callid` char(64) NOT NULL DEFAULT '',
-	LegUid       string    `gorm:"index;type:char(64);not null;default:''"` // `leg_uid` char(64) NOT NULL DEFAULT '',
-	SipMethod    string    `gorm:"index;type:char(20);not null;default:''"` // `sip_method` char(20) NOT NULL DEFAULT '',
+	ID           string    `gorm:"primaryKey;type:char(22);not null;default ''"` // `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+	FsCallid     string    `gorm:"type:char(64);not null; default:''"`           // `fs_callid` char(64) NOT NULL DEFAULT '',
+	LegUid       string    `gorm:"index;type:char(64);not null;default:''"`      // `leg_uid` char(64) NOT NULL DEFAULT '',
+	SipMethod    string    `gorm:"index;type:char(20);not null;default:''"`      // `sip_method` char(20) NOT NULL DEFAULT '',
 	ResponseCode int       `gorm:"index;type:int(11);not null;default:0"`
 	ResponseDesc string    `gorm:"index;type:char(64);not null;default:''"`
 	CseqMethod   string    `gorm:"index;type:char(20);not null;default:''"`
@@ -42,10 +43,27 @@ type Record struct {
 }
 
 func DeleteOldRecords(keepHours int) {
+	var count, i int64
+
 	deadLine := time.Now().Add(-time.Hour * time.Duration(keepHours))
-	result := db.Debug().Delete(Record{}, "create_time < ? limit ?", deadLine.Format("2006-01-02 15:04:05"), env.Conf.MaxDeleteLimit)
-	log.Infof("delete old %v records, error: %v", result.RowsAffected, result.Error)
+
+	deadLineStr := deadLine.Format("2006-01-02 15:04:05")
+
+	db.Model(&Record{}).Where("create_time < ?", deadLineStr).Count(&count)
+
+	log.Infof("all %d records need be delete", count)
+
+	loop := count / int64(env.Conf.MaxDeleteLimit)
+
+	log.Infof("will loop %d detete record", loop)
+
+	for i = 0; i < loop+1; i++ {
+		result := db.Debug().Delete(Record{}, "create_time < ? limit ?", deadLineStr, env.Conf.MaxDeleteLimit)
+		log.Infof("%d: delete old %v records, error: %v", i, result.RowsAffected, result.Error)
+	}
 }
+
+//var batchChan = make(chan *models.SIP, 100)
 
 func Save(s *models.SIP) {
 	ua := s.UserAgent
@@ -59,7 +77,15 @@ func Save(s *models.SIP) {
 		isRequest = 1
 	}
 
+	id, err := gonanoid.New()
+
+	if err != nil {
+		log.Errorf("new nanoid error %v", err)
+		return
+	}
+
 	item := Record{
+		ID:           id,
 		FsCallid:     s.FSCallID,
 		LegUid:       s.UID,
 		SipMethod:    s.Title,

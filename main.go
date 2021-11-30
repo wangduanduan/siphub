@@ -12,6 +12,7 @@ import (
 
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
+	"github.com/robfig/cron/v3"
 )
 
 const MinRawPacketLenth = 105
@@ -19,8 +20,16 @@ const MinRawPacketLenth = 105
 func main() {
 	mysql.Connect(env.Conf.DBUserPasswd, env.Conf.DBAddr, env.Conf.DBName)
 
+	// mysql.DeleteOldRecords(env.Conf.DataKeepHours)
+	c := cron.New()
+	c.AddFunc(env.Conf.DeleteCronStr, func() {
+		log.Infof("start delete record")
+		mysql.DeleteOldRecords(env.Conf.DataKeepHours)
+	})
+
+	c.Start()
+
 	go createHepServer()
-	go removeOldRecords()
 
 	app := http.NewServeMux()
 
@@ -31,13 +40,6 @@ func main() {
 
 	if err != nil {
 		log.Fatalf("app listen error: %v", err)
-	}
-}
-
-func removeOldRecords() {
-	for {
-		time.Sleep(time.Second * time.Duration(env.Conf.DeleteSecondInterval))
-		mysql.DeleteOldRecords(env.Conf.DataKeepHours)
 	}
 }
 

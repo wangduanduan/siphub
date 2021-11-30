@@ -10,7 +10,7 @@ type config struct {
 	UDPListenPort         int    `env:"UDPListenPort" envDefault:"9060"`
 	MaxPackgeLength       int    `env:"MaxPackgeLength" envDefault:"2048"`
 	MaxReadTimeoutSeconds int    `env:"MaxReadTimeoutSecond" envDefault:"5"`
-	LogLevel              string `env:"LogLevel" envDefault:"debug"`
+	LogLevel              string `env:"LogLevel" envDefault:"error"`
 	Hostname              string `env:"HOSTNAME" envDefault:"unknow"`
 	HeaderUIDName         string `env:"HeaderUIDName"`
 	HeaderFSCallIDName    string `env:"HeaderFSCallIDName"`
@@ -24,7 +24,7 @@ type config struct {
 	CalleeFrom            string `env:"CalleeFrom" envDefault:"RURI"`
 	DataKeepHours         int    `env:"DataKeepHours" envDefault:"2"`
 	MaxDeleteLimit        int    `env:"MaxDeleteLimit" envDefault:"10000"`
-	DeleteSecondInterval  int    `env:"DeleteSecondInterval" envDefault:"10"`
+	DeleteCronStr         string `env:"DeleteCronStr" envDefault:"@hourly"`
 }
 
 var Conf = config{}
