@@ -21,11 +21,12 @@ func OnMessage(b []byte, fn dbSave, ip net.IP) {
 	sip, errType, _ := Format(b)
 	if errType != "" {
 		if errType != "method_discarded" {
-			log.Infof("format msg error: %v; raw length: %d, %s, from: %v", errType, len(b), b, ip)
+			log.Errorf("format msg error: %v; raw length: %d, % #x, %s,  from: %v", errType, len(b), b, b, ip)
 		}
 		prom.MsgCount.With(prometheus.Labels{"type": errType}).Inc()
 		return
 	}
+
 	prom.MsgCount.With(prometheus.Labels{"type": "hep_parse_ok"}).Inc()
 	log.Infof("%s %s->%s", sip.Title, sip.FromUsername+sip.FromDomain, sip.ToUsername+sip.FromDomain)
 	fn(sip)

@@ -23,9 +23,9 @@ func main() {
 	go mysql.BatchSaveInit()
 
 	c := cron.New()
-	c.AddFunc(env.Conf.DeleteCronStr, func() {
+	c.AddFunc("@every "+env.Conf.DeleteCronStr, func() {
 		log.Infof("start delete record")
-		mysql.DeleteOldRecords(env.Conf.DataKeepHours)
+		mysql.DeleteOldRecordsNew(env.Conf.DataKeepHours)
 	})
 
 	c.Start()

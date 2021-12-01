@@ -42,6 +42,23 @@ type Record struct {
 	RawMsg       string    `gorm:"type:text;not null"`                                     // `raw_msg` text NOT NULL,
 }
 
+func DeleteOldRecordsNew(keepHours int) {
+	d, err := time.ParseDuration(env.Conf.DeleteCronStr)
+	if err != nil {
+		log.Errorf("DeleteCronStr parse error: %v", err)
+		return
+	}
+	deadLine := time.Now().Add(-time.Hour * time.Duration(keepHours))
+	startLine := deadLine.Add(-d)
+
+	deadLineStr := deadLine.Format("2006-01-02 15:04:05")
+	startLineStr := startLine.Format("2006-01-02 15:04:05")
+
+	result := db.Delete(Record{}, "create_time between ? and ?", startLineStr, deadLineStr)
+
+	log.Warnf("delete old from %s to %s:  %v records, error: %v", startLineStr, deadLineStr, result.RowsAffected, result.Error)
+}
+
 func DeleteOldRecords(keepHours int) {
 	var count, i int64
 
@@ -104,6 +121,12 @@ func Save(s *models.SIP) {
 		return
 	}
 
+	RawMsg := *s.Raw
+
+	if env.Conf.InsertMode == 0 {
+		RawMsg = ""
+	}
+
 	item := Record{
 		ID:           id,
 		FsCallid:     s.FSCallID,
@@ -124,7 +147,7 @@ func Save(s *models.SIP) {
 		SrcHost:      s.SrcAddr,
 		DstHost:      s.DstAddr,
 		CreateTime:   s.CreateAt,
-		RawMsg:       *s.Raw,
+		RawMsg:       RawMsg,
 	}
 
 	prom.MsgCount.With(prometheus.Labels{"type": "ready_save_to_db"}).Inc()

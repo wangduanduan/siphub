@@ -24,8 +24,9 @@ type config struct {
 	CalleeFrom            string `env:"CalleeFrom" envDefault:"RURI"`
 	DataKeepHours         int    `env:"DataKeepHours" envDefault:"2"`
 	MaxDeleteLimit        int    `env:"MaxDeleteLimit" envDefault:"10000"`
-	DeleteCronStr         string `env:"DeleteCronStr" envDefault:"@hourly"`
+	DeleteCronStr         string `env:"DeleteCronStr" envDefault:"10s"`
 	MaxBatchItems         int    `env:"MaxBatchItems" envDefault:"100"`
+	InsertMode            int    `env:"InsertMode" envDefault:"0"`
 }
 
 var Conf = config{}
