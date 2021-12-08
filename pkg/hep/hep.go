@@ -8,6 +8,7 @@ package hep
 import (
 	"encoding/binary"
 	"errors"
+	"fmt"
 	"net"
 )
 
@@ -88,6 +89,11 @@ func (hepMsg *HepMsg) parseHep3(udpPacket []byte) error {
 		hepChunk := udpPacket[currentByte:]
 		chunkType := binary.BigEndian.Uint16(hepChunk[2:4])
 		chunkLength := binary.BigEndian.Uint16(hepChunk[4:6])
+
+		if int(chunkLength) > cap(udpPacket) {
+			return fmt.Errorf("chunkLength big then package size: chunkLength: %v, package size: %v", chunkLength, cap(udpPacket))
+		}
+
 		chunkBody := hepChunk[6:chunkLength]
 
 		switch chunkType {
@@ -127,5 +133,6 @@ func (hepMsg *HepMsg) parseHep3(udpPacket []byte) error {
 		}
 		currentByte += chunkLength
 	}
+
 	return nil
 }

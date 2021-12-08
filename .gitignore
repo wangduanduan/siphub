@@ -4,3 +4,5 @@ node_modules
 siphub
 tmp
 .DS_Store
+heplify
+heplify.log.*

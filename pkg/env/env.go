@@ -10,7 +10,7 @@ type config struct {
 	UDPListenPort         int    `env:"UDPListenPort" envDefault:"9060"`
 	MaxPackgeLength       int    `env:"MaxPackgeLength" envDefault:"2048"`
 	MaxReadTimeoutSeconds int    `env:"MaxReadTimeoutSecond" envDefault:"5"`
-	LogLevel              string `env:"LogLevel" envDefault:"debug"`
+	LogLevel              string `env:"LogLevel" envDefault:"info"`
 	Hostname              string `env:"HOSTNAME" envDefault:"unknow"`
 	HeaderUIDName         string `env:"HeaderUIDName"`
 	HeaderFSCallIDName    string `env:"HeaderFSCallIDName"`
@@ -23,6 +23,9 @@ type config struct {
 	DBName                string `env:"DBName" envDefault:"siphub"`
 	CalleeFrom            string `env:"CalleeFrom" envDefault:"RURI"`
 	DataKeepHours         int    `env:"DataKeepHours" envDefault:"2"`
+	MaxDeleteLimit        int    `env:"MaxDeleteLimit" envDefault:"10000"`
+	DeleteCronStr         string `env:"DeleteCronStr" envDefault:"10s"`
+	MaxBatchItems         int    `env:"MaxBatchItems" envDefault:"20"`
 }
 
 var Conf = config{}

@@ -19,13 +19,15 @@ type dbSave func(*models.SIP)
 
 func OnMessage(b []byte, fn dbSave, ip net.IP) {
 	sip, errType, _ := Format(b)
+
 	if errType != "" {
 		if errType != "method_discarded" {
-			log.Infof("format msg error: %v; raw length: %d, %s, from: %v", errType, len(b), b, ip)
+			log.Errorf("format msg error: %v; raw length: %d, %s,  from: %v", errType, len(b), b, ip)
 		}
 		prom.MsgCount.With(prometheus.Labels{"type": errType}).Inc()
 		return
 	}
+
 	prom.MsgCount.With(prometheus.Labels{"type": "hep_parse_ok"}).Inc()
 	log.Infof("%s %s->%s", sip.Title, sip.FromUsername+sip.FromDomain, sip.ToUsername+sip.FromDomain)
 	fn(sip)
@@ -33,6 +35,8 @@ func OnMessage(b []byte, fn dbSave, ip net.IP) {
 
 func Format(p []byte) (s *models.SIP, errorType string, errMsg string) {
 	hepMsg, err := hep.NewHepMsg(p)
+
+	log.Infof("%d %#x", hepMsg.TimestampMicro, hepMsg.TimestampMicro)
 
 	if err != nil {
 		return nil, "hep_parse_error", ""
@@ -52,6 +56,8 @@ func Format(p []byte) (s *models.SIP, errorType string, errMsg string) {
 		}}
 
 	sip.ParseCseq()
+
+	sip.TimestampMicro = hepMsg.TimestampMicro
 
 	if sip.CSeqMethod == "" {
 		return nil, "cseq_is_empty", ""
