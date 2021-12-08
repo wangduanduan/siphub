@@ -29,6 +29,7 @@ type SIP struct {
 	SrcAddr         string // IP:PORT
 	DstAddr         string // IP:PORT
 	CreateAt        time.Time
+	TimestampMicro  uint32
 	Protocol        int
 	UID             string  // correlative id for AB call leg
 	FSCallID        string  // freeswitch CallID

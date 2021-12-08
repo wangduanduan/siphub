@@ -25,8 +25,7 @@ type config struct {
 	DataKeepHours         int    `env:"DataKeepHours" envDefault:"2"`
 	MaxDeleteLimit        int    `env:"MaxDeleteLimit" envDefault:"10000"`
 	DeleteCronStr         string `env:"DeleteCronStr" envDefault:"10s"`
-	MaxBatchItems         int    `env:"MaxBatchItems" envDefault:"100"`
-	InsertMode            int    `env:"InsertMode" envDefault:"0"`
+	MaxBatchItems         int    `env:"MaxBatchItems" envDefault:"20"`
 }
 
 var Conf = config{}

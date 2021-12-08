@@ -133,5 +133,6 @@ func (hepMsg *HepMsg) parseHep3(udpPacket []byte) error {
 		}
 		currentByte += chunkLength
 	}
+
 	return nil
 }

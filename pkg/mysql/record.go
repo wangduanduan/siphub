@@ -20,26 +20,27 @@ var db *gorm.DB
 const MaxUserAgentLength = 40
 
 type Record struct {
-	ID           string    `gorm:"primaryKey;type:char(22);not null;default ''"` // `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
-	FsCallid     string    `gorm:"type:char(64);not null; default:''"`           // `fs_callid` char(64) NOT NULL DEFAULT '',
-	LegUid       string    `gorm:"index;type:char(64);not null;default:''"`      // `leg_uid` char(64) NOT NULL DEFAULT '',
-	SipMethod    string    `gorm:"index;type:char(20);not null;default:''"`      // `sip_method` char(20) NOT NULL DEFAULT '',
-	ResponseCode int       `gorm:"index;type:int(11);not null;default:0"`
-	ResponseDesc string    `gorm:"index;type:char(64);not null;default:''"`
-	CseqMethod   string    `gorm:"index;type:char(20);not null;default:''"`
-	CseqNumber   int       `gorm:"type:int(11);not null;default:0"`
-	FromUser     string    `gorm:"index;type:char(40);not null;default:''"`                // `from_user` char(40) NOT NULL DEFAULT '',
-	FromHost     string    `gorm:"index;type:char(64);not null;default:''"`                // `from_host` char(64) NOT NULL DEFAULT '',
-	ToUser       string    `gorm:"index;type:char(40);not null;default:''"`                // `to_user` char(40) NOT NULL DEFAULT '',
-	ToHost       string    `gorm:"index;type:char(64);not null;default:''"`                // `to_host` char(64) NOT NULL DEFAULT '',
-	SipCallid    string    `gorm:"index;type:char(64);not null;default:''"`                // `sip_callid` char(64) NOT NULL DEFAULT '',
-	SipProtocol  uint      `gorm:"type:int(11);not null;default:0"`                        // `sip_protocol` int(11) NOT NULL,
-	IsRequest    uint      `gorm:"index;type:int(11);not null;default:0"`                  // `sip_protocol` int(11) NOT NULL,
-	UserAgent    string    `gorm:"type:char(40);not null;default:''"`                      // `user_agent` char(40) NOT NULL DEFAULT '',
-	SrcHost      string    `gorm:"type:char(32);not null;default:''"`                      // `src_host` char(32) NOT NULL DEFAULT '',
-	DstHost      string    `gorm:"type:char(32);not null;default:''"`                      // `dst_host` char(32) NOT NULL DEFAULT '',
-	CreateTime   time.Time `gorm:"index;type:datetime;not null;default:CURRENT_TIMESTAMP"` // `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
-	RawMsg       string    `gorm:"type:text;not null"`                                     // `raw_msg` text NOT NULL,
+	ID             string    `gorm:"primaryKey;type:char(22);not null;default ''"`
+	FsCallid       string    `gorm:"type:char(64);not null; default:''"`
+	LegUid         string    `gorm:"index;type:char(64);not null;default:''"`
+	SipMethod      string    `gorm:"index;type:char(20);not null;default:''"`
+	ResponseCode   int       `gorm:"index;type:int(11);not null;default:0"`
+	ResponseDesc   string    `gorm:"index;type:char(64);not null;default:''"`
+	CseqMethod     string    `gorm:"index;type:char(20);not null;default:''"`
+	CseqNumber     int       `gorm:"type:int(11);not null;default:0"`
+	FromUser       string    `gorm:"index;type:char(40);not null;default:''"`
+	FromHost       string    `gorm:"index;type:char(64);not null;default:''"`
+	ToUser         string    `gorm:"index;type:char(40);not null;default:''"`
+	ToHost         string    `gorm:"index;type:char(64);not null;default:''"`
+	SipCallid      string    `gorm:"index;type:char(64);not null;default:''"`
+	SipProtocol    uint      `gorm:"type:int(11);not null;default:0"`
+	IsRequest      uint      `gorm:"index;type:int(11);not null;default:0"`
+	UserAgent      string    `gorm:"type:char(40);not null;default:''"`
+	SrcHost        string    `gorm:"type:char(32);not null;default:''"`
+	DstHost        string    `gorm:"type:char(32);not null;default:''"`
+	CreateTime     time.Time `gorm:"index;type:datetime;not null;default:CURRENT_TIMESTAMP"`
+	TimestampMicro uint32    `gorm:"type:int(11);not null;default:0"`
+	RawMsg         string    `gorm:"type:text;not null"`
 }
 
 func DeleteOldRecordsNew(keepHours int) {
@@ -123,31 +124,28 @@ func Save(s *models.SIP) {
 
 	RawMsg := *s.Raw
 
-	if env.Conf.InsertMode == 0 {
-		RawMsg = ""
-	}
-
 	item := Record{
-		ID:           id,
-		FsCallid:     s.FSCallID,
-		LegUid:       s.UID,
-		SipMethod:    s.Title,
-		ResponseCode: s.ResponseCode,
-		ResponseDesc: s.ResponseDesc,
-		CseqMethod:   s.CSeqMethod,
-		CseqNumber:   s.CSeqNumber,
-		FromUser:     s.FromUsername,
-		FromHost:     s.FromDomain,
-		ToUser:       util.ReverseString(s.ToUsername), // 被叫号码翻转后存储, 方便查询时不需要加前缀
-		ToHost:       s.ToDomain,
-		SipCallid:    s.CallID,
-		IsRequest:    uint(isRequest),
-		SipProtocol:  uint(s.Protocol),
-		UserAgent:    ua,
-		SrcHost:      s.SrcAddr,
-		DstHost:      s.DstAddr,
-		CreateTime:   s.CreateAt,
-		RawMsg:       RawMsg,
+		ID:             id,
+		FsCallid:       s.FSCallID,
+		LegUid:         s.UID,
+		SipMethod:      s.Title,
+		ResponseCode:   s.ResponseCode,
+		ResponseDesc:   s.ResponseDesc,
+		CseqMethod:     s.CSeqMethod,
+		CseqNumber:     s.CSeqNumber,
+		FromUser:       s.FromUsername,
+		FromHost:       s.FromDomain,
+		ToUser:         util.ReverseString(s.ToUsername), // 被叫号码翻转后存储, 方便查询时不需要加前缀
+		ToHost:         s.ToDomain,
+		SipCallid:      s.CallID,
+		IsRequest:      uint(isRequest),
+		SipProtocol:    uint(s.Protocol),
+		UserAgent:      ua,
+		SrcHost:        s.SrcAddr,
+		DstHost:        s.DstAddr,
+		CreateTime:     s.CreateAt,
+		TimestampMicro: s.TimestampMicro,
+		RawMsg:         RawMsg,
 	}
 
 	prom.MsgCount.With(prometheus.Labels{"type": "ready_save_to_db"}).Inc()
