@@ -9,7 +9,6 @@ import (
 	"siphub/pkg/util"
 	"time"
 
-	gonanoid "github.com/matoous/go-nanoid/v2"
 	"github.com/prometheus/client_golang/prometheus"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
@@ -20,27 +19,31 @@ var db *gorm.DB
 const MaxUserAgentLength = 40
 
 type Record struct {
-	ID             string    `gorm:"primaryKey;type:char(22);not null;default ''"`
-	FsCallid       string    `gorm:"type:char(64);not null; default:''"`
-	LegUid         string    `gorm:"index;type:char(64);not null;default:''"`
-	SipMethod      string    `gorm:"index;type:char(20);not null;default:''"`
-	ResponseCode   int       `gorm:"index;type:int(11);not null;default:0"`
-	ResponseDesc   string    `gorm:"index;type:char(64);not null;default:''"`
-	CseqMethod     string    `gorm:"index;type:char(20);not null;default:''"`
-	CseqNumber     int       `gorm:"type:int(11);not null;default:0"`
-	FromUser       string    `gorm:"index;type:char(40);not null;default:''"`
-	FromHost       string    `gorm:"index;type:char(64);not null;default:''"`
-	ToUser         string    `gorm:"index;type:char(40);not null;default:''"`
-	ToHost         string    `gorm:"index;type:char(64);not null;default:''"`
-	SipCallid      string    `gorm:"index;type:char(64);not null;default:''"`
-	SipProtocol    uint      `gorm:"type:int(11);not null;default:0"`
-	IsRequest      uint      `gorm:"index;type:int(11);not null;default:0"`
-	UserAgent      string    `gorm:"type:char(40);not null;default:''"`
-	SrcHost        string    `gorm:"type:char(32);not null;default:''"`
-	DstHost        string    `gorm:"type:char(32);not null;default:''"`
-	CreateTime     time.Time `gorm:"index;type:datetime;not null;default:CURRENT_TIMESTAMP"`
-	TimestampMicro uint32    `gorm:"type:int(11);not null;default:0"`
-	RawMsg         string    `gorm:"type:text;not null"`
+	// ID string `gorm:"type:char(22);not null;default ''"`
+	SipCallid  string    `gorm:"index;type:char(64);not null;default:''"`
+	SipMethod  string    `gorm:"index;type:char(20);not null;default:''"`
+	CreateTime time.Time `gorm:"index;type:datetime;not null;default:CURRENT_TIMESTAMP"`
+	ToUser     string    `gorm:"index;type:char(40);not null;default:''"`
+	LegUid     string    `gorm:"index;type:char(64);not null;default:''"`
+
+	FromUser string `gorm:"type:char(40);not null;default:''"`
+
+	FsCallid string `gorm:"type:char(64);not null; default:''"`
+
+	ResponseCode int    `gorm:"type:int(11);not null;default:0"`
+	ResponseDesc string `gorm:"type:char(64);not null;default:''"`
+	CseqMethod   string `gorm:"type:char(20);not null;default:''"`
+	CseqNumber   int    `gorm:"type:int(11);not null;default:0"`
+
+	FromHost       string `gorm:"type:char(64);not null;default:''"`
+	ToHost         string `gorm:"type:char(64);not null;default:''"`
+	SipProtocol    uint   `gorm:"type:int(11);not null;default:0"`
+	IsRequest      uint   `gorm:"type:int(11);not null;default:0"`
+	UserAgent      string `gorm:"type:char(40);not null;default:''"`
+	SrcHost        string `gorm:"type:char(32);not null;default:''"`
+	DstHost        string `gorm:"type:char(32);not null;default:''"`
+	TimestampMicro uint32 `gorm:"type:int(11);not null;default:0"`
+	RawMsg         string `gorm:"type:text;not null"`
 }
 
 func DeleteOldRecordsNew(keepHours int) {
@@ -115,17 +118,16 @@ func Save(s *models.SIP) {
 		isRequest = 1
 	}
 
-	id, err := gonanoid.New()
+	//	id, err := gonanoid.New()
 
-	if err != nil {
-		log.Errorf("new nanoid error %v", err)
-		return
-	}
+	//	if err != nil {
+	//		log.Errorf("new nanoid error %v", err)
+	//		return
+	//	}
 
 	RawMsg := *s.Raw
 
 	item := Record{
-		ID:             id,
 		FsCallid:       s.FSCallID,
 		LegUid:         s.UID,
 		SipMethod:      s.Title,
@@ -157,7 +159,10 @@ func Connect(UserPasswd, Addr, DBName string) {
 	var err error
 	dsn := fmt.Sprintf("%s@tcp(%s)/%s?charset=utf8mb4&parseTime=True&loc=Local", UserPasswd, Addr, DBName)
 
-	db, err = gorm.Open(mysql.Open(dsn), &gorm.Config{})
+	db, err = gorm.Open(mysql.Open(dsn), &gorm.Config{
+		SkipDefaultTransaction: true,
+		PrepareStmt:            true,
+	})
 
 	if err != nil {
 		log.Fatalf("connect mysql error: %s", err)
