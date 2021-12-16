@@ -25,8 +25,7 @@ type Record struct {
 	CreateTime time.Time `gorm:"index;type:datetime;not null;default:CURRENT_TIMESTAMP"`
 	ToUser     string    `gorm:"index;type:char(40);not null;default:''"`
 	LegUid     string    `gorm:"index;type:char(64);not null;default:''"`
-
-	FromUser string `gorm:"type:char(40);not null;default:''"`
+	FromUser   string    `gorm:"index;type:char(40);not null;default:''"`
 
 	FsCallid string `gorm:"type:char(64);not null; default:''"`
 
@@ -61,6 +60,12 @@ func DeleteOldRecordsNew(keepHours int) {
 	result := db.Delete(Record{}, "create_time between ? and ?", startLineStr, deadLineStr)
 
 	log.Warnf("delete old from %s to %s:  %v records, error: %v", startLineStr, deadLineStr, result.RowsAffected, result.Error)
+}
+
+func BackupData() {
+	yestoday := time.Now().Add(-time.Hour * 24).Format("records_day_0102")
+	log.Infof("old time name %s", yestoday)
+	db.Exec("create table records_new like records")
 }
 
 func DeleteOldRecords(keepHours int) {
