@@ -63,10 +63,9 @@ docker 安装siphub-go
     -e DBAddr="localhost" \
     -e DBUserPasswd="root:password" \
     -e DBName="siphub" \
-    -e DataKeepHours=6 \
     -e LogLevel="info" \
     -e HeaderUIDName="X-UID" \
-    wangduanduan/siphub-go:21.12.08
+    wangduanduan/siphub-go:21.12.16
 ```
 
 - 3000/HTTP 端口
@@ -104,14 +103,19 @@ docker 安装siphub-go
 	DBName                string `env:"DBName" envDefault:"siphub"`
     // 被叫号码从哪个地方抽取，RURI 或者 TO
 	CalleeFrom            string `env:"CalleeFrom" envDefault:"RURI"`
-    // 数据保留多少小时
-	DataKeepHours         int    `env:"DataKeepHours" envDefault:"2"`
 ```
 
 
 ## siphub-ui
 
 docker运行siphub-ui
+
+- dbHost="localhost" 数据库地址
+- dbUser="root" 数据库用户
+- dbPwd="some-password" 数据库密码
+- dbName="siphub" 数据库名
+- logLevel="info" 日志级别
+- dataKeepDays="2" 数据保存多少天
 
 ```bash
     docker run -d \
@@ -123,12 +127,11 @@ docker运行siphub-ui
     -e dbPwd="some-password" \
     -e dbName="siphub" \
     -e logLevel="info" \
-    wangduanduan/siphub-ui:21.12.08
+    -e dataKeepDays="2" \
+    wangduanduan/siphub-ui:21.12.17
 ```
 
 - 8080/HTTP 端口 提供Web查询和展示界面
-
-
 
 # 集成
 
