@@ -51,6 +51,10 @@
 
 # 功能介绍
 
+## mysql安装
+
+先准备一个mysql数据库，并自行创建一个名为siphub的数据库。
+
 ## siphub-go
 
 docker 安装siphub-go
@@ -103,6 +107,10 @@ docker 安装siphub-go
 	DBName                string `env:"DBName" envDefault:"siphub"`
     // 被叫号码从哪个地方抽取，RURI 或者 TO
 	CalleeFrom            string `env:"CalleeFrom" envDefault:"RURI"`
+
+    // mysql 批次插入的数量
+    // 默认累计一定数量的消息后，再一次性插入数据库
+	MaxBatchItems         int    `env:"MaxBatchItems" envDefault:"20"`
 ```
 
 
@@ -207,3 +215,26 @@ nohup ./heplify -i eno1 \
   -dim OPTIONS,REGISTER \
   -pr "5060-5061" &
 ```
+
+# FAQ
+
+## 数据保留策略
+
+- 所有新的数据，会插入到records表。
+- 每天凌晨 00:01:00, records表会被重命名为siphub_old_day_YYYYMMDD, 然后会新建一个records表
+- 基于siphub-ui的dataKeepDays环境变量，超过最大保留天数的表，会被删除历史的表
+
+# siphub-go内存问题 与 mysql写入速度
+
+在生产环境，有观察到siphub-go的内存一直上涨，最终定位到原因是数据插入的比较慢。
+
+一般来说，siphub-go收到的每秒消息量，估计是每秒呼叫量的10-20倍。 也就是说，假如每秒呼叫量，即CPS是100，那么每秒siphub-go收到的消息量估计在1000-2000条sip消息。
+
+siphub-go不是每收到一条消息，就做一次数据库插入。而是累积到MaxBatchItems的数量之后，再执行插入。如果把MaxBatchItems设置为1000，那么两千条消息实际上只需要做两次插入。
+
+所以，你的呼叫量越大。就需要设置较大的MaxBatchItems。
+
+另外一方面，mysql数据库的性能配置也非常重要。最低建议给4C4G的配置。
+
+建议参考这篇文章：[通过配置Mysql参数提高写入速度（整理）](https://www.cnblogs.com/lzy1991/p/4778786.html), 给数据库做个配置优化。
+
