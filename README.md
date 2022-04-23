@@ -1,49 +1,39 @@
-# 架构
+# 1. 架构
 
 ![](./img/frame.png)
 
-# 相关截图
+# 2. 界面展示
 
-## 搜索界面
+## 2.1 搜索界面
 
 - 搜索页面支持主叫和被叫以及时间范围进行搜索
     - 主叫精确查询；可以不带域名搜索，8001；也可以带域名搜索,8001@test.cc; 也可以只搜搜域名，如@test.cc
     - 被叫是后缀匹配查询； 可以带域名; 也可以不带域名； 也可以只带域名查询
 - UID颜色相同表示为两个相关的call-leg
-- 搜索栏目下面是当前搜索时间范围内，按秒统计的每秒接收的消息量
-- 紧接着是一个表格，有以下字段
-    - 序号： 最多到200
-    - 时间
-    - sip callID: sip信令中的callid
-    - UID： 两个相关的call-leg id
-    - User-Agent
-    - 传输层协议： 如 UDP/TCP/TLS/WS/WSS等等
-    - 标题： 一般是SIP请求名
-    - 最少消息量： 相同callID的消息的数量
-    - 操作： 点击之后可以查看时序图
+- 导入JSON文件按钮，用来导入并展示在其他环境导出的JSON信令
+- 紧接着是一个查询出来的列表
 
-![](./img/search.png)
+![](./img/d4.jpg)
 
-## 时序图展示界面
+## 2.2 时序图展示界面
+
 - 时序图展示页面默认不会显示具体的SIP信令原始消息
-- 状态栏上左边是一个进度条
-    - 蓝色进度条表示INVITE成功
-    - 红色进度条表示INVITE失败
-- 左边是下载按钮，点击之后可以下载json格式的sip消息
-- 左边是查看原始信令的按钮，点击之后原始信令图在页面右边展现
+- 支持通过UID关联的call-leg在同一个页面展示
+- 每个Call-leg都可以下载时序图，时序图为JSON文件，可以用来在导入并展示
+- 点击展示信令详情后，可以看到每个信令的原始SIP信息
 
-**信令图查看技巧**
+![](./img/d1.jpg)
 
-- 颜色相同的时序图线条表示是相同的事务，具有相同的CSeq
-- 点击某个时序图线条，在右边原始信令出现的情况下，会自动跳转
-- 每条信令图上有以下几个字段
-    - 序号
-    - 分钟:秒钟
-    - [sip消息的前三个字符/sip响应状态码/传输协议/sip响应的sip消息]
-    - 上一个信令的时间差
+![](./img/d2.jpg)
 
-![](./img/call1.png)
-![](./img/call2.png)
+## 2.3 时序图文件导入页面
+
+在搜索首页，点击导入JSON文件按钮，会跳转到如下的页面。在这个页面，点击浏览按钮，选择文件。
+
+然后选之前导出的JSON文件，时序图就可以渲染出来。
+
+![](./img/import.jpg)
+
 
 # siphub 组件
 - siphub-go: 负责处理hep消息，写入数据库 
@@ -140,7 +130,7 @@ docker运行siphub-ui
     -e dbName="siphub" \
     -e logLevel="info" \
     -e dataKeepDays="2" \
-    wangduanduan/siphub-ui:21.12.17
+    wangduanduan/siphub-ui:22.03.03
 ```
 
 - 8080/HTTP 端口 提供Web查询和展示界面
@@ -178,7 +168,7 @@ fs version 版本要高于 1.6.8+
 <param name="capture-server" value="udp:SIP_HUB_IP_PORT;hep=3;capture_id=100"/>
 ```
 
-```
+```shell
 freeswitch@fsnode04> sofia global capture on
  
 +OK Global capture on
