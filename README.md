@@ -63,7 +63,7 @@ docker 安装siphub-go
     -e DBName="siphub" \
     -e LogLevel="info" \
     -e HeaderUIDName="X-UID" \
-    wangduanduan/siphub-go:21.12.16
+    wangduanduan/siphub-go:22.05.02
 ```
 
 - 3000/HTTP 端口

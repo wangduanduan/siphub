@@ -9,6 +9,9 @@ push:
 push-hub:
 	docker tag $(name) $(hub_name)
 	docker push $(hub_name)
+release:
+	git tag $(t)
+	git push origin
 test:
 	go test -v ./...
 fmt:
