@@ -1,0 +1,13 @@
+.chglog
+.git
+logs
+tmp/
+build.sh
+siphub
+.air.toml
+.gitignore
+CHANGELOG.md
+Makefile
+README.md
+demo.png
+heplify.log
