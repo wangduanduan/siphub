@@ -1,4 +1,19 @@
-# V23x开发计划
+# V23 Roadmap, under developing
+
+- siphub-go merge into siphub-ui, so there are no siphub-ui or siphub-go, just one siphub.
+- using react + ant design as ui frame
+- using golang fiber as the web server, no nodejs
+- using [SequenceDiagram](https://github.com/davidje13/SequenceDiagram) to draw sip sequence dragram 
+- add pagenation
+- add login page
+
+
+this is the first version
+
+![](atta/2023-10-27-10-52-01.png)
+
+
+
 
 # 1. 架构
 
