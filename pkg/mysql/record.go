@@ -52,17 +52,17 @@ var ticker = time.NewTicker(time.Second * time.Duration(env.Conf.TickerSecondTim
 func BatchSaveInit() {
 
 	for {
-		//batchItems := make([]*Record, maxBatchItems)
-		var batchItems []*Record
-		var i = 0
+		// 一次性开辟需要的内存空间， 而不是动态开辟
+		batchItems := make([]*Record, 0, maxBatchItems)
+		i := 0
 		for ; i < maxBatchItems; i++ {
-			batchItems = append(batchItems, <-batchChan)
-			//batchItems[i] = <-batchChan
+			// 默认情况下，当达到最大的插入批次量时，就执行插入语句
 			select {
 			case <-ticker.C:
+				// 但是在抓包比较少的情况下，希望在达到一定的延迟后，也可以自动插入
 				i = maxBatchItems
 			default:
-				break
+				batchItems[i] = <-batchChan
 			}
 		}
 
@@ -81,16 +81,9 @@ func Save(s *models.SIP) {
 		ua = ua[:MaxUserAgentLength]
 	}
 
-	if s.IsRequest == true {
+	if s.IsRequest {
 		isRequest = 1
 	}
-
-	//	id, err := gonanoid.New()
-
-	//	if err != nil {
-	//		log.Errorf("new nanoid error %v", err)
-	//		return
-	//	}
 
 	RawMsg := *s.Raw
 
