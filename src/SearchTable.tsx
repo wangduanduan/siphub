@@ -2,17 +2,7 @@ import React from 'react'
 import { Space, Table } from 'antd'
 import type { ColumnsType } from 'antd/es/table'
 import { Link } from 'react-router-dom'
-
-interface DataType {
-    time: string
-    callerNo: string
-    callerDomain: string
-    calleeNo: string
-    calleeDomain: string
-    userAgent: string
-    sipCallID: string
-    msgCount: number
-}
+import { DataType } from './interface'
 
 const columns: ColumnsType<DataType> = [
     {
@@ -55,25 +45,17 @@ const columns: ColumnsType<DataType> = [
         key: 'action',
         render: (_, record) => (
             <Space size="middle">
-                <Link to={'/call/' + record.time.substring(0, 10) + '/' + record.sipCallID}>Sequence Diagram</Link>
+                <Link target="blank" to={'/call/' + record.time.substring(0, 10) + '/' + record.sipCallID}>
+                    Sequence Diagram
+                </Link>
             </Space>
         ),
     },
 ]
 
-const data: DataType[] = [
-    {
-        time: '2010-10-10 10:10:10',
-        callerNo: '8001',
-        callerDomain: 'test.cc',
-        calleeNo: '8002',
-        calleeDomain: 'test.cc',
-        userAgent: 'MicroSIP',
-        sipCallID: '8389238293800990',
-        msgCount: 10,
-    },
-]
-
-const App: React.FC = () => <Table columns={columns} dataSource={data} rowKey="sipCallID" />
+interface Prop {
+    calls: DataType[]
+}
+const App: React.FC<Prop> = ({ calls }) => <Table columns={columns} dataSource={calls} rowKey="sipCallID" />
 
 export default App
