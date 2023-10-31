@@ -56,6 +56,7 @@ const columns: ColumnsType<DataType> = [
 interface Prop {
     calls: DataType[]
 }
+
 const App: React.FC<Prop> = ({ calls }) => <Table columns={columns} dataSource={calls} rowKey="sipCallID" />
 
 export default App

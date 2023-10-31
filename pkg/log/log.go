@@ -2,7 +2,7 @@ package log
 
 import (
 	"os"
-	"siphub/pkg/env"
+	"sipgrep/pkg/env"
 
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"

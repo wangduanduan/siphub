@@ -8,27 +8,26 @@ import (
 
 type config struct {
 	UDPListenPort         int    `env:"UDPListenPort" envDefault:"9060"`
-	MaxPackgeLength       int    `env:"MaxPackgeLength" envDefault:"4096"`
+	MaxPacketLength       int    `env:"MaxPacketLength" envDefault:"4096"`
 	MaxReadTimeoutSeconds int    `env:"MaxReadTimeoutSecond" envDefault:"5"`
 	LogLevel              string `env:"LogLevel" envDefault:"info"`
 	Hostname              string `env:"HOSTNAME" envDefault:"unknow"`
 	HeaderUIDName         string `env:"HeaderUIDName"`
 	HeaderFSCallIDName    string `env:"HeaderFSCallIDName"`
 	DiscardMethods        string `env:"DiscardMethods" envDefault:"OPTIONS"`
-	MinPackgeLength       int    `env:"MinPackgeLength" envDefault:"24"`
+	MinPacketLength       int    `env:"MinPacketLength" envDefault:"24"`
 	SqlMaxOpenConn        int    `env:"SqlMaxOpenConn" envDefault:"64"`
 	SqlMaxIdleConn        int    `env:"SqlMaxIdleConn" envDefault:"64"`
 
 	DBUser   string `env:"DBUser"`
-	DBPasswd string `env:"DBPasswd"` // 支持加密
-
-	DBUserPasswd string `env:"DBUserPasswd"` // user:password
+	DBPasswd string `env:"DBPasswd"`
 
 	DBAddr           string `env:"DBAddr" envDefault:"localhost"`
-	DBName           string `env:"DBName" envDefault:"siphub"`
+	DBName           string `env:"DBName" envDefault:"sipgrep"`
 	CalleeFrom       string `env:"CalleeFrom" envDefault:"RURI"`
 	MaxBatchItems    int    `env:"MaxBatchItems" envDefault:"20"`
 	TickerSecondTime int    `env:"TickerSecondTime" envDefault:"20"`
+	PageLimit        int    `env:"PageLimit" envDefault:"200"`
 }
 
 var Conf = config{}

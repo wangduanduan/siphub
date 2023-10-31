@@ -6,7 +6,7 @@ import (
 
 var MsgCount = prometheus.NewCounterVec(
 	prometheus.CounterOpts{
-		Name: "siphub_msg_count",
+		Name: "sipgrep_msg_count",
 	},
 	[]string{"type"},
 )

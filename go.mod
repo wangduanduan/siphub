@@ -1,12 +1,15 @@
-module siphub
+module sipgrep
 
 go 1.16
 
 require (
 	github.com/andybalholm/brotli v1.0.6 // indirect
 	github.com/caarlos0/env/v6 v6.10.1
+	github.com/gabriel-vasile/mimetype v1.4.3 // indirect
+	github.com/go-playground/validator/v10 v10.15.5 // indirect
 	github.com/go-sql-driver/mysql v1.7.1 // indirect
 	github.com/gofiber/fiber/v2 v2.50.0
+	github.com/golang-module/carbon/v2 v2.2.11 // indirect
 	github.com/klauspost/compress v1.17.2 // indirect
 	github.com/mattn/go-isatty v0.0.20 // indirect
 	github.com/prometheus/client_golang v1.17.0

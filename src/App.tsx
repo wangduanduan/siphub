@@ -1,5 +1,5 @@
 import { Row, Col, Card } from 'antd'
-import SearchForm from './SearchFrom'
+import { FieldType, SearchForm } from './SearchFrom'
 import SearchTable from './SearchTable'
 import { useState } from 'react'
 import { DataType } from './interface'
@@ -18,11 +18,28 @@ function App() {
         },
     ])
 
+    function Search(ft: FieldType) {
+        console.log('app', ft)
+        console.log(ft.timePicker)
+
+        const query = {
+            BeginTime: ft.datePicker.format('YYYY-MM-DD') + ' ' + ft.timePicker[0].format('HH:mm:ss'),
+            EndTime: ft.datePicker.format('YYYY-MM-DD') + ' ' + ft.timePicker[0].format('HH:mm:ss'),
+            Caller: !!ft.caller ? ft.caller : undefined,
+            CallerDomain: ft.callerDomain,
+            // 被叫号码取反存储
+            Callee: !!ft.callee ? ft.callee.split('').reverse().join('') : undefined,
+            CalleeDomain: ft.calleeDomain,
+        }
+
+        console.log(query)
+    }
+
     return (
         <Row gutter={16}>
             <Col span={6}>
                 <Card title="Search Card">
-                    <SearchForm />
+                    <SearchForm search={Search} />
                 </Card>
             </Col>
             <Col span={18}>

@@ -31,6 +31,9 @@ devDependencies:
   antd:
     specifier: ^5.10.2
     version: 5.10.2(react-dom@18.2.0)(react@18.2.0)
+  dayjs:
+    specifier: ^1.11.10
+    version: 1.11.10
   eslint:
     specifier: ^8.45.0
     version: 8.52.0

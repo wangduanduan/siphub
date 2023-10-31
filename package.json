@@ -1,5 +1,5 @@
 {
-  "name": "siphub-web",
+  "name": "sipgrep-web",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -20,6 +20,7 @@
     "@typescript-eslint/parser": "^6.0.0",
     "@vitejs/plugin-react": "^4.0.3",
     "antd": "^5.10.2",
+    "dayjs": "^1.11.10",
     "eslint": "^8.45.0",
     "eslint-plugin-react-hooks": "^4.6.0",
     "eslint-plugin-react-refresh": "^0.4.3",

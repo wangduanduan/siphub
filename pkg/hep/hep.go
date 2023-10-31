@@ -9,7 +9,7 @@ import (
 	"encoding/binary"
 	"errors"
 	"net"
-	"siphub/pkg/log"
+	"sipgrep/pkg/log"
 )
 
 // HEP ID
@@ -91,9 +91,9 @@ func (hepMsg *HepMsg) parseHep3(udpPacket []byte) error {
 
 		currentByte += chunkLength
 		if int(chunkLength) > cap(hepChunk) {
-			// 一般这种情况是因为每次读取的MaxPackgeLength设置的比较小
+			// 一般这种情况是因为每次读取的MaxPacketLength设置的比较小
 			// 导致无法一次性读区完整的hep包
-			// 所以可以适当增加MaxPackgeLength
+			// 所以可以适当增加MaxPacketLength
 			// 例如设置为4096
 			log.Warnf("chunkLength big then slice capacity: chunkLength: %v, slice capacity: %v", chunkLength, cap(hepChunk))
 			chunkLength = uint16(cap(hepChunk))

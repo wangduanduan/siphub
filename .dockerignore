@@ -3,7 +3,7 @@
 logs
 tmp/
 build.sh
-siphub
+sipgrep
 .air.toml
 .gitignore
 CHANGELOG.md

@@ -3,7 +3,7 @@ package parser
 import (
 	"testing"
 
-	"siphub/pkg/models"
+	"sipgrep/pkg/models"
 
 	"github.com/stretchr/testify/assert"
 )

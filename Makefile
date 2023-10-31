@@ -1,5 +1,5 @@
 version=$(shell cat VERSION)
-image_name="wangduanduan/siphub-go:$(version)"
+image_name="wangduanduan/sipgrep-go:$(version)"
 
 DBAddr=
 DBName=
@@ -23,12 +23,14 @@ fmt:
 changelog:
 	git-chglog -o CHANGELOG.md
 run:
-	-docker rm -f siphub-go;
+	-docker rm -f sipgrep-go;
 	docker run -d \
 	-p 3000:3000 \
 	-p 9060:9060/udp \
 	-e DBAddr="$(DBAddr)" \
 	-e DBName="$(DBName)" \
 	-e DBUserPasswd="$(DBUserPasswd)" \
-	--name siphub-go \
-	harbor:5000/wecloud/siphub-go:$(image_name)
+	--name sipgrep-go \
+	harbor:5000/wecloud/sipgrep-go:$(image_name)
+t1:
+	http --verbose localhost:3000/api/v1/call BeginTime=="2023-10-31 00:00:00" EndTime=="2023-10-31 23:59:59"

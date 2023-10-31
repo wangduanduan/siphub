@@ -2,11 +2,11 @@ package mysql
 
 import (
 	"fmt"
-	"siphub/pkg/env"
-	"siphub/pkg/log"
-	"siphub/pkg/models"
-	"siphub/pkg/prom"
-	"siphub/pkg/util"
+	"sipgrep/pkg/env"
+	"sipgrep/pkg/log"
+	"sipgrep/pkg/models"
+	"sipgrep/pkg/prom"
+	"sipgrep/pkg/util"
 	"time"
 
 	"github.com/prometheus/client_golang/prometheus"
@@ -45,6 +45,11 @@ type Record struct {
 	RawMsg         string `gorm:"type:text;not null"`
 }
 
+type CallTable struct {
+	Meta     Record
+	MsgCount int
+}
+
 var maxBatchItems = env.Conf.MaxBatchItems
 var batchChan = make(chan *Record, maxBatchItems*2)
 var ticker = time.NewTicker(time.Second * time.Duration(env.Conf.TickerSecondTime))
@@ -60,9 +65,10 @@ func BatchSaveInit() {
 			select {
 			case <-ticker.C:
 				// 但是在抓包比较少的情况下，希望在达到一定的延迟后，也可以自动插入
+				log.Infof("ticker for saving to db")
 				i = maxBatchItems
 			default:
-				batchItems[i] = <-batchChan
+				batchItems = append(batchItems, <-batchChan)
 			}
 		}
 
@@ -117,7 +123,7 @@ func Save(s *models.SIP) {
 
 func Connect(UserPasswd, Addr, DBName string) {
 	var err error
-	dsn := fmt.Sprintf("%s@tcp(%s)/%s?charset=utf8mb4&parseTime=True&loc=Local", UserPasswd, Addr, DBName)
+	dsn := fmt.Sprintf("%s@tcp(%s)/%s?charset=utf8mb4&parseTime=True&loc=Local&sql_mode=TRADITIONAL", UserPasswd, Addr, DBName)
 
 	db, err = gorm.Open(mysql.Open(dsn), &gorm.Config{
 		SkipDefaultTransaction: true,
@@ -140,4 +146,44 @@ func Connect(UserPasswd, Addr, DBName string) {
 	sqlDB.SetConnMaxLifetime(time.Minute)
 
 	db.AutoMigrate(&Record{})
+}
+
+func Search(sql string) ([]CallTable, error) {
+	rows, err := db.Raw(sql).Rows()
+
+	if err != nil {
+		return nil, err
+	}
+
+	table := make([]CallTable, 0, env.Conf.PageLimit)
+
+	defer rows.Close()
+
+	for rows.Next() {
+		item := CallTable{}
+
+		err := rows.Scan(
+			&item.Meta.SipCallid,
+			&item.Meta.CreateTime,
+			&item.Meta.FromUser,
+			&item.Meta.FromHost,
+			&item.Meta.ToUser,
+			&item.Meta.ToHost,
+			&item.Meta.UserAgent,
+			&item.Meta.SipProtocol,
+			&item.Meta.SipMethod,
+			&item.Meta.CseqMethod,
+			&item.Meta.FsCallid,
+			&item.Meta.LegUid,
+			&item.MsgCount,
+		)
+
+		if err != nil {
+			log.Errorf("sql scan error: %v", err)
+		}
+
+		table = append(table, item)
+	}
+
+	return table, nil
 }

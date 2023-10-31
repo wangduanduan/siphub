@@ -1,8 +1,8 @@
 package parser
 
 import (
-	"siphub/pkg/models"
-	"siphub/pkg/util"
+	"sipgrep/pkg/models"
+	"sipgrep/pkg/util"
 	"strings"
 )
 
@@ -24,9 +24,9 @@ type Parser struct {
 	models.SIP
 }
 
-// 	Request 	: INVITE bob@example.com SIP/2.0
-// 	Response 	: SIP/2.0 200 OK
-// 	Response	: SIP/2.0 501 Not Implemented
+// Request 	: INVITE bob@example.com SIP/2.0
+// Response 	: SIP/2.0 200 OK
+// Response	: SIP/2.0 501 Not Implemented
 func (p *Parser) ParseFirstLine() {
 	if p.Raw == nil {
 		return

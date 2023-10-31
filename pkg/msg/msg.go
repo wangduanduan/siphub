@@ -3,12 +3,12 @@ package msg
 import (
 	"fmt"
 	"net"
-	"siphub/pkg/env"
-	"siphub/pkg/hep"
-	"siphub/pkg/log"
-	"siphub/pkg/models"
-	"siphub/pkg/parser"
-	"siphub/pkg/prom"
+	"sipgrep/pkg/env"
+	"sipgrep/pkg/hep"
+	"sipgrep/pkg/log"
+	"sipgrep/pkg/models"
+	"sipgrep/pkg/parser"
+	"sipgrep/pkg/prom"
 	"strings"
 	"time"
 
@@ -45,7 +45,7 @@ func Format(p []byte) (s *models.SIP, errorType string, errMsg string) {
 		return nil, "hep_body_is_empty", ""
 	}
 
-	if len(hepMsg.Body) < env.Conf.MinPackgeLength {
+	if len(hepMsg.Body) < env.Conf.MinPacketLength {
 		return nil, "hep_body_is_too_small", ""
 	}
 
