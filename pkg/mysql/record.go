@@ -20,33 +20,32 @@ const MaxUserAgentLength = 40
 
 type Record struct {
 	// ID string `gorm:"type:char(22);not null;default ''"`
-	SipCallid  string    `gorm:"index;type:char(64);not null;default:''"`
-	SipMethod  string    `gorm:"index;type:char(20);not null;default:''"`
-	CreateTime time.Time `gorm:"index;type:datetime;not null;default:CURRENT_TIMESTAMP"`
-	ToUser     string    `gorm:"index;type:char(40);not null;default:''"`
-	LegUid     string    `gorm:"index;type:char(64);not null;default:''"`
-	FromUser   string    `gorm:"index;type:char(40);not null;default:''"`
+	SIPCallID  string    `gorm:"column:sip_call_id;index;type:char(64);not null;default:''"`
+	SIPMethod  string    `gorm:"column:sip_method;index;type:char(20);not null;default:''"`
+	CreateTime time.Time `gorm:"column:create_time;index;type:datetime;not null;default:CURRENT_TIMESTAMP"`
+	ToUser     string    `gorm:"column:to_user;index;type:char(40);not null;default:''"`
+	LegUid     string    `gorm:"column:leg_uid;index;type:char(64);not null;default:''"`
+	FromUser   string    `gorm:"column:from_user;index;type:char(40);not null;default:''"`
 
-	FsCallid string `gorm:"type:char(64);not null; default:''"`
+	FsCallID string `gorm:"column:fs_call_id;type:char(64);not null; default:''"`
 
-	ResponseCode int    `gorm:"type:int(11);not null;default:0"`
-	ResponseDesc string `gorm:"type:char(64);not null;default:''"`
-	CseqMethod   string `gorm:"type:char(20);not null;default:''"`
-	CseqNumber   int    `gorm:"type:int(11);not null;default:0"`
+	ResponseCode int    `gorm:"column:response_code;type:int(11);not null;default:0"`
+	ResponseDesc string `gorm:"column:response_desc;type:char(64);not null;default:''"`
+	CSeqMethod   string `gorm:"column:cseq_method;type:char(20);not null;default:''"`
+	CSeqNumber   int    `gorm:"column:cseq_number;type:int(11);not null;default:0"`
 
-	FromHost       string `gorm:"type:char(64);not null;default:''"`
-	ToHost         string `gorm:"type:char(64);not null;default:''"`
-	SipProtocol    uint   `gorm:"type:int(11);not null;default:0"`
-	IsRequest      uint   `gorm:"type:int(11);not null;default:0"`
-	UserAgent      string `gorm:"type:char(40);not null;default:''"`
-	SrcHost        string `gorm:"type:char(32);not null;default:''"`
-	DstHost        string `gorm:"type:char(32);not null;default:''"`
-	TimestampMicro uint32 `gorm:"type:int(11);not null;default:0"`
-	RawMsg         string `gorm:"type:text;not null"`
+	FromHost       string `gorm:"column:from_host;type:char(64);not null;default:''"`
+	ToHost         string `gorm:"column:to_host;type:char(64);not null;default:''"`
+	SIPProtocol    uint   `gorm:"column:sip_protocol;type:int(11);not null;default:0"`
+	UserAgent      string `gorm:"column:user_agent;type:char(40);not null;default:''"`
+	SrcHost        string `gorm:"column:src_host;type:char(32);not null;default:''"`
+	DstHost        string `gorm:"column:dst_host;type:char(32);not null;default:''"`
+	TimestampMicro uint32 `gorm:"column:timestamp_micro;type:int(11);not null;default:0"`
+	RawMsg         string `gorm:"column:raw_msg;type:text;not null"`
 }
 
 type CallTable struct {
-	Meta     Record
+	Record
 	MsgCount int
 }
 
@@ -81,33 +80,27 @@ func BatchSaveInit() {
 
 func Save(s *models.SIP) {
 	ua := s.UserAgent
-	isRequest := 0
 
 	if len(ua) > MaxUserAgentLength {
 		ua = ua[:MaxUserAgentLength]
 	}
 
-	if s.IsRequest {
-		isRequest = 1
-	}
-
 	RawMsg := *s.Raw
 
 	item := Record{
-		FsCallid:       s.FSCallID,
+		FsCallID:       s.FSCallID,
 		LegUid:         s.UID,
-		SipMethod:      s.Title,
+		SIPMethod:      s.Title,
 		ResponseCode:   s.ResponseCode,
 		ResponseDesc:   s.ResponseDesc,
-		CseqMethod:     s.CSeqMethod,
-		CseqNumber:     s.CSeqNumber,
+		CSeqMethod:     s.CSeqMethod,
+		CSeqNumber:     s.CSeqNumber,
 		FromUser:       s.FromUsername,
 		FromHost:       s.FromDomain,
 		ToUser:         util.ReverseString(s.ToUsername), // 被叫号码翻转后存储, 方便查询时不需要加前缀
 		ToHost:         s.ToDomain,
-		SipCallid:      s.CallID,
-		IsRequest:      uint(isRequest),
-		SipProtocol:    uint(s.Protocol),
+		SIPCallID:      s.CallID,
+		SIPProtocol:    uint(s.Protocol),
 		UserAgent:      ua,
 		SrcHost:        s.SrcAddr,
 		DstHost:        s.DstAddr,
@@ -163,18 +156,18 @@ func Search(sql string) ([]CallTable, error) {
 		item := CallTable{}
 
 		err := rows.Scan(
-			&item.Meta.SipCallid,
-			&item.Meta.CreateTime,
-			&item.Meta.FromUser,
-			&item.Meta.FromHost,
-			&item.Meta.ToUser,
-			&item.Meta.ToHost,
-			&item.Meta.UserAgent,
-			&item.Meta.SipProtocol,
-			&item.Meta.SipMethod,
-			&item.Meta.CseqMethod,
-			&item.Meta.FsCallid,
-			&item.Meta.LegUid,
+			&item.SIPCallID,
+			&item.CreateTime,
+			&item.FromUser,
+			&item.FromHost,
+			&item.ToUser,
+			&item.ToHost,
+			&item.UserAgent,
+			&item.SIPProtocol,
+			&item.SIPMethod,
+			&item.CSeqMethod,
+			&item.FsCallID,
+			&item.LegUid,
 			&item.MsgCount,
 		)
 

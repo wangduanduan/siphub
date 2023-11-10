@@ -9,7 +9,7 @@ import (
 )
 
 var SearchFields = []string{
-	"sip_callid",
+	"sip_call_id",
 	"create_time",
 	"from_user",
 	"from_host",
@@ -19,7 +19,7 @@ var SearchFields = []string{
 	"sip_protocol",
 	"sip_method",
 	"cseq_method",
-	"fs_callid",
+	"fs_call_Id",
 	"leg_uid",
 	"count(*) as msg_count",
 }
@@ -56,7 +56,7 @@ func GetSearchSql(sp SearchParams) string {
 		conditions = append(conditions, fmt.Sprintf("from_host='%s'", sp.CallerDomain))
 	}
 	if sp.Callee != "" {
-		conditions = append(conditions, fmt.Sprintf("to_user='%s'", sp.Callee))
+		conditions = append(conditions, fmt.Sprintf("to_user like '%s'%%", sp.Callee))
 	}
 	if sp.CalleeDomain != "" {
 		conditions = append(conditions, fmt.Sprintf("to_host='%s'", sp.CalleeDomain))
@@ -66,13 +66,13 @@ func GetSearchSql(sp SearchParams) string {
 	conds := strings.Join(conditions, ",")
 	tableName := GetTableName(sp.BeginTime)
 
-	sql := fmt.Sprintf(`select %s from %s where sip_callid in (
-		select sip_callid from (
-			select distinct sip_callid from %s where %s
+	sql := fmt.Sprintf(`select %s from %s where sip_call_id in (
+		select sip_call_id from (
+			select distinct sip_call_id from %s where %s
 			limit %d
 		) tmp
 	  )
-	  group by sip_callid order by create_time desc`, columns, tableName, tableName, conds, env.Conf.PageLimit)
+	  group by sip_call_id order by create_time desc`, columns, tableName, tableName, conds, env.Conf.PageLimit)
 
 	return sql
 }

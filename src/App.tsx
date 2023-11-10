@@ -3,20 +3,10 @@ import { FieldType, SearchForm } from './SearchFrom'
 import SearchTable from './SearchTable'
 import { useState } from 'react'
 import { DataType } from './interface'
+import axios from 'axios'
 
 function App() {
-    const [calls, setCalls] = useState<DataType[]>([
-        {
-            time: '2010-10-10 10:10:10',
-            callerNo: '8001',
-            callerDomain: 'test.cc',
-            calleeNo: '8002',
-            calleeDomain: 'test.cc',
-            userAgent: 'MicroSIP',
-            sipCallID: '8389238293800990',
-            msgCount: 10,
-        },
-    ])
+    const [calls, setCalls] = useState<DataType[]>([])
 
     function Search(ft: FieldType) {
         console.log('app', ft)
@@ -24,7 +14,7 @@ function App() {
 
         const query = {
             BeginTime: ft.datePicker.format('YYYY-MM-DD') + ' ' + ft.timePicker[0].format('HH:mm:ss'),
-            EndTime: ft.datePicker.format('YYYY-MM-DD') + ' ' + ft.timePicker[0].format('HH:mm:ss'),
+            EndTime: ft.datePicker.format('YYYY-MM-DD') + ' ' + ft.timePicker[1].format('HH:mm:ss'),
             Caller: !!ft.caller ? ft.caller : undefined,
             CallerDomain: ft.callerDomain,
             // 被叫号码取反存储
@@ -33,6 +23,14 @@ function App() {
         }
 
         console.log(query)
+        axios
+            .get('/api/v1/call', {
+                params: query,
+            })
+            .then((res) => {
+                setCalls(res.data)
+            })
+            .catch()
     }
 
     return (

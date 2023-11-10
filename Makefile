@@ -33,4 +33,4 @@ run:
 	--name sipgrep-go \
 	harbor:5000/wecloud/sipgrep-go:$(image_name)
 t1:
-	http --verbose localhost:3000/api/v1/call BeginTime=="2023-10-31 00:00:00" EndTime=="2023-10-31 23:59:59"
+	http --verbose localhost:3000/api/v1/call BeginTime=="2023-11-05 00:00:00" EndTime=="2023-11-05 23:59:59"
