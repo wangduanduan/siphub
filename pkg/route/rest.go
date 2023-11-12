@@ -10,6 +10,22 @@ import (
 
 var validate = validator.New()
 
+func SearchCallID(c *fiber.Ctx) error {
+	day := c.Params("Day")
+	callID := c.Params("SIPCallID")
+	data, err := mysql.FindBySIPCallID(day, callID)
+
+	if err != nil {
+		log.Errorf("%v", err)
+		return &fiber.Error{
+			Code:    fiber.ErrInternalServerError.Code,
+			Message: "sql query error",
+		}
+	}
+
+	return c.JSON(data)
+}
+
 func Search(c *fiber.Ctx) error {
 	sp := mysql.SearchParams{
 		BeginTime:    c.Query("BeginTime"),

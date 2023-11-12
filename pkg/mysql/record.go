@@ -141,6 +141,20 @@ func Connect(UserPasswd, Addr, DBName string) {
 	db.AutoMigrate(&Record{})
 }
 
+func FindBySIPCallID(Date, SIPCallID string) ([]Record, error) {
+	var re []Record
+
+	tableName := GetTableName(Date)
+
+	sqlRE := db.Table(tableName).Where("sip_call_id = ?", SIPCallID).Order("create_time, timestamp_micro").Find(&re)
+
+	if sqlRE.Error != nil {
+		return nil, sqlRE.Error
+	}
+
+	return re, nil
+}
+
 func Search(sql string) ([]CallTable, error) {
 	rows, err := db.Raw(sql).Rows()
 

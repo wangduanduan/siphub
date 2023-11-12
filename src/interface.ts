@@ -2,6 +2,8 @@ export interface BaseType {
     SIPCallID: string
     SIPMethod: string
     CreateTime: string
+    CreateTimeShort?: string
+    CreateTimeLong?: string
     ToUser: string
     LegUid: string
     FromUser: string
@@ -13,7 +15,8 @@ export interface BaseType {
     FromHost: string
     ToHost: string
     SIPProtocol: number
-    IsRequest: number
+    SIPProtocolName?: string
+    IsRequest?: number
     UserAgent: string
     SrcHost: string
     DstHost: string

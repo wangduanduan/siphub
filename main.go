@@ -22,6 +22,7 @@ func main() {
 
 	v1 := api.Group("/v1")
 	v1.Get("/call", route.Search)
+	v1.Get("/call/:Day/:SIPCallID/", route.SearchCallID)
 
 	log.Infof("app listen on :3000")
 	app.Listen(":3000")
