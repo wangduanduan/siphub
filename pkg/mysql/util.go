@@ -9,6 +9,7 @@ import (
 )
 
 var SearchFields = []string{
+	"id",
 	"sip_call_id",
 	"create_time",
 	"from_user",

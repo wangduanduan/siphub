@@ -19,7 +19,7 @@ var db *gorm.DB
 const MaxUserAgentLength = 40
 
 type Record struct {
-	// ID string `gorm:"type:char(22);not null;default ''"`
+	ID         int64     `gorm:"column:id;type:bigint(20);autoIncrement;primaryKey"`
 	SIPCallID  string    `gorm:"column:sip_call_id;index;type:char(64);not null;default:''"`
 	SIPMethod  string    `gorm:"column:sip_method;index;type:char(20);not null;default:''"`
 	CreateTime time.Time `gorm:"column:create_time;index;type:datetime;not null;default:CURRENT_TIMESTAMP"`
@@ -170,6 +170,7 @@ func Search(sql string) ([]CallTable, error) {
 		item := CallTable{}
 
 		err := rows.Scan(
+			&item.ID,
 			&item.SIPCallID,
 			&item.CreateTime,
 			&item.FromUser,

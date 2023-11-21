@@ -63,6 +63,6 @@ interface Prop {
     calls: DataType[]
 }
 
-const App: React.FC<Prop> = ({ calls }) => <Table columns={columns} dataSource={calls} rowKey="SIPCallID" />
+const App: React.FC<Prop> = ({ calls }) => <Table columns={columns} dataSource={calls} rowKey="ID" />
 
 export default App

@@ -1,9 +1,8 @@
-import { useParams } from 'react-router-dom'
+import { useLoaderData } from 'react-router-dom'
 import { useEffect, useRef, useState } from 'react'
 import { Tabs } from 'antd'
 import type { TabsProps } from 'antd'
 import { Col, Row, Card, Tag } from 'antd'
-import axios from 'axios'
 import './Sequence.css'
 
 const onChange = (key: string) => {
@@ -28,16 +27,17 @@ function paintLine(pid: string, flow: BaseType[]) {
 }
 
 export default function SequenceDiagram() {
-    const params = useParams()
+    // const params = useParams()
     const ssdRef = useRef<HTMLDivElement>(null)
     // const [flow, setFLow] = useState<string>(createSeqHtml(data, 0).html)
-    const [seq, setSeq] = useState<BaseType[]>([])
+    // const [seq, setSeq] = useState<BaseType[]>([])
     const [seqHeight, _] = useState(window.innerHeight)
+    const seq = useLoaderData() as BaseType[]
 
     const seqList = seq.map((item, index) => {
         return (
             <Card
-                key={index}
+                key={item.ID}
                 id={'s-line-' + (index + 1)}
                 title={`[${index + 1}]  ${item.SIPMethod} ${formatLongTime(item.CreateTime)}`}
                 bordered={true}
@@ -75,15 +75,15 @@ export default function SequenceDiagram() {
         },
     ]
 
-    useEffect(() => {
-        axios
-            .get(`/api/v1/call/${params.day}/${params.callID}/`)
-            .then((res) => {
-                res.data
-                setSeq(res.data)
-            })
-            .catch()
-    }, [])
+    // useEffect(() => {
+    //     axios
+    //         .get(`/api/v1/call/${params.day}/${params.callID}/`)
+    //         .then((res) => {
+    //             res.data
+    //             setSeq(res.data)
+    //         })
+    //         .catch()
+    // }, [])
 
     useEffect(() => {
         const diagram = new ssd.SequenceDiagram()

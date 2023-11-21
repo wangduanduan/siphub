@@ -1,4 +1,5 @@
 export interface BaseType {
+    ID: number
     SIPCallID: string
     SIPMethod: string
     CreateTime: string
