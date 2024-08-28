@@ -39,10 +39,11 @@ export default function SequenceDiagram() {
             <Card
                 key={item.ID}
                 id={'s-line-' + (index + 1)}
-                title={`[${index + 1}]  ${item.SIPMethod} ${formatLongTime(item.CreateTime)}`}
+                title={`[${index + 1}] ${item.SIPMethod} ${item.ResponseDesc}`}
                 bordered={true}
             >
                 <p>
+                    <Tag>{formatLongTime(item.CreateTime)}</Tag>
                     <Tag color="magenta">length: {item.RawMsg.length}B</Tag>
                     <Tag color="cyan">protocol: {getProtocolName(item.SIPProtocol)}</Tag>
                 </p>

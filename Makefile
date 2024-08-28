@@ -5,6 +5,8 @@ DBAddr=
 DBName=
 DBUserPasswd=
 
+dev:
+	watchexec -r -e go -- go run main.go
 go:
 	go build -o run .
 gofmt:

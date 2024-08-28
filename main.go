@@ -1,22 +1,41 @@
 package main
 
 import (
-	"sipgrep/pkg/env"
+	// "sipgrep/pkg/env"
 	"sipgrep/pkg/hepserver"
 	"sipgrep/pkg/log"
 	"sipgrep/pkg/mysql"
+
+	// _ "sipgrep/pkg/pg"
 	"sipgrep/pkg/route"
 
 	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/template/html/v2"
+	"time"
 )
 
 func main() {
-	mysql.Connect(env.Conf.DBUser+":"+env.Conf.DBPasswd, env.Conf.DBAddr, env.Conf.DBName)
+	mysql.Connect()
 
 	go mysql.BatchSaveInit()
 	go hepserver.CreateHepServer()
 
-	app := fiber.New()
+	engine := html.New("./views", ".html")
+	app := fiber.New(fiber.Config{
+		Views: engine,
+	})
+
+	app.Static("/", "./public")
+
+	app.Get("/", func(c *fiber.Ctx) error {
+		// Render index template
+		return c.Render("index", fiber.Map{
+			"Title":     "Hello, World!",
+			"Today":     time.Now().Format("2006-01-02"),
+			"EndTime":   time.Now().Format("15:04:05"),
+			"StartTime": time.Now().Add(-time.Minute * 30).Format("15:04:05"),
+		})
+	})
 
 	api := app.Group("/api")
 
