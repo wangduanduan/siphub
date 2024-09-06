@@ -1,0 +1,13 @@
+.region.focus .outline {
+    stroke-width: 5px;
+    stroke: rgba(255, 128, 0, 0.5);
+}
+.region:hover .outline{
+    stroke-width: 5px;
+    stroke: rgba(250, 216, 66, 0.497);
+    cursor: pointer;
+}
+
+.region:hover{
+    cursor: pointer;
+}

@@ -6,11 +6,9 @@ DBName=
 DBUserPasswd=
 
 dev:
-	watchexec -r -e go -- go run main.go
-go:
-	go build -o run .
-gofmt:
-	gofmt -l -w .
+	watchexec -r -e mjs -- bun app.mjs
+dev1:
+	watchexec -r -e mjs -- node app.mjs
 image-build:
 	docker build . -t $(image_name)
 image-push:
@@ -18,22 +16,8 @@ image-push:
 release:
 	git tag v$(version)
 	git push origin v$(version)
-test:
-	go test -v ./...
-fmt:
-	go fmt ./...
 changelog:
 	git-chglog -o CHANGELOG.md
-run:
-	-docker rm -f sipgrep-go;
-	docker run -d \
-	-p 3000:3000 \
-	-p 9060:9060/udp \
-	-e DBAddr="$(DBAddr)" \
-	-e DBName="$(DBName)" \
-	-e DBUserPasswd="$(DBUserPasswd)" \
-	--name sipgrep-go \
-	harbor:5000/wecloud/sipgrep-go:$(image_name)
 t1:
 	http --verbose localhost:3000/api/v1/call BeginTime=="2023-11-05 00:00:00" EndTime=="2023-11-05 23:59:59"
 t2:

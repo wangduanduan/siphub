@@ -1,26 +1,19 @@
-FROM golang:1.17.2 as builder
+FROM node:22-alpine3.19
+# RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.tuna.tsinghua.edu.cn/g' /etc/apk/repositories
+RUN apk update && apk add tzdata curl && cp -r -f /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
 
-ENV GO111MODULE=on GOPROXY=https://goproxy.cn,direct
-
-WORKDIR /app
-
-COPY . .
-
-RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o run .
-
-FROM alpine:3.14.2
+ENV NODE_ENV production
 
 WORKDIR /app
-RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.tuna.tsinghua.edu.cn/g' /etc/apk/repositories
-RUN apk update && apk add tzdata curl net-tools && cp -r -f /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
-RUN echo "curl http://localhost:3000/metrics/prometheus" > /app/README.md
 
-COPY --from=builder /app/run .
-#COPY --from=builder /usr/share/zoneinfo /usr/share/zoneinfo
-ENV TZ=Asia/Shanghai
+RUN npm install -g pnpm
 
-EXPOSE 9060/udp
+COPY package.json pnpm-lock.yaml /app/
+
+RUN pnpm i -P
+
+COPY . /app
+
 EXPOSE 3000
 
-ENTRYPOINT ["/app/run"]
-
+CMD [ "node", "app.mjs" ]

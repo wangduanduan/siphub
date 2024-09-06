@@ -1,7 +1,0 @@
-# tab宽度
-tabWidth: 4
-# 句尾不加分号
-semi: false
-# 使用单引号括住字符串
-singleQuote: true
-printWidth: 120

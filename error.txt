@@ -1,8 +1,0 @@
-2023-10-31T11:00:27.938+0800    INFO    msg/msg.go:32   200 8011cmbc.poc->8011cmbc.poc
-panic: runtime error: index out of range [0] with length 0
-
-goroutine 8 [running]:
-sipgrep/pkg/mysql.BatchSaveInit()
-        /Users/wangduanduan/github/siphub/pkg/mysql/record.go:65 +0x298
-created by main.main in goroutine 1
-        /Users/wangduanduan/github/siphub/main.go:22 +0x7c

@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>SIP-Hub</title>
+    <link href="/bootstrap-5.3.0/css/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
+    <script src="/htmx-2.0.2/htmx.js"></script>
+    <script src="/lib/sequence-diagram-web.min.js"></script>
+    <script src="/lib/jquery.min.js"></script>
+    <link rel="stylesheet" href="/css/diagram.css">
+
+</head>
+
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">1</div>
+        </div>
+        <div class="row">
+            <div class="col-md-8" style="max-height: 800px;overflow-y: scroll;">
+                <div id="seq-a"></div>
+            </div>
+            <div class="col-md-4" style="max-height: 800px;overflow-y: scroll;">
+                <div class="list-group">
+
+<%for ( let i = 0; i < table.length; i++ ) { let v = table[i] %>
+<a id="raw-sip-<%- i %>" data-id="<%- i %>" data-cseq="<%- v.cseq_number %>" href="#" class="list-group-item list-group-item-action" aria-current="true">
+                      <div class="d-flex w-100 justify-content-between">
+                        <h5 class="mb-1">F<%= i %> <%= v.sip_method %> </h5>
+                        <small><%- v.create_time %> <%= v.sip_protocl %>/<%- v.msg_len %></small>
+                      </div>
+<pre>
+<%- v.raw_msg %>
+</pre>
+                    </a>
+<%} %>
+                  
+                  </div>
+
+            </div>
+        </div>
+    </div>
+
+</body>
+
+<script>
+    const code = `<%- seq %>`
+    const jq = jQuery
+    const sd = SequenceDiagram
+    const lineColors = [
+        '#8A2BE2',
+        '#D2691E',
+        '#5F9EA0',
+        '#CD5C5C',
+        '#FF69B4',
+        '#90EE90',
+        '#FFA07A',
+        '#20B2AA',
+        '#87CEFA',
+        '#32CD32',
+        '#7B68EE',
+        '#C71585',
+        '#808000',
+        '#FF4500',
+        '#DA70D6',
+        '#00FF7F',
+        '#EE82EE',
+        '#9ACD32',
+    ]
+
+
+    const flow = [<%- table.map((it)=>it.cseq_number) %>]
+
+    let gram
+
+    function init_diagram(){
+        gram = new sd(code, {
+            container: document.getElementById('seq-a')
+        })
+        // gram.setHighlight(1)
+        gram.addEventListener('click', (e)=>{
+            if (e.type === 'connect') {
+                gram.setHighlight(e.ln)
+                let el = document.getElementById(`raw-sip-${e.ln}`)
+                if (el) el.scrollIntoView()
+            }
+        });
+
+        jq('a.list-group-item').on('click', (e)=>{
+            let id = e.currentTarget.dataset.id
+            gram.setHighlight(parseInt(id))
+            jq('g.region.focus')[0].scrollIntoView()
+        })
+
+        jq(`g.region:has(polygon)`).each(function (index) {
+            const color = lineColors[flow[index] % lineColors.length]
+            jq(this).find('path').first().css('stroke', color)
+            jq(this).find('polygon').css('fill', color)
+            jq(this).find('text').css('fill', color)
+        })
+    }
+
+    jq(document).ready(init_diagram)
+</script>
+
+</html>

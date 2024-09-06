@@ -1,0 +1,40 @@
+<div class="container">
+
+    <form class="row g-3 mt-2" hx-post="/api/record" hx-target="#cdr" hx-swap="innerHTML" >
+        <div class="col-md-2">
+            <label class="form-label">日期</label>
+            <input name="day" type="date" value="<%= day %>" class="form-control" id="inputEmail4">
+        </div>
+        <div class="col-md-2">
+            <label class="form-label">开始时间</label>
+            <input name="start" type="time" value="<%= start %>" step="1" class="form-control" id="inputPassword4">
+        </div>
+        <div class="col-md-2">
+            <label class="form-label">结束时间</label>
+            <input name="stop" type="time" value="<%= stop %>" step="1" class="form-control" id="inputPassword4">
+        </div>
+
+        <div class="col-md-2">
+            <label class="form-label">最小消息数</label>
+            <input name="msg_min" type="number" value="1" class="form-control" id="inputPassword4">
+        </div>
+
+        <div class="col-md-2">
+            <label class="form-label">主叫</label>
+            <input name="caller" type="text" class="form-control" id="inputPassword4">
+        </div>
+        <div class="col-md-2">
+            <label class="form-label">被叫</label>
+            <input name="callee" type="text" class="form-control" id="inputPassword4">
+        </div>
+
+        <div class="col-12">
+            <button type="submit" class="btn btn-primary">搜索
+                <img class="htmx-indicator" src="/img/oval.svg" width="16px">
+                <!-- <div class="spinner-border" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                </div> -->
+            </button>
+        </div>
+    </form>
+</div>
