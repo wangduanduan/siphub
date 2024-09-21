@@ -12,12 +12,10 @@ route.post('/record', async (req, res) => {
 })
 
 route.get('/call', async (req, res) => {
-    let re = await queryById(req.query.id)
-    // res.render('home/sipcdr', { table: re.rows })
-    logger.info(re.rows)
+    let re = await queryById(req.query.id, req.query.day)
     let rows = re.rows
     let seq = createSeqHtml(rows)
-    logger.info(seq)
+    logger.debug(seq)
 
     res.render('diagram/index', {
         seq: seq.html, table: rows

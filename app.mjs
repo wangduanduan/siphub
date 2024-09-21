@@ -4,6 +4,8 @@ import { AppLoger, logger } from './logger.mjs'
 import dayjs from 'dayjs'
 import { route } from './router/api.mjs'
 import { queryRecord } from './db.mjs'
+import { startCron } from './cron.mjs'
+import { AppEnv } from './env.mjs'
 
 const app = express()
 
@@ -11,6 +13,13 @@ app.use(AppLoger())
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(express.static('public'))
 app.set('view engine', 'ejs')
+
+if (AppEnv.enableCron === 'yes') {
+  logger.info('enable crontab')
+  startCron()
+} else {
+  logger.info('disable crontab')
+}
 
 app.get('/', async function (req, res) {
   let n = dayjs()

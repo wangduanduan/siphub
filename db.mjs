@@ -3,6 +3,7 @@ import { AppEnv } from './env.mjs'
 import { logger } from './logger.mjs'
 import { whereBuilder } from './util.mjs'
 const { Client, Pool } = pg
+import dayjs from 'dayjs'
 
 const pool = new Pool({
     user: AppEnv.DBUser,
@@ -15,16 +16,58 @@ const pool = new Pool({
     connectionTimeoutMillis: 2000,
 })
 
+function getTableNameByDay(day) {
+    let today = dayjs().format('YYYY-MM-DD')
+    if (day === today) {
+        return 'records'
+    }
 
+    return `records_${day.replaceAll('-', '')}`
+}
+
+export async function tableSplit() {
+    let tableDay = dayjs().subtract(1, 'day').format("YYYYMMDD")
+
+    const sql = `
+        CREATE table if not exists records_tmp (LIKE public.records INCLUDING all);
+        ALTER TABLE records RENAME TO records_${tableDay};
+        ALTER TABLE records_tmp RENAME TO records;
+    `
+
+    logger.info(sql)
+
+    return await pool.query(sql)
+}
+
+export async function deleteTable() {
+    let res = await pool.query(`
+        SELECT table_name
+        FROM information_schema.tables
+        WHERE table_schema = 'public' and 
+        table_name like 'records_%' 
+        order by table_name desc 
+        offset ${AppEnv.dataKeepDays};
+    `)
+
+    if (res.rows.length === 0) {
+        logger.info("没有需要删除的表")
+    }
+
+    for (const ele of res.rows) {
+        console.log(ele.table_name)
+        logger.info(`try delete table ${ele.table_name}`)
+        await pool.query(`DROP TABLE IF EXISTS ${ele.table_name}`)
+    }
+}
 
 export async function queryRecord(c) {
     logger.info(c)
-    console.log(c)
     let wh = whereBuilder(c)
     const sql = `
       select
         sip_call_id as "CallID",
         to_char(min(create_time),'HH24:MI:SS') as "startTime",
+        to_char(min(create_time),'YYYY-MM-DD') as "day",
         to_char(max(create_time),'HH24:MI:SS') as "stopTime",
         to_char(max(create_time) - min(create_time),'HH24:MI:SS') as "duration",
         min(from_user) as "caller",
@@ -34,7 +77,7 @@ export async function queryRecord(c) {
         max(response_code)::int as "finalCode",
         string_agg(DISTINCT CASE WHEN response_code BETWEEN 170 AND 190 THEN response_code::text END, ',') AS "tempCode"
     from
-        public.records
+        public.${getTableNameByDay(c.day)}
     where
         ${wh.join(' and ')}
     group by sip_call_id 
@@ -52,7 +95,7 @@ export async function queryRecord(c) {
 
 export async function queryById(id, day) {
     const sql = `
-       select
+    select
     sip_call_id,
 	sip_method,
 	to_char(create_time,
@@ -71,13 +114,11 @@ export async function queryById(id, day) {
 	replace(dst_host,':','_') as dst_host,
     response_desc,
     length(raw_msg) as msg_len
-from
-	public.records
-where
-	sip_call_id = '${id}'
-order by
-	create_time ,
-	timestamp_micro 
+    from
+        public.${getTableNameByDay(day)}
+    where
+        sip_call_id = '${id}'
+    order by create_time , timestamp_micro 
     `
 
     logger.info(sql)

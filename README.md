@@ -25,8 +25,8 @@
 
 - [x] 时序图搜索
 - [x] 时序图展示
-- [ ] 分表
-- [ ] 数据保留日期设置
+- [x] 分表
+- [x] 数据保留天数设置
 - [ ] 收藏
 - [ ] 导入pcap
 - [ ] 导入json
@@ -48,6 +48,7 @@ docker run -d --name=siphub \
     -e DBAddr=1.2.3.4 \
     -e DBPort=5432 \
     -e DBName=postgres \
+    -e dataKeepDays=10 \
     -p 3000:3000 \
     eddiemurphy5/siphub:latest
 ```
@@ -61,7 +62,7 @@ docker run -d --name=siphub \
 - DBName: 数据库名，默认postgres,
 - LogLevel: 日志级别, 默认debug
 - QueryLimit: 一次性查询的行数，默认10
-
+- dataKeepDays: 数据保留几天，默认3
 
 # 架构图
 
