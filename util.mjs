@@ -30,6 +30,10 @@ export function whereBuilder(cond) {
         }
     }
 
+    if (cond.callid && cond.callid.length > 0) {
+        re.push(`sip_call_id = '${cond.callid.trim()}'`)
+    }
+
     return re
 }
 

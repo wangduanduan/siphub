@@ -75,6 +75,7 @@ export async function queryRecord(c) {
         count(*)::int as "msgTotal",
         min(user_agent) as "UA",
         max(response_code)::int as "finalCode",
+        max(leg_uid) as "uid",
         string_agg(DISTINCT CASE WHEN response_code BETWEEN 170 AND 190 THEN response_code::text END, ',') AS "tempCode"
     from
         public.${getTableNameByDay(c.day)}

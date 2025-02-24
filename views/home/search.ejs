@@ -3,29 +3,35 @@
     <form class="row g-3 mt-2" hx-post="/api/record" hx-target="#cdr" hx-swap="innerHTML" >
         <div class="col-md-2">
             <label class="form-label">日期</label>
-            <input name="day" type="date" value="<%= day %>" class="form-control" id="inputEmail4">
+            <input name="day" type="date" value="<%= day %>" class="form-control">
         </div>
         <div class="col-md-2">
             <label class="form-label">开始时间</label>
-            <input name="start" type="time" value="<%= start %>" step="1" class="form-control" id="inputPassword4">
+            <input name="start" type="time" value="<%= start %>" step="1" class="form-control">
         </div>
         <div class="col-md-2">
             <label class="form-label">结束时间</label>
-            <input name="stop" type="time" value="<%= stop %>" step="1" class="form-control" id="inputPassword4">
+            <input name="stop" type="time" value="<%= stop %>" step="1" class="form-control">
         </div>
 
         <div class="col-md-2">
             <label class="form-label">最小消息数</label>
-            <input name="msg_min" type="number" value="1" class="form-control" id="inputPassword4">
+            <input name="msg_min" type="number" value="1" class="form-control">
         </div>
 
         <div class="col-md-2">
             <label class="form-label">主叫</label>
-            <input name="caller" type="text" class="form-control" id="inputPassword4">
+            <input name="caller" type="text" class="form-control">
         </div>
+
         <div class="col-md-2">
             <label class="form-label">被叫</label>
-            <input name="callee" type="text" class="form-control" id="inputPassword4">
+            <input name="callee" type="text" class="form-control">
+        </div>
+
+        <div class="col-md-2">
+            <label class="form-label">CallID</label>
+            <input name="callid" type="text" class="form-control">
         </div>
 
         <div class="col-12">

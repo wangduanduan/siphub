@@ -8,6 +8,7 @@
                 <th scope="col">结束时间</th>
                 <th scope="col">持续时长</th>
                 <th scope="col">Call-ID</th>
+                <th scope="col">UID</th>
                 <th scope="col">主叫</th>
                 <th scope="col">被叫</th>
                 <th scope="col">消息数</th>
@@ -26,6 +27,7 @@
                   <td>
                     <a href="/api/call?id=<%= v.CallID %>&day=<%= v.day %>" target="_blank"> <%= v.CallID %> </a>
                   </td>
+                  <td><%= v.uid %></td>
                   <td><%= v.caller %></td>
                   <td><%= v.callee %></td>
                   <td><%= v.msgTotal %></td>

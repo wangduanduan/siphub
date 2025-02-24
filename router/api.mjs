@@ -8,6 +8,7 @@ export const route = Router()
 
 route.post('/record', async (req, res) => {
     let re = await queryRecord(req.body)
+    logger.info(`row length ${re.rows.length}`)
     res.render('home/sipcdr', { table: re.rows })
 })
 
