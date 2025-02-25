@@ -26,15 +26,18 @@
                 <div class="list-group">
 
 <%for ( let i = 0; i < table.length; i++ ) { let v = table[i] %>
-<a id="raw-sip-<%- i %>" data-id="<%- i %>" data-cseq="<%- v.cseq_number %>" href="#" class="list-group-item list-group-item-action" aria-current="true">
-                      <div class="d-flex w-100 justify-content-between">
-                        <h5 class="mb-1">F<%= i %> <%= v.sip_method %> </h5>
+    <div class="d-flex w-100 justify-content-between">
+                        <h5 class="mb-1">
+                        <a id="raw-sip-<%- i %>" data-id="<%- i %>" data-cseq="<%- v.cseq_number %>" href="#" class="list-group-item list-group-item-action" aria-current="true">
+                            F<%= i %> <%= v.sip_method %> 
+                        </a>
+                        </h5>
                         <small><%- v.create_time %> <%= v.sip_protocl %>/<%- v.msg_len %></small>
-                      </div>
+    </div>
 <pre>
 <%= v.raw_msg %>
 </pre>
-                    </a>
+                    
 <%} %>
                   
                   </div>

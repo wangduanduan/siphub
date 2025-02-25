@@ -50,7 +50,7 @@ docker run -d --name=siphub \
     -e DBName=postgres \
     -e dataKeepDays=10 \
     -p 3000:3000 \
-    eddiemurphy5/siphub:latest
+    ghcr.io/wangduanduan/siphub:latest
 ```
 
 **启动环境变量说明**

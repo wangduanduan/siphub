@@ -34,6 +34,15 @@
             <input name="callid" type="text" class="form-control">
         </div>
 
+        <div class="col-md-2">
+            <label class="form-label">SIP Method</label>
+            <select name="cseq_method" class="form-control">
+                <option value="">ALL</option>
+                <option value="INVITE">INVITE</option>
+                <option value="REGISTER">REGISTER</option>
+            </select>
+        </div>
+
         <div class="col-12">
             <button type="submit" class="btn btn-primary">搜索
                 <img class="htmx-indicator" src="/img/oval.svg" width="16px">

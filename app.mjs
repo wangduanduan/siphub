@@ -33,7 +33,9 @@ app.get('/', async function (req, res) {
     stop,
     caller: '',
     callee: '',
-    msg_min: 1
+    msg_min: 1,
+    callid: '',
+    cseq_method: ''
   })
 
   res.render('home/index', {

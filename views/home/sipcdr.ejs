@@ -6,6 +6,7 @@
                 <th scope="col">序号</th>
                 <th scope="col">开始时间</th>
                 <th scope="col">结束时间</th>
+                <th scope="col">Method</th>
                 <th scope="col">持续时长</th>
                 <th scope="col">Call-ID</th>
                 <th scope="col">UID</th>
@@ -23,6 +24,7 @@
                   <th scope="row"><%= i %></th>
                   <td><%= v.startTime %></td>
                   <td><%= v.stopTime %></td>
+                  <td><%= v.cseq_method %></td>
                   <td><%= v.duration %></td>
                   <td>
                     <a href="/api/call?id=<%= v.CallID %>&day=<%= v.day %>" target="_blank"> <%= v.CallID %> </a>

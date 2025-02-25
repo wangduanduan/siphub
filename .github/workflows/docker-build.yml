@@ -1,7 +1,8 @@
 name: ci
 
 on:
-  push:
+  release:
+    types: [published]
 
 jobs:
   docker:
@@ -25,4 +26,4 @@ jobs:
         uses: docker/build-push-action@v6
         with:
           push: true
-          tags: ghcr.io/wangduanduan/siphub:latest
+          tags: ghcr.io/wangduanduan/siphub:${{ steps.meta.outputs.tags }}

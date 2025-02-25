@@ -14,24 +14,28 @@ export function whereBuilder(cond) {
         `create_time <= '${cond.day} ${cond.stop}'`
     ]
 
-    if (cond.caller.length > 0) {
+    if (cond.caller.trim().length > 0) {
         if (cond.caller.indexOf('*') >= 0) {
-            re.push(`from_user like '${cond.caller.replaceAll('*', '%')}'`)
+            re.push(`from_user like '${cond.caller.trim().replaceAll('*', '%')}'`)
         } else {
-            re.push(`from_user = '${cond.caller}'`)
+            re.push(`from_user = '${cond.caller.trim()}'`)
         }
     }
 
-    if (cond.callee.length > 0) {
+    if (cond.callee.trim().length > 0) {
         if (cond.callee.indexOf('*') >= 0) {
-            re.push(`to_user like '${cond.callee.replaceAll('*', '%')}'`)
+            re.push(`to_user like '${cond.callee.trim().replaceAll('*', '%')}'`)
         } else {
-            re.push(`to_user = '${cond.callee}'`)
+            re.push(`to_user = '${cond.callee.trim()}'`)
         }
     }
 
-    if (cond.callid && cond.callid.length > 0) {
+    if (cond.callid?.trim() && cond.callid.trim().length > 0) {
         re.push(`sip_call_id = '${cond.callid.trim()}'`)
+    }
+
+    if (cond.cseq_method?.trim() && cond.cseq_method.trim().length > 0) {
+        re.push(`cseq_method = '${cond.cseq_method.trim()}'`)
     }
 
     return re

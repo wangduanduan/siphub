@@ -73,8 +73,9 @@ export async function queryRecord(c) {
         min(from_user) as "caller",
         min(to_user) as "callee",
         count(*)::int as "msgTotal",
-        min(user_agent) as "UA",
+        max(user_agent) as "UA",
         max(response_code)::int as "finalCode",
+        max(cseq_method) as "cseq_method",
         max(leg_uid) as "uid",
         string_agg(DISTINCT CASE WHEN response_code BETWEEN 170 AND 190 THEN response_code::text END, ',') AS "tempCode"
     from
