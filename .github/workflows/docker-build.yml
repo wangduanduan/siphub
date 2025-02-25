@@ -26,4 +26,4 @@ jobs:
         uses: docker/build-push-action@v6
         with:
           push: true
-          tags: ghcr.io/wangduanduan/siphub:${{ github.ref | split('/')[2] }}
+          tags: ghcr.io/wangduanduan/siphub:${{ github.event.release.tag_name }}
