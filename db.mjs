@@ -77,6 +77,8 @@ export async function queryRecord(c) {
         max(response_code)::int as "finalCode",
         max(cseq_method) as "cseq_method",
         max(leg_uid) as "uid",
+        max(src_host) as "srcHost",
+        max(dst_host) as "dstHost",
         string_agg(DISTINCT CASE WHEN response_code BETWEEN 170 AND 190 THEN response_code::text END, ',') AS "tempCode"
     from
         public.${getTableNameByDay(c.day)}

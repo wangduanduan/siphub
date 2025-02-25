@@ -1,4 +1,4 @@
-<div class="container">
+<div class="container-fluid">
     <div class="col-12" id="cdr">
         <table class="table table-striped">
             <thead>
@@ -6,6 +6,8 @@
                 <th scope="col">序号</th>
                 <th scope="col">开始时间</th>
                 <th scope="col">结束时间</th>
+                <th scope="col">源地址</th>
+                <th scope="col">目标地址</th>
                 <th scope="col">Method</th>
                 <th scope="col">持续时长</th>
                 <th scope="col">Call-ID</th>
@@ -24,6 +26,8 @@
                   <th scope="row"><%= i %></th>
                   <td><%= v.startTime %></td>
                   <td><%= v.stopTime %></td>
+                  <td><%= v.srcHost %></td>
+                  <td><%= v.dstHost %></td>
                   <td><%= v.cseq_method %></td>
                   <td><%= v.duration %></td>
                   <td>

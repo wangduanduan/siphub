@@ -38,6 +38,14 @@ export function whereBuilder(cond) {
         re.push(`cseq_method = '${cond.cseq_method.trim()}'`)
     }
 
+    if (cond.src_host?.trim() && cond.src_host.trim().length > 0) {
+        re.push(`src_host like '${cond.src_host.trim()}%'`)
+    }
+
+    if (cond.dst_host?.trim() && cond.dst_host.trim().length > 0) {
+        re.push(`dst_host like '${cond.dst_host.trim()}%'`)
+    }
+
     return re
 }
 
