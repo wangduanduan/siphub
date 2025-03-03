@@ -26,17 +26,27 @@ function getTableNameByDay(day) {
 }
 
 export async function tableSplit() {
-    let tableDay = dayjs().subtract(1, 'day').format("YYYYMMDD")
+    let yestoday = dayjs().subtract(1, 'day').format("YYYYMMDD")
+    let today = dayjs().format("YYYYMMDD")
+    logger.info('tableSplit')
+    const client = await pool.connect()
 
-    const sql = `
-        CREATE table if not exists records_tmp (LIKE public.records INCLUDING all);
-        ALTER TABLE records RENAME TO records_${tableDay};
-        ALTER TABLE records_tmp RENAME TO records;
-    `
+    try {
+        await client.query('BEGIN')
 
-    logger.info(sql)
+        await client.query('CREATE table if not exists records_tmp (LIKE public.records INCLUDING all)')
+        await client.query(`ALTER TABLE records RENAME TO records_${yestoday}`)
+        await client.query('ALTER TABLE records_tmp RENAME TO records')
+        await client.query(`CREATE SEQUENCE record_id_seq_${today} OWNED BY records.id`)
+        await client.query(`ALTER TABLE records ALTER COLUMN id SET DEFAULT nextval('record_id_seq_${today}')`)
 
-    return await pool.query(sql)
+        await client.query('COMMIT')
+    } catch (e) {
+        await client.query('ROLLBACK')
+        throw e
+    } finally {
+        client.release()
+    }
 }
 
 export async function deleteTable() {
@@ -56,7 +66,7 @@ export async function deleteTable() {
     for (const ele of res.rows) {
         console.log(ele.table_name)
         logger.info(`try delete table ${ele.table_name}`)
-        await pool.query(`DROP TABLE IF EXISTS ${ele.table_name}`)
+        await pool.query(`DROP TABLE IF EXISTS ${ele.table_name} CASCADE;`)
     }
 }
 
